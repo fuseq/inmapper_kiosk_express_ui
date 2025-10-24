@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorlu Center - Dijital Rehber</title>
+    <link rel="stylesheet" href="styles_v2.css">
+</head>
+<body>
+    <!-- Top Info Bar -->
+    <div class="top-info-bar">
+        <div class="info-left">
+            <span class="time" id="currentTime">10:34</span>
+            <span class="date" id="currentDate">Salı, Ekim 22</span>
+        </div>
+        <div class="info-center">
+            <div class="location-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+            <span class="location-text">ZORLU CENTER İSTANBUL</span>
+        </div>
+        <div class="info-right">
+            <div class="language-switcher">
+                <button class="lang-option active" data-lang="tr">TR</button>
+                <button class="lang-option" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- Initial Home Screen (Full Screen) -->
+        <div class="initial-home active" id="initialHome">
+            <div class="home-content">
+                <!-- Logo Section -->
+                <div class="home-logo">
+                    <div class="logo-icon">
+                        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                            <circle cx="60" cy="60" r="50" stroke="white" stroke-width="4"/>
+                            <text x="60" y="75" font-size="48" font-weight="bold" text-anchor="middle" fill="white">Z</text>
+                        </svg>
+                    </div>
+                    <h1 class="home-title">ZORLU CENTER</h1>
+                    <p class="home-subtitle">Dijital Yönlendirme Sistemi</p>
+                </div>
+
+                <!-- Search Trigger -->
+                <div class="home-search-trigger" id="homeSearchTrigger">
+                    <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="search-placeholder" id="searchPlaceholder">Nereye gitmek istersiniz?</span>
+                </div>
+
+                <!-- Explore Map Button -->
+                <button class="explore-map-btn" id="exploreMapBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Haritayı Keşfet</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Tab (Bottom Sheet) -->
+        <div class="search-tab" id="searchTab">
+
+            <!-- Route Points Selector (Inside Panel) -->
+            <div class="route-points-selector-panel" id="routePointsSelector">
+                <button class="route-point-btn active" id="startPointSelector" data-point="start">
+                    <div class="point-icon start-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <div class="point-info">
+                        <span class="point-label">BAŞLANGIÇ</span>
+                        <span class="point-name" id="startPointDisplay">Seçiniz</span>
+                    </div>
+                </button>
+                <div class="route-arrow">→</div>
+                <button class="route-point-btn" id="endPointSelector" data-point="end">
+                    <div class="point-icon end-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                        </svg>
+                    </div>
+                    <div class="point-info">
+                        <span class="point-label">VARIŞ</span>
+                        <span class="point-name" id="endPointDisplay">Seçiniz</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs-container">
+                <div class="category-tabs-wrapper">
+                    <button class="category-tab active" data-category="all">Tümü</button>
+                    <button class="category-tab" data-category="shopping">Alışveriş</button>
+                    <button class="category-tab" data-category="food">Yemek</button>
+                    <button class="category-tab" data-category="coffee">Kafe</button>
+                    <button class="category-tab" data-category="entertainment">Eğlence</button>
+                    <button class="category-tab" data-category="wc">Tuvalet</button>
+                    <button class="category-tab" data-category="atm">ATM</button>
+                    <button class="category-tab" data-category="parking">Otopark</button>
+                </div>
+                
+                <!-- Floor Selector Compact -->
+                <div class="floor-selector-compact" id="floorSelectorCompact">
+                    <button class="floor-display-btn" id="floorDisplayBtn">
+                        <span class="floor-name" id="currentFloorName">Zemin Kat</span>
+                    </button>
+                    <div class="floor-arrows-group">
+                        <button class="floor-arrow-btn" id="floorUpBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="floor-arrow-btn" id="floorDownBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="floor-dropdown" id="floorDropdown">
+                        <div class="floor-dropdown-item" data-floor="2">
+                            <span class="floor-label">2. Kat</span>
+                        </div>
+                        <div class="floor-dropdown-item" data-floor="1">
+                            <span class="floor-label">1. Kat</span>
+                        </div>
+                        <div class="floor-dropdown-item active" data-floor="0">
+                            <span class="floor-label">Zemin Kat</span>
+                        </div>
+                        <div class="floor-dropdown-item" data-floor="-1">
+                            <span class="floor-label">Bodrum 1</span>
+                        </div>
+                        <div class="floor-dropdown-item" data-floor="-2">
+                            <span class="floor-label">Bodrum 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results List -->
+            <div class="tab-results-container" id="tabResults">
+                <!-- Dinamik olarak doldurulacak -->
+            </div>
+            
+            <!-- Inline Keyboard -->
+            <div class="inline-keyboard">
+                <div class="keyboard-row">
+                    <button class="inline-key" data-key="Q">Q</button>
+                    <button class="inline-key" data-key="W">W</button>
+                    <button class="inline-key" data-key="E">E</button>
+                    <button class="inline-key" data-key="R">R</button>
+                    <button class="inline-key" data-key="T">T</button>
+                    <button class="inline-key" data-key="Y">Y</button>
+                    <button class="inline-key" data-key="U">U</button>
+                    <button class="inline-key" data-key="I">I</button>
+                    <button class="inline-key" data-key="O">O</button>
+                    <button class="inline-key" data-key="P">P</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="inline-key" data-key="A">A</button>
+                    <button class="inline-key" data-key="S">S</button>
+                    <button class="inline-key" data-key="D">D</button>
+                    <button class="inline-key" data-key="F">F</button>
+                    <button class="inline-key" data-key="G">G</button>
+                    <button class="inline-key" data-key="H">H</button>
+                    <button class="inline-key" data-key="J">J</button>
+                    <button class="inline-key" data-key="K">K</button>
+                    <button class="inline-key" data-key="L">L</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="inline-key special" data-key="123">123</button>
+                    <button class="inline-key" data-key="Z">Z</button>
+                    <button class="inline-key" data-key="X">X</button>
+                    <button class="inline-key" data-key="C">C</button>
+                    <button class="inline-key" data-key="V">V</button>
+                    <button class="inline-key" data-key="B">B</button>
+                    <button class="inline-key" data-key="N">N</button>
+                    <button class="inline-key" data-key="M">M</button>
+                    <button class="inline-key special" data-key="Backspace">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                            <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Panel (Background) -->
+        <div class="map-panel visible" id="mapPanel">
+            <div class="map-container" id="mapContainer">
+                <!-- Back to Home Button -->
+                <button class="map-back-btn" id="mapBackBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Ana Sayfa</span>
+                </button>
+                
+                <!-- SVG Floor Map -->
+                <img src="floors/0.svg" alt="Floor Map" class="floor-map-svg" id="floorMapSvg" />
+                
+                <!-- Floor Selector -->
+                <div class="floor-selector">
+                    <button class="floor-btn" data-floor="-2">-2</button>
+                    <button class="floor-btn" data-floor="-1">-1</button>
+                    <button class="floor-btn active" data-floor="0">Z</button>
+                    <button class="floor-btn" data-floor="1">1</button>
+                    <button class="floor-btn" data-floor="2">2</button>
+                </div>
+            </div>
+            
+            <!-- Side Panel for Route Info -->
+            <div class="map-side-panel hidden" id="mapSidePanel">
+                <div class="side-panel-content">
+                    <!-- Route Points Header -->
+                    <div class="side-panel-header">
+                        <div class="side-route-card start" id="sidePanelStartPoint">
+                            <div class="side-route-icon start-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                            </div>
+                            <div class="side-route-text">
+                                <span class="side-route-label">BAŞLANGIÇ</span>
+                                <span class="side-route-name" id="sidePanelStartName">Seçiniz</span>
+                                <span class="side-route-floor" id="sidePanelStartFloor">Floor 0</span>
+                            </div>
+                            <button class="side-route-swap" id="routeSwapBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="side-route-divider"></div>
+                        
+                        <div class="side-route-card end" id="sidePanelEndPoint">
+                            <div class="side-route-icon end-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                </svg>
+                            </div>
+                            <div class="side-route-text">
+                                <span class="side-route-label">VARIŞ</span>
+                                <span class="side-route-name" id="sidePanelEndName">Seçiniz</span>
+                                <span class="side-route-floor" id="sidePanelEndFloor">Floor 1</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Route Type Buttons -->
+                    <div class="route-type-selector">
+                        <button class="route-type-btn active" id="routeTypeNormal" data-type="normal">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>En Kısa Rota</span>
+                        </button>
+                        <button class="route-type-btn" id="routeTypeAccessible" data-type="accessible">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2"/>
+                                <path d="M10 22V14L7 10V6H17V10L14 14V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Asansörlü Rota</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Route Info Stats -->
+                    <div class="route-stats">
+                        <div class="route-stat">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span id="routeDistance">173 m</span>
+                        </div>
+                        <div class="route-stat">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span id="routeTime">3 dk</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Steps -->
+                    <div class="navigation-steps">
+                        <div class="navigation-header">
+                            <h3>Rotayı Takip Edin</h3>
+                        </div>
+                        <div class="steps-container" id="navigationSteps">
+                            <!-- Will be populated dynamically -->
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Düz ilerleyin</span>
+                                    <span class="step-distance">7 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Sağa dönün ve ilerleyin</span>
+                                    <span class="step-distance">12 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Koridorda devam edin</span>
+                                    <span class="step-distance">25 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Sola dönün</span>
+                                    <span class="step-distance">3 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Ana geçide devam edin</span>
+                                    <span class="step-distance">45 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Sağ tarafta mağaza</span>
+                                    <span class="step-distance">8 m</span>
+                                </div>
+                            </div>
+                            <div class="nav-step">
+                                <div class="step-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="step-text">
+                                    <span class="step-instruction">Hedefe vardınız</span>
+                                    <span class="step-distance">0 m</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- QR Code Section (Bottom) -->
+                    <div class="side-panel-qr">
+                        <div class="qr-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                <rect x="7" y="7" width="3" height="3" fill="currentColor"/>
+                                <rect x="14" y="7" width="3" height="3" fill="currentColor"/>
+                                <rect x="7" y="14" width="3" height="3" fill="currentColor"/>
+                                <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
+                            </svg>
+                            <span>Rotayı Telefonunuza Gönderin</span>
+                        </div>
+                        <div class="qr-code-display">
+                            <img id="sidePanelQRCode" src="" alt="QR Code">
+                        </div>
+                        <p class="qr-desc">QR kodu tarayarak rotayı cep telefonunuzda görüntüleyin</p>
+                    </div>
+                    
+                    <!-- Search/Filter Section (Appears when expanded) -->
+                    <div class="side-panel-search" id="sidePanelSearch">
+                        <div class="side-search-header">
+                            <h3>Nokta Değiştir</h3>
+                            <button class="side-search-close" id="sidePanelSearchClose">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Category Filters -->
+                        <div class="side-category-filters">
+                            <button class="side-category-btn active" data-category="all">Tümü</button>
+                            <button class="side-category-btn" data-category="shopping">Alışveriş</button>
+                            <button class="side-category-btn" data-category="food">Yemek</button>
+                            <button class="side-category-btn" data-category="coffee">Kafe</button>
+                        </div>
+                        
+                        <!-- Search Results -->
+                        <div class="side-search-results" id="sidePanelResults">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="qr-modal" id="qrModal">
+        <div class="qr-modal-content">
+            <button class="qr-close-btn" id="qrCloseBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="qr-card">
+                <div class="qr-icon">📱</div>
+                <h2>Rotayı Telefonunuzda Takip Edin</h2>
+                <p>QR kodu tarayın ve rotayı cep telefonunuzda görüntüleyin</p>
+                <div class="qr-code-container">
+                    <img id="qrCodeImage" src="" alt="QR Code">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Virtual Keyboard -->
+    <div class="keyboard hidden" id="keyboard">
+        <div class="keyboard-display">
+            <input type="text" id="keyboardDisplay" class="keyboard-display-input" readonly>
+        </div>
+        <div class="keyboard-keys">
+            <div class="keyboard-row">
+                <button class="key" data-key="Q">Q</button>
+                <button class="key" data-key="W">W</button>
+                <button class="key" data-key="E">E</button>
+                <button class="key" data-key="R">R</button>
+                <button class="key" data-key="T">T</button>
+                <button class="key" data-key="Y">Y</button>
+                <button class="key" data-key="U">U</button>
+                <button class="key" data-key="I">I</button>
+                <button class="key" data-key="O">O</button>
+                <button class="key" data-key="P">P</button>
+                <button class="key" data-key="Ğ">Ğ</button>
+                <button class="key" data-key="Ü">Ü</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="A">A</button>
+                <button class="key" data-key="S">S</button>
+                <button class="key" data-key="D">D</button>
+                <button class="key" data-key="F">F</button>
+                <button class="key" data-key="G">G</button>
+                <button class="key" data-key="H">H</button>
+                <button class="key" data-key="J">J</button>
+                <button class="key" data-key="K">K</button>
+                <button class="key" data-key="L">L</button>
+                <button class="key" data-key="Ş">Ş</button>
+                <button class="key" data-key="İ">İ</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="Z">Z</button>
+                <button class="key" data-key="X">X</button>
+                <button class="key" data-key="C">C</button>
+                <button class="key" data-key="V">V</button>
+                <button class="key" data-key="B">B</button>
+                <button class="key" data-key="N">N</button>
+                <button class="key" data-key="M">M</button>
+                <button class="key" data-key="Ö">Ö</button>
+                <button class="key" data-key="Ç">Ç</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-space" data-key=" ">BOŞLUK</button>
+                <button class="key key-backspace" data-key="Backspace">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script_v2.js"></script>
+</body>
+</html>

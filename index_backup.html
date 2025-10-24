@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorlu Center - Dijital Rehber</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Info Bar -->
+    <div class="top-info-bar">
+        <div class="info-left">
+            <span class="time" id="currentTime">10:34</span>
+            <span class="date" id="currentDate">Salı, Ekim 22</span>
+        </div>
+        <div class="info-center">
+            <div class="location-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </div>
+            <span class="location-text">ZORLU CENTER İSTANBUL</span>
+        </div>
+        <div class="info-right">
+            <div class="language-switcher">
+                <button class="lang-option active" data-lang="tr">TR</button>
+                <button class="lang-option" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- Sol Panel: Arama + Kategoriler + Sonuçlar -->
+        <div class="search-panel" id="searchPanel">
+            
+            <!-- Logo -->
+            <div class="panel-logo">
+                <span class="logo-text">ZORLU CENTER</span>
+            </div>
+            
+            <!-- Ana İçerik (Home) -->
+            <div class="search-panel-content" id="searchContent">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Nereye gitmek istersiniz?</h1>
+                </div>
+
+                <!-- Arama Kutusu -->
+                <div class="search-container">
+                    <div class="search-box" id="searchBox">
+                        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Mağaza veya mekan ara..." readonly>
+                        <button class="clear-btn" id="clearBtn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kategoriler Grid -->
+                <div class="categories-section">
+                    <h3 class="section-title">Kategoriler</h3>
+                    <div class="categories-grid">
+                        <button class="category-card" data-category="shopping">
+                            <div class="category-icon">🛍️</div>
+                            <span class="category-name">Alışveriş</span>
+                        </button>
+                        <button class="category-card" data-category="food">
+                            <div class="category-icon">🍽️</div>
+                            <span class="category-name">Yemek</span>
+                        </button>
+                        <button class="category-card" data-category="coffee">
+                            <div class="category-icon">☕</div>
+                            <span class="category-name">Kafe</span>
+                        </button>
+                        <button class="category-card" data-category="entertainment">
+                            <div class="category-icon">🎬</div>
+                            <span class="category-name">Eğlence</span>
+                        </button>
+                        <button class="category-card" data-category="wc">
+                            <div class="category-icon">🚻</div>
+                            <span class="category-name">Tuvalet</span>
+                        </button>
+                        <button class="category-card" data-category="atm">
+                            <div class="category-icon">💰</div>
+                            <span class="category-name">ATM</span>
+                        </button>
+                        <button class="category-card" data-category="parking">
+                            <div class="category-icon">🅿️</div>
+                            <span class="category-name">Otopark</span>
+                        </button>
+                        <button class="category-card" data-category="services">
+                            <div class="category-icon">💼</div>
+                            <span class="category-name">Hizmetler</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popüler Mekanlar -->
+                <div class="popular-section">
+                    <h3 class="section-title">Popüler Mekanlar</h3>
+                    <div class="popular-list">
+                        <button class="popular-item" data-location="zara">
+                            <span class="popular-name">Zara</span>
+                            <span class="popular-floor">Z. Kat</span>
+                        </button>
+                        <button class="popular-item" data-location="starbucks">
+                            <span class="popular-name">Starbucks</span>
+                            <span class="popular-floor">1. Kat</span>
+                        </button>
+                        <button class="popular-item" data-location="cinemaximum">
+                            <span class="popular-name">Sinema</span>
+                            <span class="popular-floor">S. Kat</span>
+                        </button>
+                        <button class="popular-item" data-location="h&m">
+                            <span class="popular-name">H&M</span>
+                            <span class="popular-floor">Z. Kat</span>
+                        </button>
+                        <button class="popular-item" data-location="nike">
+                            <span class="popular-name">Nike</span>
+                            <span class="popular-floor">1. Kat</span>
+                        </button>
+                        <button class="popular-item" data-location="apple store">
+                            <span class="popular-name">Apple</span>
+                            <span class="popular-floor">Z. Kat</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arama Sonuçları Container -->
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <button class="back-btn" id="backToHome">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Geri</span>
+                    </button>
+                    <h2 class="results-title" id="resultsTitle">Arama Sonuçları</h2>
+                </div>
+                
+                <!-- Arama Kutusu (Genişlemiş modda) -->
+                <div class="search-container" style="padding: 16px 24px; background: white; border-bottom: 1px solid var(--border-color);">
+                    <div class="search-box" id="searchBoxExpanded" style="margin: 0;">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" id="searchInputExpanded" class="search-input" placeholder="Mağaza veya mekan ara..." readonly style="font-size: 16px;">
+                        <button class="clear-btn" id="clearBtnExpanded">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-list" id="resultsList"></div>
+            </div>
+            
+            <!-- Rota Özeti (Daralmış durumda gösterilecek) -->
+            <div class="route-summary" id="routeSummary">
+                <div class="route-points">
+                    <div class="route-point">
+                        <div class="point-label">Başlangıç</div>
+                        <button class="point-button" id="startPointBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span class="point-name" id="startPointName">Giriş (Zemin Kat)</span>
+                        </button>
+                    </div>
+                    <div class="route-arrow">→</div>
+                    <div class="route-point">
+                        <div class="point-label">Varış</div>
+                        <button class="point-button" id="endPointBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+                            </svg>
+                            <span class="point-name" id="endPointName">Seçiniz</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- QR Kod (Küçük) -->
+                <div class="qr-mini" id="qrMini">
+                    <p class="qr-mini-text">Telefonda Açmak İçin QR Kodu Tarayın</p>
+                    <img src="" alt="QR Code" id="qrMiniImg">
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Sağ Panel: Harita -->
+        <div class="map-panel" id="mapPanel">
+            
+            <!-- Harita Konteyneri -->
+            <div class="map-container" id="mapContainer">
+                <div class="map-placeholder">
+                    <div class="map-demo">
+                        <!-- Kat Seçici -->
+                        <div class="floor-selector">
+                            <button class="floor-btn" data-floor="-2">-2</button>
+                            <button class="floor-btn" data-floor="-1">-1</button>
+                            <button class="floor-btn active" data-floor="0">Z</button>
+                            <button class="floor-btn" data-floor="1">1</button>
+                            <button class="floor-btn" data-floor="2">2</button>
+                        </div>
+                        
+                        <!-- Örnek Rota -->
+                        <div class="route-line"></div>
+                        <div class="start-marker">📍</div>
+                        <div class="end-marker">🎯</div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    <!-- QR Kod Ekranı (Tam Ekran Overlay) -->
+    <div id="qrScreen" class="qr-screen">
+        <div class="qr-content">
+            <button class="close-btn" id="closeQR">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="qr-card">
+                <div class="qr-icon">📱</div>
+                <h2 class="qr-title">Rotayı Telefonunuzda Takip Edin</h2>
+                <p class="qr-subtitle">QR kodu tarayın ve rotayı telefonunuzda görüntüleyin</p>
+                <div class="qr-code" id="qrCodeLarge">
+                    <img src="" alt="QR Code">
+                </div>
+                <p class="qr-footer">Kamera ile QR kodu tarayın</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sanal Klavye -->
+    <div id="keyboard" class="keyboard hidden">
+        <div class="keyboard-display">
+            <input type="text" id="keyboardDisplay" class="keyboard-display-input" readonly>
+        </div>
+        <div class="keyboard-keys">
+            <div class="keyboard-row">
+                <button class="key" data-key="Q">Q</button>
+                <button class="key" data-key="W">W</button>
+                <button class="key" data-key="E">E</button>
+                <button class="key" data-key="R">R</button>
+                <button class="key" data-key="T">T</button>
+                <button class="key" data-key="Y">Y</button>
+                <button class="key" data-key="U">U</button>
+                <button class="key" data-key="I">I</button>
+                <button class="key" data-key="O">O</button>
+                <button class="key" data-key="P">P</button>
+                <button class="key" data-key="Ğ">Ğ</button>
+                <button class="key" data-key="Ü">Ü</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="A">A</button>
+                <button class="key" data-key="S">S</button>
+                <button class="key" data-key="D">D</button>
+                <button class="key" data-key="F">F</button>
+                <button class="key" data-key="G">G</button>
+                <button class="key" data-key="H">H</button>
+                <button class="key" data-key="J">J</button>
+                <button class="key" data-key="K">K</button>
+                <button class="key" data-key="L">L</button>
+                <button class="key" data-key="Ş">Ş</button>
+                <button class="key" data-key="İ">İ</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="Z">Z</button>
+                <button class="key" data-key="X">X</button>
+                <button class="key" data-key="C">C</button>
+                <button class="key" data-key="V">V</button>
+                <button class="key" data-key="B">B</button>
+                <button class="key" data-key="N">N</button>
+                <button class="key" data-key="M">M</button>
+                <button class="key" data-key="Ö">Ö</button>
+                <button class="key" data-key="Ç">Ç</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key key-space" data-key=" ">BOŞLUK</button>
+                <button class="key key-backspace" data-key="Backspace">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
