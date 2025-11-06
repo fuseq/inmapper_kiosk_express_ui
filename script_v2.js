@@ -8,8 +8,87 @@ const state = {
     endPoint: null,
     editingPoint: 'start', // 'start' or 'end' - which point is being edited
     currentFloor: 0, // Current selected floor
+    keyboardLanguage: 'tr', // 'tr', 'en', 'zh', 'ar'
     keyboardMode: 'letters', // 'letters' or 'numbers'
     routeType: 'normal', // 'normal' or 'accessible'
+    panelSide: 'left', // 'left' or 'right' - which side the panel is on
+};
+
+// Keyboard layouts
+const keyboardLayouts = {
+    tr: {
+        letters: [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Ğ', 'Ü'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ş', 'İ'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Ö', 'Ç']
+        ],
+        name: 'Türkçe',
+        flag: '🇹🇷'
+    },
+    en: {
+        letters: [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+        ],
+        name: 'English',
+        flag: '🇬🇧'
+    },
+        zh: {
+        letters: [
+            [
+                {main: 'Q', sub: '手'},
+                {main: 'W', sub: '田'},
+                {main: 'E', sub: '水'},
+                {main: 'R', sub: '口'},
+                {main: 'T', sub: '庭'},
+                {main: 'Y', sub: '山'},
+                {main: 'U', sub: '人'},
+                {main: 'I', sub: '心'},
+                {main: 'O', sub: '火'},
+                {main: 'P', sub: '之'}
+            ],
+            [
+                {main: 'A', sub: '日'},
+                {main: 'S', sub: '木'},
+                {main: 'D', sub: '大'},
+                {main: 'F', sub: '土'},
+                {main: 'G', sub: '王'},
+                {main: 'H', sub: '目'},
+                {main: 'J', sub: '十'},
+                {main: 'K', sub: '竹'},
+                {main: 'L', sub: '中'}
+            ],
+            [
+                {main: 'Z', sub: '重'},
+                {main: 'X', sub: '難'},
+                {main: 'C', sub: '金'},
+                {main: 'V', sub: '女'},
+                {main: 'B', sub: '月'},
+                {main: 'N', sub: '弓'},
+                {main: 'M', sub: '门'}
+            ]
+        ],
+        common: ['商', '店', '铺', '餐', '厅', '咖', '啡', '厕', '所', '停', '车', '场'],
+        name: '中文',
+        flag: '🇨🇳',
+        hasDualKeys: true
+    },
+    ar: {
+        letters: [
+            ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح'],
+            ['ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن', 'م'],
+            ['ذ', 'د', 'ز', 'ر', 'و', 'ة', 'ى', 'ء']
+        ],
+        name: 'العربية',
+        flag: '🇸🇦',
+        rtl: true
+    },
+    numbers: [
+        ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+        ['-', '/', ':', ';', '(', ')', '₺', '$', '€', '@'],
+        ['.', ',', '?', '!', '\'', '"', '#', '&', '*']
+    ]
 };
 
 // Floor data
@@ -68,6 +147,7 @@ const elements = {
     
         mapPanel: document.getElementById('mapPanel'),
     mapSidePanel: document.getElementById('mapSidePanel'),
+    panelToggleBtnTop: document.getElementById('panelToggleBtnTop'),
     sidePanelStartPoint: document.getElementById('sidePanelStartPoint'),
     sidePanelEndPoint: document.getElementById('sidePanelEndPoint'),
     sidePanelStartName: document.getElementById('sidePanelStartName'),
@@ -122,6 +202,12 @@ function showSearchTab() {
         elements.searchTab.classList.add('open');
         loadAllLocations();
         
+        // Render keyboard after panel is visible
+        setTimeout(() => {
+            console.log('🎹 Rendering keyboard after panel opened');
+            renderInlineKeyboard();
+        }, 100);
+        
         // Remove animating class after all animations
         setTimeout(() => {
             elements.initialHome.classList.remove('animating');
@@ -137,17 +223,31 @@ function showSearchTab() {
 }
 
 function hideSearchTab() {
-    // Reverse animation sequence
+    console.log('🔽 Hiding search tab - Reverse animation...');
+    
+    // Reverse animation sequence (opposite of showSearchTab)
+    
+    // Step 1: Close search panel (scale down) - 600ms
+    console.log('📉 Closing panel...');
     elements.searchTab.classList.remove('open');
     
+    // Step 2: After panel closes, shrink search bar - 700ms
     setTimeout(() => {
+        console.log('🔽 Shrinking search bar...');
         elements.initialHome.classList.remove('search-mode');
-        elements.initialHome.classList.remove('animating');
         
-        if (!state.selectedLocation) {
-            state.currentView = 'initial';
-        }
-    }, 300);
+        // Step 3: After search bar shrinks, fade in logo and explore button - 400ms
+        setTimeout(() => {
+            console.log('✨ Fading in home elements...');
+            elements.initialHome.classList.remove('animating');
+            
+            if (!state.selectedLocation) {
+                state.currentView = 'initial';
+            }
+            console.log('✅ Search tab fully hidden');
+        }, 700); // search bar shrink animation time
+        
+    }, 600); // panel close animation time
 }
 
 // ==================== SEARCH FUNCTIONALITY ====================
@@ -233,7 +333,7 @@ function selectLocation(locationId) {
         // Don't hide search tab, just reload locations for end point
         loadAllLocations();
         
-    } else {
+            } else {
         state.endPoint = location;
         if (elements.endPointDisplay) {
             elements.endPointDisplay.textContent = location.name;
@@ -242,45 +342,72 @@ function selectLocation(locationId) {
             elements.sidePanelEndName.textContent = location.name;
         }
         
-        // Hide search tab
-        hideSearchTab();
-        
         // Show map with route if both points selected
         if (state.endPoint && state.startPoint) {
-            showMapWithRoute();
+            // Smooth transition sequence
+            transitionToMapView();
         }
     }
 }
 
+function transitionToMapView() {
+    console.log('🎬 Starting transition to map view...');
+    
+    // Step 1: Add closing class to fade panel content
+    console.log('📉 Step 1: Fading panel content...');
+    elements.searchTab.classList.add('closing');
+    
+    // Step 2: After content fade, close panel (scale up - reverse)
+    setTimeout(() => {
+        console.log('⬆️ Step 2: Closing panel upwards...');
+        elements.searchTab.classList.remove('open');
+        
+        // Step 3: After panel closes, immediately show map
+        setTimeout(() => {
+            console.log('🗺️ Step 3: Showing map...');
+            
+            // Hide home screen immediately
+            elements.initialHome.style.transition = 'none';
+            elements.initialHome.style.opacity = '0';
+            elements.initialHome.style.visibility = 'hidden';
+            elements.initialHome.style.pointerEvents = 'none';
+            elements.initialHome.classList.remove('search-mode');
+            elements.initialHome.classList.remove('animating');
+            elements.searchTab.classList.remove('closing');
+            
+            // Update side panel data
+            if (elements.sidePanelStartName) {
+                elements.sidePanelStartName.textContent = state.startPoint.name;
+            }
+            if (elements.sidePanelEndName) {
+                elements.sidePanelEndName.textContent = state.endPoint.name;
+            }
+            if (elements.sidePanelStartFloor) {
+                elements.sidePanelStartFloor.textContent = state.startPoint.floor;
+            }
+            if (elements.sidePanelEndFloor) {
+                elements.sidePanelEndFloor.textContent = state.endPoint.floor;
+            }
+            
+            // Generate QR code
+            generateQRCode();
+            
+            // Show side panel
+            if (elements.mapSidePanel) {
+                elements.mapSidePanel.classList.remove('hidden');
+            }
+            
+            state.currentView = 'map';
+            console.log('✅ Transition complete!');
+            
+        }, 650); // Wait for panel close animation (600ms + 50ms buffer)
+        
+    }, 300); // Wait for content fade
+}
+
 function showMapWithRoute() {
-    // Hide initial home
-    elements.initialHome.style.opacity = '0';
-    elements.initialHome.style.visibility = 'hidden';
-    elements.initialHome.style.pointerEvents = 'none';
-    
-    // Show side panel
-    if (elements.mapSidePanel) {
-        elements.mapSidePanel.classList.remove('hidden');
-    }
-    
-    // Update side panel
-    if (elements.sidePanelStartName) {
-        elements.sidePanelStartName.textContent = state.startPoint.name;
-    }
-    if (elements.sidePanelEndName) {
-        elements.sidePanelEndName.textContent = state.endPoint.name;
-    }
-    if (elements.sidePanelStartFloor) {
-        elements.sidePanelStartFloor.textContent = state.startPoint.floor;
-    }
-    if (elements.sidePanelEndFloor) {
-        elements.sidePanelEndFloor.textContent = state.endPoint.floor;
-    }
-    
-    // Generate QR code
-    generateQRCode();
-    
-    state.currentView = 'map';
+    // Legacy function - redirects to new transition
+    transitionToMapView();
 }
 
 function swapRoutePoints() {
@@ -324,6 +451,38 @@ function changeRouteType(type) {
     console.log('Route type changed to:', type);
 }
 
+function togglePanelSide() {
+    console.log('🔄 Toggling panel side');
+    
+    // Toggle state
+    state.panelSide = state.panelSide === 'left' ? 'right' : 'left';
+    
+    // Update classes
+    if (state.panelSide === 'right') {
+        if (elements.mapSidePanel) {
+            elements.mapSidePanel.classList.add('panel-right');
+        }
+        if (elements.mapContainer) {
+            elements.mapContainer.classList.add('panel-right');
+        }
+        if (elements.panelToggleBtnTop) {
+            elements.panelToggleBtnTop.classList.add('panel-right');
+        }
+    } else {
+        if (elements.mapSidePanel) {
+            elements.mapSidePanel.classList.remove('panel-right');
+        }
+        if (elements.mapContainer) {
+            elements.mapContainer.classList.remove('panel-right');
+        }
+        if (elements.panelToggleBtnTop) {
+            elements.panelToggleBtnTop.classList.remove('panel-right');
+        }
+    }
+    
+    console.log('✅ Panel moved to:', state.panelSide);
+}
+
 function generateQRCode() {
     if (!state.endPoint || !state.startPoint) return;
     
@@ -336,8 +495,23 @@ function generateQRCode() {
 }
 
 function toggleSidePanel() {
+    console.log('🎛️ Toggling side panel');
     if (elements.mapSidePanel) {
-        elements.mapSidePanel.classList.toggle('expanded');
+        const isExpanded = elements.mapSidePanel.classList.contains('expanded');
+        
+        if (isExpanded) {
+            // Closing
+            elements.mapSidePanel.classList.remove('expanded');
+            if (elements.sidePanelSearch) {
+                elements.sidePanelSearch.style.display = 'none';
+            }
+        } else {
+            // Opening
+            elements.mapSidePanel.classList.add('expanded');
+            if (elements.sidePanelSearch) {
+                elements.sidePanelSearch.style.display = 'flex';
+            }
+        }
     }
     if (elements.mapContainer) {
         elements.mapContainer.classList.toggle('panel-expanded');
@@ -345,11 +519,15 @@ function toggleSidePanel() {
 }
 
 function closeSidePanel() {
+    console.log('✖️ Closing side panel');
     if (elements.mapSidePanel) {
         elements.mapSidePanel.classList.remove('expanded');
     }
     if (elements.mapContainer) {
         elements.mapContainer.classList.remove('panel-expanded');
+    }
+    if (elements.sidePanelSearch) {
+        elements.sidePanelSearch.style.display = 'none';
     }
 }
 
@@ -563,23 +741,72 @@ function handleInlineKeyPress(key) {
     } else if (key === 'ABC') {
         toggleKeyboardMode();
         return;
+    } else if (key.startsWith('LANG_')) {
+        const lang = key.replace('LANG_', '');
+        changeKeyboardLanguage(lang);
+        return;
+    } else if (key === 'Space') {
+        state.searchQuery += ' ';
     } else {
-        state.searchQuery += key.toLowerCase();
+        // For Arabic and Chinese, don't convert to lowercase
+        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh') {
+            state.searchQuery += key;
+        } else {
+            state.searchQuery += key.toLowerCase();
+        }
     }
     
-    // Update search placeholder
+        // Update search placeholder
     if (elements.searchPlaceholder) {
+        // Always apply RTL/LTR based on language
+        const isRTL = state.keyboardLanguage === 'ar';
+        elements.searchPlaceholder.style.direction = isRTL ? 'rtl' : 'ltr';
+        elements.searchPlaceholder.style.textAlign = isRTL ? 'right' : 'left';
+        elements.searchPlaceholder.style.unicodeBidi = 'embed';
+        
         if (state.searchQuery) {
             elements.searchPlaceholder.textContent = state.searchQuery;
             elements.searchPlaceholder.style.color = 'var(--text-primary)';
+            console.log('🖊️ Updated text:', state.searchQuery, 'RTL:', isRTL);
         } else {
-            elements.searchPlaceholder.textContent = 'Nereye gitmek istersiniz?';
+            elements.searchPlaceholder.textContent = getPlaceholderText();
             elements.searchPlaceholder.style.color = 'var(--text-light)';
         }
     }
     
     // Auto search
     searchLocations(state.searchQuery);
+}
+
+function getPlaceholderText() {
+    const placeholders = {
+        tr: 'Nereye gitmek istersiniz?',
+        en: 'Where would you like to go?',
+        zh: '您想去哪里？',
+        ar: 'أين تريد أن تذهب؟'
+    };
+    return placeholders[state.keyboardLanguage] || placeholders.tr;
+}
+
+function changeKeyboardLanguage(lang) {
+    console.log('🌍 Changing keyboard language to:', lang);
+    state.keyboardLanguage = lang;
+    state.keyboardMode = 'letters'; // Reset to letters when changing language
+    
+    // Update placeholder and direction immediately
+    if (elements.searchPlaceholder) {
+        const isRTL = lang === 'ar';
+        elements.searchPlaceholder.style.direction = isRTL ? 'rtl' : 'ltr';
+        elements.searchPlaceholder.style.textAlign = isRTL ? 'right' : 'left';
+        elements.searchPlaceholder.style.unicodeBidi = 'embed';
+        
+        if (!state.searchQuery) {
+            elements.searchPlaceholder.textContent = getPlaceholderText();
+        }
+    }
+    
+    renderInlineKeyboard();
+    console.log('✅ Language changed successfully to:', lang);
 }
 
 function toggleKeyboardMode() {
@@ -589,103 +816,138 @@ function toggleKeyboardMode() {
 
 function renderInlineKeyboard() {
     const keyboardContainer = document.querySelector('.inline-keyboard');
-    if (!keyboardContainer) return;
-    
-    if (state.keyboardMode === 'letters') {
-        keyboardContainer.innerHTML = `
-            <div class="keyboard-row">
-                <button class="inline-key" data-key="Q">Q</button>
-                <button class="inline-key" data-key="W">W</button>
-                <button class="inline-key" data-key="E">E</button>
-                <button class="inline-key" data-key="R">R</button>
-                <button class="inline-key" data-key="T">T</button>
-                <button class="inline-key" data-key="Y">Y</button>
-                <button class="inline-key" data-key="U">U</button>
-                <button class="inline-key" data-key="I">I</button>
-                <button class="inline-key" data-key="O">O</button>
-                <button class="inline-key" data-key="P">P</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="inline-key" data-key="A">A</button>
-                <button class="inline-key" data-key="S">S</button>
-                <button class="inline-key" data-key="D">D</button>
-                <button class="inline-key" data-key="F">F</button>
-                <button class="inline-key" data-key="G">G</button>
-                <button class="inline-key" data-key="H">H</button>
-                <button class="inline-key" data-key="J">J</button>
-                <button class="inline-key" data-key="K">K</button>
-                <button class="inline-key" data-key="L">L</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="inline-key special" data-key="123">123</button>
-                <button class="inline-key" data-key="Z">Z</button>
-                <button class="inline-key" data-key="X">X</button>
-                <button class="inline-key" data-key="C">C</button>
-                <button class="inline-key" data-key="V">V</button>
-                <button class="inline-key" data-key="B">B</button>
-                <button class="inline-key" data-key="N">N</button>
-                <button class="inline-key" data-key="M">M</button>
-                <button class="inline-key special" data-key="Backspace">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                        <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-        `;
-    } else {
-        keyboardContainer.innerHTML = `
-            <div class="keyboard-row">
-                <button class="inline-key" data-key="1">1</button>
-                <button class="inline-key" data-key="2">2</button>
-                <button class="inline-key" data-key="3">3</button>
-                <button class="inline-key" data-key="4">4</button>
-                <button class="inline-key" data-key="5">5</button>
-                <button class="inline-key" data-key="6">6</button>
-                <button class="inline-key" data-key="7">7</button>
-                <button class="inline-key" data-key="8">8</button>
-                <button class="inline-key" data-key="9">9</button>
-                <button class="inline-key" data-key="0">0</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="inline-key" data-key="-">-</button>
-                <button class="inline-key" data-key="/">/</button>
-                <button class="inline-key" data-key=":">:</button>
-                <button class="inline-key" data-key=";">;</button>
-                <button class="inline-key" data-key="(">(</button>
-                <button class="inline-key" data-key=")">)</button>
-                <button class="inline-key" data-key="₺">₺</button>
-                <button class="inline-key" data-key="&">&</button>
-                <button class="inline-key" data-key="@">@</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="inline-key special" data-key="ABC">ABC</button>
-                <button class="inline-key" data-key=".">.</button>
-                <button class="inline-key" data-key=",">,</button>
-                <button class="inline-key" data-key="?">?</button>
-                <button class="inline-key" data-key="!">!</button>
-                <button class="inline-key" data-key="'">'</button>
-                <button class="inline-key" data-key='"'>"</button>
-                <button class="inline-key" data-key=" ">Space</button>
-                <button class="inline-key special" data-key="Backspace">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                        <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-        `;
+    if (!keyboardContainer) {
+        console.error('❌ Keyboard container not found!');
+        return;
     }
     
+    console.log('🎹 Rendering keyboard - Language:', state.keyboardLanguage, 'Mode:', state.keyboardMode);
+    
+    let html = '';
+    
+    // Language selector row removed - now using top bar TR/EN toggle
+    
+        if (state.keyboardMode === 'letters') {
+        const layout = keyboardLayouts[state.keyboardLanguage];
+        const isRTL = layout.rtl || false;
+        const hasDualKeys = layout.hasDualKeys || false;
+        
+        // First row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        layout.letters[0].forEach(key => {
+            if (hasDualKeys && key.main) {
+                // Chinese dual key
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                // Normal key
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += '</div>';
+        
+        // Second row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        layout.letters[1].forEach(key => {
+            if (hasDualKeys && key.main) {
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += '</div>';
+        
+        // Third row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        html += '<button class="inline-key special" data-key="123">123</button>';
+        layout.letters[2].forEach(key => {
+            if (hasDualKeys && key.main) {
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += `
+            <button class="inline-key special" data-key="Backspace">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        `;
+        html += '</div>';
+        
+                // Space bar row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+        html += '</div>';
+        
+    } else {
+        const numbers = keyboardLayouts.numbers;
+        
+        // First row - numbers
+        html += '<div class="keyboard-row">';
+        numbers[0].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += '</div>';
+        
+        // Second row - symbols
+        html += '<div class="keyboard-row">';
+        numbers[1].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += '</div>';
+        
+        // Third row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key special" data-key="ABC">ABC</button>';
+        numbers[2].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += `
+            <button class="inline-key special" data-key="Backspace">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        `;
+        html += '</div>';
+        
+        // Space bar row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+        html += '</div>';
+    }
+    
+        keyboardContainer.innerHTML = html;
+    
+    console.log('✅ Keyboard rendered successfully');
+    
     // Re-attach event listeners
-    attachInlineKeyboardListeners();
+    setTimeout(() => {
+        attachInlineKeyboardListeners();
+    }, 0);
 }
 
 function attachInlineKeyboardListeners() {
-    const inlineKeys = document.querySelectorAll('.inline-key');
-    inlineKeys.forEach(key => {
-        key.addEventListener('click', () => {
+    // Attach listeners to all keys (including language buttons)
+    const allKeys = document.querySelectorAll('.inline-key, .keyboard-lang-btn');
+    allKeys.forEach(key => {
+        key.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const keyValue = key.dataset.key;
+            console.log('Key pressed:', keyValue);
             handleInlineKeyPress(keyValue);
         });
     });
@@ -875,6 +1137,13 @@ function initEventListeners() {
         });
     }
     
+    // Panel toggle button (top bar)
+    if (elements.panelToggleBtnTop) {
+        elements.panelToggleBtnTop.addEventListener('click', () => {
+            togglePanelSide();
+        });
+    }
+    
         // QR close
     if (elements.qrCloseBtn) {
         elements.qrCloseBtn.addEventListener('click', () => {
@@ -953,11 +1222,18 @@ function initEventListeners() {
     
     console.log('🏫 Floor selector initialized with', floors.length, 'floors');
     
-    // Language switcher
+    // Language switcher - changes keyboard language
     document.querySelectorAll('.lang-option').forEach(btn => {
         btn.addEventListener('click', () => {
+            const lang = btn.dataset.lang;
+            console.log('🌍 Switching language to:', lang);
+            
+            // Update active state
             document.querySelectorAll('.lang-option').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            
+            // Change keyboard language
+            changeKeyboardLanguage(lang);
         });
     });
 }
@@ -976,6 +1252,7 @@ function resetIdleTimer() {
         state.endPoint = null;
         state.editingPoint = 'start';
         state.currentFloor = 0;
+        state.panelSide = 'left';
         
         // Reset displays
         if (elements.startPointDisplay) elements.startPointDisplay.textContent = 'Seçiniz';
@@ -992,9 +1269,20 @@ function resetIdleTimer() {
         closeFloorDropdown();
         closeSidePanel();
         
-        // Hide side panel
+        // Hide side panel and search
         if (elements.mapSidePanel) {
             elements.mapSidePanel.classList.add('hidden');
+            elements.mapSidePanel.classList.remove('expanded');
+            elements.mapSidePanel.classList.remove('panel-right'); // Reset panel position
+        }
+        if (elements.mapContainer) {
+            elements.mapContainer.classList.remove('panel-right'); // Reset container
+        }
+        if (elements.panelToggleBtnTop) {
+            elements.panelToggleBtnTop.classList.remove('panel-right'); // Reset toggle button
+        }
+        if (elements.sidePanelSearch) {
+            elements.sidePanelSearch.style.display = 'none';
         }
         
         showInitialHome();
@@ -1020,11 +1308,11 @@ function init() {
     initIdleDetection();
     showInitialHome();
     
-        // Initialize floor selector
+    // Initialize floor selector
     changeFloor(0);
     
-    // Initialize keyboard
-    renderInlineKeyboard();
+    // Note: Keyboard will be rendered when search tab opens
+    console.log('✅ Initialization complete. Keyboard will render when search panel opens.');
 }
 
 // Start application
