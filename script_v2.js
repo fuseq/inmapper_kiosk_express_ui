@@ -2,6 +2,7 @@
 const state = {
     currentView: 'initial', // 'initial', 'search', 'route'
     searchQuery: '',
+    sidePanelSearchQuery: '', // Search query for side panel
     selectedCategory: 'all',
     selectedLocation: null,
     startPoint: null,
@@ -11,7 +12,7 @@ const state = {
     keyboardLanguage: 'tr', // 'tr', 'en', 'zh', 'ar'
     keyboardMode: 'letters', // 'letters' or 'numbers'
     routeType: 'normal', // 'normal' or 'accessible'
-    panelSide: 'left', // 'left' or 'right' - which side the panel is on
+    panelSide: 'right', // 'left' or 'right' - which side the panel is on (default: right)
 };
 
 // Keyboard layouts
@@ -155,7 +156,9 @@ const elements = {
     sidePanelQRCode: document.getElementById('sidePanelQRCode'),
     sidePanelSearch: document.getElementById('sidePanelSearch'),
     sidePanelSearchClose: document.getElementById('sidePanelSearchClose'),
-        sidePanelResults: document.getElementById('sidePanelResults'),
+    sidePanelSearchInput: document.getElementById('sidePanelSearchInput'),
+    sidePanelSearchClear: document.getElementById('sidePanelSearchClear'),
+    sidePanelResults: document.getElementById('sidePanelResults'),
     mapContainer: document.getElementById('mapContainer'),
     sidePanelStartFloor: document.getElementById('sidePanelStartFloor'),
     sidePanelEndFloor: document.getElementById('sidePanelEndFloor'),
@@ -169,6 +172,19 @@ const elements = {
     
     keyboard: document.getElementById('keyboard'),
     keyboardDisplay: document.getElementById('keyboardDisplay'),
+    
+    // Side keyboard elements
+    sideKeyboardOverlay: document.getElementById('sideKeyboardOverlay'),
+    sideKeyboardSheet: document.getElementById('sideKeyboardSheet'),
+    sideInlineKeyboard: document.getElementById('sideInlineKeyboard'),
+    
+    // Map floor selector
+    mapFloorSelectorCompact: document.getElementById('mapFloorSelectorCompact'),
+    mapFloorUpBtn: document.getElementById('mapFloorUpBtn'),
+    mapFloorDownBtn: document.getElementById('mapFloorDownBtn'),
+    mapFloorDisplayBtn: document.getElementById('mapFloorDisplayBtn'),
+    mapFloorDropdown: document.getElementById('mapFloorDropdown'),
+    mapCurrentFloorName: document.getElementById('mapCurrentFloorName'),
 };
 
 // ==================== VIEW MANAGEMENT ====================
@@ -180,10 +196,20 @@ function showInitialHome() {
     elements.initialHome.classList.remove('search-mode');
     elements.searchTab.classList.remove('open');
     elements.routeInfoOverlay.classList.remove('visible');
+    
+    // Hide floor selector on home screen
+    if (elements.mapFloorSelectorCompact) {
+        elements.mapFloorSelectorCompact.style.display = 'none';
+    }
 }
 
 function showSearchTab() {
     state.currentView = 'search';
+    
+    // Hide floor selector during search
+    if (elements.mapFloorSelectorCompact) {
+        elements.mapFloorSelectorCompact.style.display = 'none';
+    }
     
     // Step 1: Add animating class to keep logo/button visible during animation
     elements.initialHome.classList.add('animating');
@@ -398,6 +424,12 @@ function transitionToMapView() {
             }
             
             state.currentView = 'map';
+            
+            // Show floor selector on map view
+            if (elements.mapFloorSelectorCompact) {
+                elements.mapFloorSelectorCompact.style.display = 'flex';
+            }
+            
             console.log('✅ Transition complete!');
             
         }, 650); // Wait for panel close animation (600ms + 50ms buffer)
@@ -510,6 +542,8 @@ function toggleSidePanel() {
             elements.mapSidePanel.classList.add('expanded');
             if (elements.sidePanelSearch) {
                 elements.sidePanelSearch.style.display = 'flex';
+                // Clear search when opening
+                clearSidePanelSearch();
             }
         }
     }
@@ -529,14 +563,220 @@ function closeSidePanel() {
     if (elements.sidePanelSearch) {
         elements.sidePanelSearch.style.display = 'none';
     }
+    // Hide keyboard when closing side panel
+    hideSideKeyboard();
 }
 
 function loadSidePanelLocations() {
-    const filteredLocations = state.selectedCategory === 'all' 
-        ? locations 
-        : locations.filter(loc => loc.type === state.selectedCategory);
+    let filteredLocations = locations;
+    
+    // Filter by category
+    if (state.selectedCategory !== 'all') {
+        filteredLocations = filteredLocations.filter(loc => loc.type === state.selectedCategory);
+    }
+    
+    // Filter by search query
+    if (state.sidePanelSearchQuery && state.sidePanelSearchQuery.trim() !== '') {
+        const query = state.sidePanelSearchQuery.toLowerCase();
+        filteredLocations = filteredLocations.filter(loc => 
+            loc.name.toLowerCase().includes(query) ||
+            loc.category.toLowerCase().includes(query)
+        );
+    }
     
     displaySidePanelLocations(filteredLocations);
+}
+
+function clearSidePanelSearch() {
+    state.sidePanelSearchQuery = '';
+    if (elements.sidePanelSearchInput) elements.sidePanelSearchInput.value = '';
+    if (elements.sidePanelSearchClear) elements.sidePanelSearchClear.classList.remove('visible');
+    loadSidePanelLocations();
+}
+
+// ==================== SIDE KEYBOARD FUNCTIONS ====================
+function showSideKeyboard() {
+    if (elements.sideKeyboardOverlay) {
+        elements.sideKeyboardOverlay.classList.add('active');
+        renderSideKeyboard();
+    }
+}
+
+function hideSideKeyboard() {
+    if (elements.sideKeyboardOverlay) {
+        elements.sideKeyboardOverlay.classList.remove('active');
+    }
+}
+
+function handleSideKeyPress(key) {
+    if (key === 'Backspace') {
+        state.sidePanelSearchQuery = state.sidePanelSearchQuery.slice(0, -1);
+    } else if (key === '123' || key === 'ABC') {
+        toggleKeyboardMode();
+        renderSideKeyboard();
+        return;
+    } else if (key.startsWith('LANG_')) {
+        const lang = key.replace('LANG_', '');
+        changeKeyboardLanguage(lang);
+        renderSideKeyboard();
+        return;
+    } else if (key === 'Space') {
+        state.sidePanelSearchQuery += ' ';
+    } else {
+        // For Arabic and Chinese, don't convert to lowercase
+        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh') {
+            state.sidePanelSearchQuery += key;
+        } else {
+            state.sidePanelSearchQuery += key.toLowerCase();
+        }
+    }
+    
+    // Update input value
+    if (elements.sidePanelSearchInput) {
+        elements.sidePanelSearchInput.value = state.sidePanelSearchQuery;
+    }
+    
+    // Show/hide clear button
+    if (elements.sidePanelSearchClear) {
+        elements.sidePanelSearchClear.classList.toggle('visible', state.sidePanelSearchQuery.length > 0);
+    }
+    
+    // Auto search
+    loadSidePanelLocations();
+}
+
+function renderSideKeyboard() {
+    const keyboardContainer = elements.sideInlineKeyboard;
+    if (!keyboardContainer) {
+        console.error('❌ Side keyboard container not found!');
+        return;
+    }
+    
+    console.log('🎹 Rendering side keyboard - Language:', state.keyboardLanguage, 'Mode:', state.keyboardMode);
+    
+    let html = '';
+    
+    if (state.keyboardMode === 'letters') {
+        const layout = keyboardLayouts[state.keyboardLanguage];
+        const isRTL = layout.rtl || false;
+        const hasDualKeys = layout.hasDualKeys || false;
+        
+        // First row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        layout.letters[0].forEach(key => {
+            if (hasDualKeys && key.main) {
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += '</div>';
+        
+        // Second row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        layout.letters[1].forEach(key => {
+            if (hasDualKeys && key.main) {
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += '</div>';
+        
+        // Third row
+        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+        html += '<button class="inline-key special" data-key="123">123</button>';
+        layout.letters[2].forEach(key => {
+            if (hasDualKeys && key.main) {
+                html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                    <span class="key-main">${key.main}</span>
+                    <span class="key-sub">${key.sub}</span>
+                </button>`;
+            } else {
+                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+            }
+        });
+        html += `
+            <button class="inline-key special" data-key="Backspace">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        `;
+        html += '</div>';
+        
+        // Space bar row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+        html += '</div>';
+        
+    } else {
+        const numbers = keyboardLayouts.numbers;
+        
+        // First row - numbers
+        html += '<div class="keyboard-row">';
+        numbers[0].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += '</div>';
+        
+        // Second row - symbols
+        html += '<div class="keyboard-row">';
+        numbers[1].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += '</div>';
+        
+        // Third row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key special" data-key="ABC">ABC</button>';
+        numbers[2].forEach(key => {
+            html += `<button class="inline-key" data-key="${key}">${key}</button>`;
+        });
+        html += `
+            <button class="inline-key special" data-key="Backspace">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        `;
+        html += '</div>';
+        
+        // Space bar row
+        html += '<div class="keyboard-row">';
+        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+        html += '</div>';
+    }
+    
+    keyboardContainer.innerHTML = html;
+    
+    console.log('✅ Side keyboard rendered successfully');
+    
+    // Re-attach event listeners
+    setTimeout(() => {
+        attachSideKeyboardListeners();
+    }, 0);
+}
+
+function attachSideKeyboardListeners() {
+    const allKeys = elements.sideInlineKeyboard.querySelectorAll('.inline-key');
+    allKeys.forEach(key => {
+        key.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const keyValue = key.dataset.key;
+            console.log('Side key pressed:', keyValue);
+            handleSideKeyPress(keyValue);
+        });
+    });
 }
 
 function displaySidePanelLocations(locationsList) {
@@ -591,6 +831,9 @@ function selectLocationFromSidePanel(locationId) {
     // Regenerate QR code
     generateQRCode();
     
+    // Hide keyboard
+    hideSideKeyboard();
+    
     // Close side panel
     closeSidePanel();
 }
@@ -609,8 +852,18 @@ function changeFloor(floorId) {
             elements.currentFloorName.textContent = floor.name;
         }
         
+        // Update map floor display
+        if (elements.mapCurrentFloorName) {
+            elements.mapCurrentFloorName.textContent = floor.name;
+        }
+        
         // Update dropdown active state
         document.querySelectorAll('.floor-dropdown-item').forEach(item => {
+            item.classList.toggle('active', parseInt(item.dataset.floor) === floorId);
+        });
+        
+        // Update map dropdown active state
+        document.querySelectorAll('.map-floor-dropdown-item').forEach(item => {
             item.classList.toggle('active', parseInt(item.dataset.floor) === floorId);
         });
         
@@ -621,10 +874,6 @@ function changeFloor(floorId) {
             console.log('🗺️ Map updated to:', mapSvg.src);
         }
         
-        // Update main floor selector buttons
-        document.querySelectorAll('.floor-btn').forEach(btn => {
-            btn.classList.toggle('active', parseInt(btn.dataset.floor) === floorId);
-        });
     } else {
         console.error('❌ Floor not found:', floorId);
     }
@@ -658,6 +907,18 @@ function toggleFloorDropdown() {
 
 function closeFloorDropdown() {
     elements.floorSelectorCompact.classList.remove('open');
+}
+
+function toggleMapFloorDropdown() {
+    if (elements.mapFloorSelectorCompact) {
+        elements.mapFloorSelectorCompact.classList.toggle('open');
+    }
+}
+
+function closeMapFloorDropdown() {
+    if (elements.mapFloorSelectorCompact) {
+        elements.mapFloorSelectorCompact.classList.remove('open');
+    }
 }
 
 // ==================== CATEGORY FILTERING ====================
@@ -1021,6 +1282,11 @@ function initEventListeners() {
             elements.initialHome.style.visibility = 'hidden';
             elements.initialHome.style.pointerEvents = 'none';
             state.currentView = 'map';
+            
+            // Show floor selector on map view
+            if (elements.mapFloorSelectorCompact) {
+                elements.mapFloorSelectorCompact.style.display = 'flex';
+            }
         });
     }
     
@@ -1106,7 +1372,36 @@ function initEventListeners() {
         });
     }
     
-        // Side panel category filters
+    // Side panel search input
+    if (elements.sidePanelSearchInput) {
+        // Show keyboard on click/focus
+        elements.sidePanelSearchInput.addEventListener('click', () => {
+            showSideKeyboard();
+        });
+        
+        elements.sidePanelSearchInput.addEventListener('focus', () => {
+            showSideKeyboard();
+        });
+        
+        elements.sidePanelSearchInput.addEventListener('input', (e) => {
+            state.sidePanelSearchQuery = e.target.value;
+            loadSidePanelLocations();
+            
+            // Show/hide clear button
+            if (elements.sidePanelSearchClear) {
+                elements.sidePanelSearchClear.classList.toggle('visible', state.sidePanelSearchQuery.length > 0);
+            }
+        });
+    }
+    
+    // Side panel search clear
+    if (elements.sidePanelSearchClear) {
+        elements.sidePanelSearchClear.addEventListener('click', () => {
+            clearSidePanelSearch();
+        });
+    }
+    
+    // Side panel category filters
     document.querySelectorAll('.side-category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.side-category-btn').forEach(b => b.classList.remove('active'));
@@ -1167,49 +1462,66 @@ function initEventListeners() {
         });
     });
     
-        // Floor selector compact - arrows
+    // Search tab floor selector (compact)
     if (elements.floorUpBtn) {
-        console.log('✅ Floor Up button found');
         elements.floorUpBtn.addEventListener('click', (e) => {
-            console.log('👆 Floor Up clicked');
             e.stopPropagation();
             goToNextFloor();
         });
-    } else {
-        console.error('❌ Floor Up button not found');
     }
     
     if (elements.floorDownBtn) {
-        console.log('✅ Floor Down button found');
         elements.floorDownBtn.addEventListener('click', (e) => {
-            console.log('👇 Floor Down clicked');
             e.stopPropagation();
             goToPreviousFloor();
         });
-    } else {
-        console.error('❌ Floor Down button not found');
     }
     
-    // Floor selector compact - display button (toggle dropdown)
     if (elements.floorDisplayBtn) {
-        console.log('✅ Floor Display button found');
         elements.floorDisplayBtn.addEventListener('click', (e) => {
-            console.log('👆 Floor Display clicked');
             e.stopPropagation();
             toggleFloorDropdown();
         });
-    } else {
-        console.error('❌ Floor Display button not found');
     }
     
-    // Floor dropdown items
     document.querySelectorAll('.floor-dropdown-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.stopPropagation();
             const floorId = parseInt(item.dataset.floor);
-            console.log('🎯 Dropdown item clicked:', floorId);
             changeFloor(floorId);
             closeFloorDropdown();
+        });
+    });
+    
+    // Map floor selector (bottom right)
+    if (elements.mapFloorUpBtn) {
+        elements.mapFloorUpBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToNextFloor();
+        });
+    }
+    
+    if (elements.mapFloorDownBtn) {
+        elements.mapFloorDownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToPreviousFloor();
+        });
+    }
+    
+    if (elements.mapFloorDisplayBtn) {
+        elements.mapFloorDisplayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMapFloorDropdown();
+        });
+    }
+    
+    // Map floor dropdown items
+    document.querySelectorAll('.map-floor-dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const floorId = parseInt(item.dataset.floor);
+            changeFloor(floorId);
+            closeMapFloorDropdown();
         });
     });
     
@@ -1217,6 +1529,9 @@ function initEventListeners() {
     document.addEventListener('click', (e) => {
         if (elements.floorSelectorCompact && !elements.floorSelectorCompact.contains(e.target)) {
             closeFloorDropdown();
+        }
+        if (elements.mapFloorSelectorCompact && !elements.mapFloorSelectorCompact.contains(e.target)) {
+            closeMapFloorDropdown();
         }
     });
     
@@ -1236,6 +1551,14 @@ function initEventListeners() {
             changeKeyboardLanguage(lang);
         });
     });
+    
+    // Side keyboard handle - close on click/swipe down
+    const keyboardHandle = document.querySelector('.side-keyboard-handle');
+    if (keyboardHandle) {
+        keyboardHandle.addEventListener('click', () => {
+            hideSideKeyboard();
+        });
+    }
 }
 
 // ==================== IDLE TIMEOUT ====================
@@ -1252,7 +1575,7 @@ function resetIdleTimer() {
         state.endPoint = null;
         state.editingPoint = 'start';
         state.currentFloor = 0;
-        state.panelSide = 'left';
+        state.panelSide = 'right';
         
         // Reset displays
         if (elements.startPointDisplay) elements.startPointDisplay.textContent = 'Seçiniz';
@@ -1267,19 +1590,20 @@ function resetIdleTimer() {
         hideKeyboard();
         hideQRCode();
         closeFloorDropdown();
+        closeMapFloorDropdown();
         closeSidePanel();
         
         // Hide side panel and search
         if (elements.mapSidePanel) {
             elements.mapSidePanel.classList.add('hidden');
             elements.mapSidePanel.classList.remove('expanded');
-            elements.mapSidePanel.classList.remove('panel-right'); // Reset panel position
+            elements.mapSidePanel.classList.add('panel-right'); // Reset to default right position
         }
         if (elements.mapContainer) {
-            elements.mapContainer.classList.remove('panel-right'); // Reset container
+            elements.mapContainer.classList.add('panel-right'); // Reset to default right position
         }
         if (elements.panelToggleBtnTop) {
-            elements.panelToggleBtnTop.classList.remove('panel-right'); // Reset toggle button
+            elements.panelToggleBtnTop.classList.add('panel-right'); // Reset to default right position
         }
         if (elements.sidePanelSearch) {
             elements.sidePanelSearch.style.display = 'none';
@@ -1308,11 +1632,17 @@ function init() {
     initIdleDetection();
     showInitialHome();
     
-    // Initialize floor selector
+    // Initialize floor selector (will be hidden by showInitialHome)
     changeFloor(0);
     
-    // Note: Keyboard will be rendered when search tab opens
-    console.log('✅ Initialization complete. Keyboard will render when search panel opens.');
+    // Ensure floor selector is hidden on init
+    if (elements.mapFloorSelectorCompact) {
+        elements.mapFloorSelectorCompact.style.display = 'none';
+    }
+    
+    // Note: Panel is set to right by default in HTML (panel-right class)
+    // Keyboard will be rendered when search tab opens
+    console.log('✅ Initialization complete. Panel position: right (default)');
 }
 
 // Start application

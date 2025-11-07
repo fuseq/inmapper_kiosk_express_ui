@@ -23,7 +23,7 @@
             <span class="location-text">ZORLU CENTER İSTANBUL</span>
         </div>
         <div class="info-right">
-            <button class="panel-toggle-btn-top" id="panelToggleBtnTop" title="Paneli Taşı">
+            <button class="panel-toggle-btn-top panel-right" id="panelToggleBtnTop" title="Paneli Taşı">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <path d="M7 16L3 12M3 12L7 8M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -204,7 +204,7 @@
 
         <!-- Map Panel (Background) -->
         <div class="map-panel visible" id="mapPanel">
-            <div class="map-container" id="mapContainer">
+            <div class="map-container panel-right" id="mapContainer">
                 <!-- Back to Home Button -->
                 <button class="map-back-btn" id="mapBackBtn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -216,18 +216,47 @@
                 <!-- SVG Floor Map -->
                 <img src="floors/0.svg" alt="Floor Map" class="floor-map-svg" id="floorMapSvg" />
                 
-                <!-- Floor Selector -->
-                <div class="floor-selector">
-                    <button class="floor-btn" data-floor="-2">-2</button>
-                    <button class="floor-btn" data-floor="-1">-1</button>
-                    <button class="floor-btn active" data-floor="0">Z</button>
-                    <button class="floor-btn" data-floor="1">1</button>
-                    <button class="floor-btn" data-floor="2">2</button>
+                <!-- Floor Selector Compact (Bottom Right) -->
+                <div class="map-floor-selector-compact" id="mapFloorSelectorCompact">
+                    <button class="map-floor-display-btn" id="mapFloorDisplayBtn">
+                        <span class="map-floor-name" id="mapCurrentFloorName">Zemin Kat</span>
+                    </button>
+                    <div class="map-floor-arrows-group">
+                        <button class="map-floor-arrow-btn" id="mapFloorUpBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="map-floor-arrow-btn" id="mapFloorDownBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="map-floor-dropdown" id="mapFloorDropdown">
+                        <div class="map-floor-dropdown-item" data-floor="2">
+                            <span class="map-floor-label">2. Kat</span>
+                        </div>
+                        <div class="map-floor-dropdown-item" data-floor="1">
+                            <span class="map-floor-label">1. Kat</span>
+                        </div>
+                        <div class="map-floor-dropdown-item active" data-floor="0">
+                            <span class="map-floor-label">Zemin Kat</span>
+                        </div>
+                        <div class="map-floor-dropdown-item" data-floor="-1">
+                            <span class="map-floor-label">Otopark 1</span>
+                        </div>
+                        <div class="map-floor-dropdown-item" data-floor="-2">
+                            <span class="map-floor-label">Otopark 2</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <!-- Side Panel for Route Info -->
-            <div class="map-side-panel hidden" id="mapSidePanel">
+            <div class="map-side-panel panel-right hidden" id="mapSidePanel">
             <div class="side-panel-content">
                 <!-- Route Points Header -->
                 <div class="side-panel-header">
@@ -238,8 +267,10 @@
                                 </svg>
                             </div>
                             <div class="side-route-text">
-                                <span class="side-route-label">BAŞLANGIÇ</span>
-                                <span class="side-route-name" id="sidePanelStartName">Seçiniz</span>
+                                <div>
+                                    <span class="side-route-label">BAŞLANGIÇ</span>
+                                    <span class="side-route-name" id="sidePanelStartName">Seçiniz</span>
+                                </div>
                                 <span class="side-route-floor" id="sidePanelStartFloor">Floor 0</span>
                             </div>
                             <button class="side-route-swap" id="routeSwapBtn">
@@ -258,8 +289,10 @@
                                 </svg>
                             </div>
                             <div class="side-route-text">
-                                <span class="side-route-label">VARIŞ</span>
-                                <span class="side-route-name" id="sidePanelEndName">Seçiniz</span>
+                                <div>
+                                    <span class="side-route-label">VARIŞ</span>
+                                    <span class="side-route-name" id="sidePanelEndName">Seçiniz</span>
+                                </div>
                                 <span class="side-route-floor" id="sidePanelEndFloor">Floor 1</span>
                             </div>
                         </div>
@@ -421,6 +454,19 @@
                         </button>
                     </div>
                     
+                    <!-- Search Input -->
+                    <div class="side-search-input-container">
+                        <svg class="side-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" class="side-search-input" id="sidePanelSearchInput" placeholder="Ara...">
+                        <button class="side-search-clear" id="sidePanelSearchClear">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
                     <!-- Category Filters -->
                     <div class="side-category-filters">
                         <button class="side-category-btn active" data-category="all">Tümü</button>
@@ -453,6 +499,17 @@
                 <div class="qr-code-container">
                     <img id="qrCodeImage" src="" alt="QR Code">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel Keyboard Bottom Sheet -->
+    <div class="side-keyboard-overlay" id="sideKeyboardOverlay">
+        <div class="side-keyboard-sheet" id="sideKeyboardSheet">
+            <div class="side-keyboard-handle"></div>
+            <div class="side-keyboard-content">
+                <!-- Inline keyboard will be rendered here -->
+                <div class="side-inline-keyboard" id="sideInlineKeyboard"></div>
             </div>
         </div>
     </div>
