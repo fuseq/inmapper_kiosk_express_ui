@@ -13,6 +13,7 @@ const state = {
     keyboardMode: 'letters', // 'letters' or 'numbers'
     routeType: 'normal', // 'normal' or 'accessible'
     panelSide: 'right', // 'left' or 'right' - which side the panel is on (default: right)
+    kioskLocation: { id: 0, name: 'Bulunduğunuz Konum', category: 'Kiosk', floor: 'Zemin Kat', type: 'kiosk', icon: '📍' }, // Default kiosk location
 };
 
 // Keyboard layouts
@@ -149,20 +150,15 @@ const elements = {
         mapPanel: document.getElementById('mapPanel'),
     mapSidePanel: document.getElementById('mapSidePanel'),
     panelToggleBtnTop: document.getElementById('panelToggleBtnTop'),
+    sidePanelSearchBar: document.getElementById('sidePanelSearchBar'),
     sidePanelStartPoint: document.getElementById('sidePanelStartPoint'),
     sidePanelEndPoint: document.getElementById('sidePanelEndPoint'),
     sidePanelStartName: document.getElementById('sidePanelStartName'),
     sidePanelEndName: document.getElementById('sidePanelEndName'),
     sidePanelQRCode: document.getElementById('sidePanelQRCode'),
-    sidePanelSearch: document.getElementById('sidePanelSearch'),
-    sidePanelSearchClose: document.getElementById('sidePanelSearchClose'),
-    sidePanelSearchInput: document.getElementById('sidePanelSearchInput'),
-    sidePanelSearchClear: document.getElementById('sidePanelSearchClear'),
-    sidePanelResults: document.getElementById('sidePanelResults'),
     mapContainer: document.getElementById('mapContainer'),
     sidePanelStartFloor: document.getElementById('sidePanelStartFloor'),
     sidePanelEndFloor: document.getElementById('sidePanelEndFloor'),
-    routeSwapBtn: document.getElementById('routeSwapBtn'),
     routeTypeNormal: document.getElementById('routeTypeNormal'),
     routeTypeAccessible: document.getElementById('routeTypeAccessible'),
     
@@ -378,6 +374,11 @@ function selectLocation(locationId) {
 
 function transitionToMapView() {
     console.log('🎬 Starting transition to map view...');
+    
+    // Ensure start point is kiosk location
+    if (!state.startPoint) {
+        state.startPoint = state.kioskLocation;
+    }
     
     // Step 1: Add closing class to fade panel content
     console.log('📉 Step 1: Fading panel content...');
@@ -1259,13 +1260,18 @@ function initEventListeners() {
         showSearchTab();
     });
     
-        // Route point selectors
-    if (elements.startPointSelector) {
-        elements.startPointSelector.addEventListener('click', () => {
-            selectEditingPoint('start');
+    // Category cards on home screen
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const category = card.dataset.category;
+            selectCategory(category);
             showSearchTab();
         });
-    }
+    });
+    
+        // Route point selectors
+    // Start point is always kiosk location, so we disable its click
+    // Only end point can be selected
     
     if (elements.endPointSelector) {
         elements.endPointSelector.addEventListener('click', () => {
@@ -1348,74 +1354,53 @@ function initEventListeners() {
     attachInlineKeyboardListeners();
     console.log('✅ Inline keyboard initialized');
     
-            // Side panel point selectors
-    if (elements.sidePanelStartPoint) {
-        elements.sidePanelStartPoint.addEventListener('click', () => {
-            state.editingPoint = 'start';
-            toggleSidePanel();
-            loadSidePanelLocations();
+            // Side panel search bar - opens search tab for destination selection
+    if (elements.sidePanelSearchBar) {
+        elements.sidePanelSearchBar.addEventListener('click', () => {
+            console.log('🔍 Side panel search bar clicked - opening search tab...');
+            
+            // Set start point to kiosk location automatically
+            state.startPoint = state.kioskLocation;
+            state.editingPoint = 'end'; // Only editing end point
+            
+            // Show initial home with search tab
+            elements.initialHome.style.transition = 'opacity 0.3s ease';
+            elements.initialHome.style.opacity = '1';
+            elements.initialHome.style.visibility = 'visible';
+            elements.initialHome.style.pointerEvents = 'auto';
+            
+            // Hide side panel
+            if (elements.mapSidePanel) {
+                elements.mapSidePanel.classList.add('hidden');
+            }
+            
+            // Open search tab after a short delay
+            setTimeout(() => {
+                showSearchTab();
+            }, 100);
         });
     }
     
+    // Side panel end point - clicking opens search for new destination
     if (elements.sidePanelEndPoint) {
         elements.sidePanelEndPoint.addEventListener('click', () => {
-            state.editingPoint = 'end';
-            toggleSidePanel();
-            loadSidePanelLocations();
-        });
-    }
-    
-    // Side panel search close
-    if (elements.sidePanelSearchClose) {
-        elements.sidePanelSearchClose.addEventListener('click', () => {
-            closeSidePanel();
-        });
-    }
-    
-    // Side panel search input
-    if (elements.sidePanelSearchInput) {
-        // Show keyboard on click/focus
-        elements.sidePanelSearchInput.addEventListener('click', () => {
-            showSideKeyboard();
-        });
-        
-        elements.sidePanelSearchInput.addEventListener('focus', () => {
-            showSideKeyboard();
-        });
-        
-        elements.sidePanelSearchInput.addEventListener('input', (e) => {
-            state.sidePanelSearchQuery = e.target.value;
-            loadSidePanelLocations();
+            console.log('📍 End point clicked - opening search for new destination...');
             
-            // Show/hide clear button
-            if (elements.sidePanelSearchClear) {
-                elements.sidePanelSearchClear.classList.toggle('visible', state.sidePanelSearchQuery.length > 0);
+            // Show initial home with search tab
+            elements.initialHome.style.transition = 'opacity 0.3s ease';
+            elements.initialHome.style.opacity = '1';
+            elements.initialHome.style.visibility = 'visible';
+            elements.initialHome.style.pointerEvents = 'auto';
+            
+            // Hide side panel
+            if (elements.mapSidePanel) {
+                elements.mapSidePanel.classList.add('hidden');
             }
-        });
-    }
-    
-    // Side panel search clear
-    if (elements.sidePanelSearchClear) {
-        elements.sidePanelSearchClear.addEventListener('click', () => {
-            clearSidePanelSearch();
-        });
-    }
-    
-    // Side panel category filters
-    document.querySelectorAll('.side-category-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.side-category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            state.selectedCategory = btn.dataset.category;
-            loadSidePanelLocations();
-        });
-    });
-    
-    // Route swap button
-    if (elements.routeSwapBtn) {
-        elements.routeSwapBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            swapRoutePoints();
+            
+            // Open search tab after a short delay
+            setTimeout(() => {
+                showSearchTab();
+            }, 100);
         });
     }
     
@@ -1571,32 +1556,30 @@ function resetIdleTimer() {
         // Reset to initial state
         state.searchQuery = '';
         state.selectedLocation = null;
-        state.startPoint = null;
+        state.startPoint = state.kioskLocation; // Set to kiosk location
         state.endPoint = null;
-        state.editingPoint = 'start';
+        state.editingPoint = 'end'; // Always editing end point (destination)
         state.currentFloor = 0;
         state.panelSide = 'right';
         
         // Reset displays
-        if (elements.startPointDisplay) elements.startPointDisplay.textContent = 'Seçiniz';
+        if (elements.startPointDisplay) elements.startPointDisplay.textContent = state.kioskLocation.name;
         if (elements.endPointDisplay) elements.endPointDisplay.textContent = 'Seçiniz';
-        if (elements.sidePanelStartName) elements.sidePanelStartName.textContent = 'Seçiniz';
+        if (elements.sidePanelStartName) elements.sidePanelStartName.textContent = state.kioskLocation.name;
         if (elements.sidePanelEndName) elements.sidePanelEndName.textContent = 'Seçiniz';
         
-        // Reset active state
-        if (elements.startPointSelector) elements.startPointSelector.classList.add('active');
-        if (elements.endPointSelector) elements.endPointSelector.classList.remove('active');
+        // Reset active state - end point should be active
+        if (elements.startPointSelector) elements.startPointSelector.classList.remove('active');
+        if (elements.endPointSelector) elements.endPointSelector.classList.add('active');
         
         hideKeyboard();
         hideQRCode();
         closeFloorDropdown();
         closeMapFloorDropdown();
-        closeSidePanel();
         
-        // Hide side panel and search
+        // Hide side panel
         if (elements.mapSidePanel) {
             elements.mapSidePanel.classList.add('hidden');
-            elements.mapSidePanel.classList.remove('expanded');
             elements.mapSidePanel.classList.add('panel-right'); // Reset to default right position
         }
         if (elements.mapContainer) {
@@ -1604,9 +1587,6 @@ function resetIdleTimer() {
         }
         if (elements.panelToggleBtnTop) {
             elements.panelToggleBtnTop.classList.add('panel-right'); // Reset to default right position
-        }
-        if (elements.sidePanelSearch) {
-            elements.sidePanelSearch.style.display = 'none';
         }
         
         showInitialHome();
@@ -1625,6 +1605,18 @@ function initIdleDetection() {
 function init() {
     console.log('🚀 Zorlu Center Kiosk V2 Initialized');
     
+    // Set initial start point to kiosk location
+    state.startPoint = state.kioskLocation;
+    state.editingPoint = 'end'; // Always editing end point (destination)
+    
+    // Update displays
+    if (elements.startPointDisplay) elements.startPointDisplay.textContent = state.kioskLocation.name;
+    if (elements.sidePanelStartName) elements.sidePanelStartName.textContent = state.kioskLocation.name;
+    
+    // Set active state - end point should be active
+    if (elements.startPointSelector) elements.startPointSelector.classList.remove('active');
+    if (elements.endPointSelector) elements.endPointSelector.classList.add('active');
+    
     updateClock();
     setInterval(updateClock, 1000);
     
@@ -1642,7 +1634,7 @@ function init() {
     
     // Note: Panel is set to right by default in HTML (panel-right class)
     // Keyboard will be rendered when search tab opens
-    console.log('✅ Initialization complete. Panel position: right (default)');
+    console.log('✅ Initialization complete. Kiosk location set as start point. Panel position: right (default)');
 }
 
 // Start application

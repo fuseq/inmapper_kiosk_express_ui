@@ -61,6 +61,34 @@
                     <span class="search-placeholder" id="searchPlaceholder">Nereye gitmek istersiniz?</span>
                 </div>
 
+                <!-- Category Cards -->
+                <div class="home-category-cards">
+                    <div class="category-card" data-category="shopping">
+                        <div class="category-card-icon">🛍️</div>
+                        <span class="category-card-label">Alışveriş</span>
+                    </div>
+                    <div class="category-card" data-category="food">
+                        <div class="category-card-icon">🍔</div>
+                        <span class="category-card-label">Yemek</span>
+                    </div>
+                    <div class="category-card" data-category="coffee">
+                        <div class="category-card-icon">☕</div>
+                        <span class="category-card-label">Kafe</span>
+                    </div>
+                    <div class="category-card" data-category="entertainment">
+                        <div class="category-card-icon">🎬</div>
+                        <span class="category-card-label">Eğlence</span>
+                    </div>
+                    <div class="category-card" data-category="wc">
+                        <div class="category-card-icon">🚻</div>
+                        <span class="category-card-label">Tuvalet</span>
+                    </div>
+                    <div class="category-card" data-category="parking">
+                        <div class="category-card-icon">🅿️</div>
+                        <span class="category-card-label">Otopark</span>
+                    </div>
+                </div>
+
                 <!-- Explore Map Button -->
                 <button class="explore-map-btn" id="exploreMapBtn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -76,15 +104,15 @@
 
             <!-- Route Points Selector (Inside Panel) -->
             <div class="route-points-selector-panel" id="routePointsSelector">
-                <button class="route-point-btn active" id="startPointSelector" data-point="start">
+                <button class="route-point-btn disabled" id="startPointSelector" data-point="start" disabled>
                     <div class="point-icon start-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                             <circle cx="12" cy="12" r="10"/>
                         </svg>
                     </div>
                     <div class="point-info">
-                        <span class="point-label">BAŞLANGIÇ</span>
-                        <span class="point-name" id="startPointDisplay">Seçiniz</span>
+                        <span class="point-label">BAŞLANGIÇ (Kiosk)</span>
+                        <span class="point-name" id="startPointDisplay">Bulunduğunuz Konum</span>
                     </div>
                 </button>
                 <div class="route-arrow">→</div>
@@ -258,9 +286,17 @@
             <!-- Side Panel for Route Info -->
             <div class="map-side-panel panel-right hidden" id="mapSidePanel">
             <div class="side-panel-content">
+                <!-- Search Bar at Top -->
+                <div class="side-panel-search-bar" id="sidePanelSearchBar">
+                    <svg class="side-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="side-search-placeholder">Nereye gitmek istersiniz?</span>
+                </div>
+                
                 <!-- Route Points Header -->
                 <div class="side-panel-header">
-                        <div class="side-route-card start" id="sidePanelStartPoint">
+                        <div class="side-route-card start disabled">
                             <div class="side-route-icon start-icon">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <circle cx="12" cy="12" r="10"/>
@@ -268,16 +304,11 @@
                             </div>
                             <div class="side-route-text">
                                 <div>
-                                    <span class="side-route-label">BAŞLANGIÇ</span>
-                                    <span class="side-route-name" id="sidePanelStartName">Seçiniz</span>
+                                    <span class="side-route-label">BAŞLANGIÇ (Kiosk)</span>
+                                    <span class="side-route-name" id="sidePanelStartName">Bulunduğunuz Konum</span>
                                 </div>
-                                <span class="side-route-floor" id="sidePanelStartFloor">Floor 0</span>
+                                <span class="side-route-floor" id="sidePanelStartFloor">Zemin Kat</span>
                             </div>
-                            <button class="side-route-swap" id="routeSwapBtn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                    <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
                         </div>
                         
                         <div class="side-route-divider"></div>
@@ -442,44 +473,6 @@
                         <p class="qr-desc">QR kodu tarayarak rotayı cep telefonunuzda görüntüleyin</p>
                     </div>
                 </div>
-                
-                <!-- Search/Filter Section (Appears when expanded) -->
-                <div class="side-panel-search" id="sidePanelSearch">
-                    <div class="side-search-header">
-                        <h3>Nokta Değiştir</h3>
-                        <button class="side-search-close" id="sidePanelSearchClose">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <!-- Search Input -->
-                    <div class="side-search-input-container">
-                        <svg class="side-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <input type="text" class="side-search-input" id="sidePanelSearchInput" placeholder="Ara...">
-                        <button class="side-search-clear" id="sidePanelSearchClear">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <!-- Category Filters -->
-                    <div class="side-category-filters">
-                        <button class="side-category-btn active" data-category="all">Tümü</button>
-                        <button class="side-category-btn" data-category="shopping">Alışveriş</button>
-                        <button class="side-category-btn" data-category="food">Yemek</button>
-                        <button class="side-category-btn" data-category="coffee">Kafe</button>
-                    </div>
-                    
-                    <!-- Search Results -->
-                    <div class="side-search-results" id="sidePanelResults">
-                        <!-- Will be populated dynamically -->
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -499,17 +492,6 @@
                 <div class="qr-code-container">
                     <img id="qrCodeImage" src="" alt="QR Code">
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Side Panel Keyboard Bottom Sheet -->
-    <div class="side-keyboard-overlay" id="sideKeyboardOverlay">
-        <div class="side-keyboard-sheet" id="sideKeyboardSheet">
-            <div class="side-keyboard-handle"></div>
-            <div class="side-keyboard-content">
-                <!-- Inline keyboard will be rendered here -->
-                <div class="side-inline-keyboard" id="sideInlineKeyboard"></div>
             </div>
         </div>
     </div>
