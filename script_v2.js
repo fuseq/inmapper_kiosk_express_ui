@@ -424,6 +424,15 @@ function transitionToMapView() {
                 elements.mapSidePanel.classList.remove('hidden');
             }
             
+            // Add panel-visible class to map-container based on panel side
+            if (elements.mapContainer) {
+                if (state.panelSide === 'right') {
+                    elements.mapContainer.classList.add('panel-visible-right');
+                } else {
+                    elements.mapContainer.classList.add('panel-visible-left');
+                }
+            }
+            
             state.currentView = 'map';
             
             // Show floor selector on map view
@@ -612,10 +621,6 @@ function hideSideKeyboard() {
 function handleSideKeyPress(key) {
     if (key === 'Backspace') {
         state.sidePanelSearchQuery = state.sidePanelSearchQuery.slice(0, -1);
-    } else if (key === '123' || key === 'ABC') {
-        toggleKeyboardMode();
-        renderSideKeyboard();
-        return;
     } else if (key.startsWith('LANG_')) {
         const lang = key.replace('LANG_', '');
         changeKeyboardLanguage(lang);
@@ -625,7 +630,8 @@ function handleSideKeyPress(key) {
         state.sidePanelSearchQuery += ' ';
     } else {
         // For Arabic and Chinese, don't convert to lowercase
-        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh') {
+        // For numbers, keep as is
+        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh' || /\d/.test(key)) {
             state.sidePanelSearchQuery += key;
         } else {
             state.sidePanelSearchQuery += key.toLowerCase();
@@ -653,109 +659,75 @@ function renderSideKeyboard() {
         return;
     }
     
-    console.log('🎹 Rendering side keyboard - Language:', state.keyboardLanguage, 'Mode:', state.keyboardMode);
+    console.log('🎹 Rendering side keyboard - Language:', state.keyboardLanguage);
     
     let html = '';
     
-    if (state.keyboardMode === 'letters') {
-        const layout = keyboardLayouts[state.keyboardLanguage];
-        const isRTL = layout.rtl || false;
-        const hasDualKeys = layout.hasDualKeys || false;
-        
-        // First row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        layout.letters[0].forEach(key => {
-            if (hasDualKeys && key.main) {
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += '</div>';
-        
-        // Second row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        layout.letters[1].forEach(key => {
-            if (hasDualKeys && key.main) {
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += '</div>';
-        
-        // Third row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        html += '<button class="inline-key special" data-key="123">123</button>';
-        layout.letters[2].forEach(key => {
-            if (hasDualKeys && key.main) {
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += `
-            <button class="inline-key special" data-key="Backspace">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        `;
-        html += '</div>';
-        
-        // Space bar row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
-        html += '</div>';
-        
-    } else {
-        const numbers = keyboardLayouts.numbers;
-        
-        // First row - numbers
-        html += '<div class="keyboard-row">';
-        numbers[0].forEach(key => {
+    const layout = keyboardLayouts[state.keyboardLanguage];
+    const isRTL = layout.rtl || false;
+    const hasDualKeys = layout.hasDualKeys || false;
+    
+    // Numbers row (always visible at top)
+    html += '<div class="keyboard-row numbers-row">';
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].forEach(num => {
+        html += `<button class="inline-key number-key" data-key="${num}">${num}</button>`;
+    });
+    html += '</div>';
+    
+    // First letter row
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[0].forEach(key => {
+        if (hasDualKeys && key.main) {
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += '</div>';
-        
-        // Second row - symbols
-        html += '<div class="keyboard-row">';
-        numbers[1].forEach(key => {
+        }
+    });
+    html += '</div>';
+    
+    // Second letter row
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[1].forEach(key => {
+        if (hasDualKeys && key.main) {
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += '</div>';
-        
-        // Third row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key special" data-key="ABC">ABC</button>';
-        numbers[2].forEach(key => {
+        }
+    });
+    html += '</div>';
+    
+    // Third letter row with backspace
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[2].forEach(key => {
+        if (hasDualKeys && key.main) {
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += `
-            <button class="inline-key special" data-key="Backspace">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        `;
-        html += '</div>';
-        
-        // Space bar row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
-        html += '</div>';
-    }
+        }
+    });
+    html += `
+        <button class="inline-key special" data-key="Backspace">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    `;
+    html += '</div>';
+    
+    // Space bar row
+    html += '<div class="keyboard-row">';
+    html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+    html += '</div>';
     
     keyboardContainer.innerHTML = html;
     
@@ -997,12 +969,6 @@ function clearSearch() {
 function handleInlineKeyPress(key) {
     if (key === 'Backspace') {
         state.searchQuery = state.searchQuery.slice(0, -1);
-    } else if (key === '123') {
-        toggleKeyboardMode();
-        return;
-    } else if (key === 'ABC') {
-        toggleKeyboardMode();
-        return;
     } else if (key.startsWith('LANG_')) {
         const lang = key.replace('LANG_', '');
         changeKeyboardLanguage(lang);
@@ -1011,7 +977,8 @@ function handleInlineKeyPress(key) {
         state.searchQuery += ' ';
     } else {
         // For Arabic and Chinese, don't convert to lowercase
-        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh') {
+        // For numbers, keep as is
+        if (state.keyboardLanguage === 'ar' || state.keyboardLanguage === 'zh' || /\d/.test(key)) {
             state.searchQuery += key;
         } else {
             state.searchQuery += key.toLowerCase();
@@ -1083,113 +1050,77 @@ function renderInlineKeyboard() {
         return;
     }
     
-    console.log('🎹 Rendering keyboard - Language:', state.keyboardLanguage, 'Mode:', state.keyboardMode);
+    console.log('🎹 Rendering keyboard - Language:', state.keyboardLanguage);
     
     let html = '';
     
-    // Language selector row removed - now using top bar TR/EN toggle
+    const layout = keyboardLayouts[state.keyboardLanguage];
+    const isRTL = layout.rtl || false;
+    const hasDualKeys = layout.hasDualKeys || false;
     
-        if (state.keyboardMode === 'letters') {
-        const layout = keyboardLayouts[state.keyboardLanguage];
-        const isRTL = layout.rtl || false;
-        const hasDualKeys = layout.hasDualKeys || false;
-        
-        // First row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        layout.letters[0].forEach(key => {
-            if (hasDualKeys && key.main) {
-                // Chinese dual key
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                // Normal key
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += '</div>';
-        
-        // Second row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        layout.letters[1].forEach(key => {
-            if (hasDualKeys && key.main) {
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += '</div>';
-        
-        // Third row
-        html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
-        html += '<button class="inline-key special" data-key="123">123</button>';
-        layout.letters[2].forEach(key => {
-            if (hasDualKeys && key.main) {
-                html += `<button class="inline-key chinese-key" data-key="${key.main}">
-                    <span class="key-main">${key.main}</span>
-                    <span class="key-sub">${key.sub}</span>
-                </button>`;
-            } else {
-                html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-            }
-        });
-        html += `
-            <button class="inline-key special" data-key="Backspace">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        `;
-        html += '</div>';
-        
-                // Space bar row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
-        html += '</div>';
-        
-    } else {
-        const numbers = keyboardLayouts.numbers;
-        
-        // First row - numbers
-        html += '<div class="keyboard-row">';
-        numbers[0].forEach(key => {
+    // Numbers row (always visible at top)
+    html += '<div class="keyboard-row numbers-row">';
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].forEach(num => {
+        html += `<button class="inline-key number-key" data-key="${num}">${num}</button>`;
+    });
+    html += '</div>';
+    
+    // First letter row
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[0].forEach(key => {
+        if (hasDualKeys && key.main) {
+            // Chinese dual key
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
+            // Normal key
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += '</div>';
-        
-        // Second row - symbols
-        html += '<div class="keyboard-row">';
-        numbers[1].forEach(key => {
+        }
+    });
+    html += '</div>';
+    
+    // Second letter row
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[1].forEach(key => {
+        if (hasDualKeys && key.main) {
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += '</div>';
-        
-        // Third row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key special" data-key="ABC">ABC</button>';
-        numbers[2].forEach(key => {
+        }
+    });
+    html += '</div>';
+    
+    // Third letter row with backspace
+    html += `<div class="keyboard-row ${isRTL ? 'rtl' : ''}">`;
+    layout.letters[2].forEach(key => {
+        if (hasDualKeys && key.main) {
+            html += `<button class="inline-key chinese-key" data-key="${key.main}">
+                <span class="key-main">${key.main}</span>
+                <span class="key-sub">${key.sub}</span>
+            </button>`;
+        } else {
             html += `<button class="inline-key" data-key="${key}">${key}</button>`;
-        });
-        html += `
-            <button class="inline-key special" data-key="Backspace">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </button>
-        `;
-        html += '</div>';
-        
-        // Space bar row
-        html += '<div class="keyboard-row">';
-        html += '<button class="inline-key space-key" data-key="Space">Space</button>';
-        html += '</div>';
-    }
+        }
+    });
+    html += `
+        <button class="inline-key special" data-key="Backspace">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M21 4H9L3 12L9 20H21C21.5523 20 22 19.5523 22 19V5C22 4.44772 21.5523 4 21 4Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M17 9L11 15M11 9L17 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    `;
+    html += '</div>';
+    
+    // Space bar row
+    html += '<div class="keyboard-row">';
+    html += '<button class="inline-key space-key" data-key="Space">Space</button>';
+    html += '</div>';
     
         keyboardContainer.innerHTML = html;
     
@@ -1289,6 +1220,14 @@ function initEventListeners() {
             elements.initialHome.style.pointerEvents = 'none';
             state.currentView = 'map';
             
+            // Ensure side panel is hidden and map is centered
+            if (elements.mapSidePanel) {
+                elements.mapSidePanel.classList.add('hidden');
+            }
+            if (elements.mapContainer) {
+                elements.mapContainer.classList.remove('panel-visible-left', 'panel-visible-right');
+            }
+            
             // Show floor selector on map view
             if (elements.mapFloorSelectorCompact) {
                 elements.mapFloorSelectorCompact.style.display = 'flex';
@@ -1374,6 +1313,11 @@ function initEventListeners() {
                 elements.mapSidePanel.classList.add('hidden');
             }
             
+            // Remove panel-visible classes from map-container
+            if (elements.mapContainer) {
+                elements.mapContainer.classList.remove('panel-visible-left', 'panel-visible-right');
+            }
+            
             // Open search tab after a short delay
             setTimeout(() => {
                 showSearchTab();
@@ -1395,6 +1339,11 @@ function initEventListeners() {
             // Hide side panel
             if (elements.mapSidePanel) {
                 elements.mapSidePanel.classList.add('hidden');
+            }
+            
+            // Remove panel-visible classes from map-container
+            if (elements.mapContainer) {
+                elements.mapContainer.classList.remove('panel-visible-left', 'panel-visible-right');
             }
             
             // Open search tab after a short delay
@@ -1584,6 +1533,7 @@ function resetIdleTimer() {
         }
         if (elements.mapContainer) {
             elements.mapContainer.classList.add('panel-right'); // Reset to default right position
+            elements.mapContainer.classList.remove('panel-visible-left', 'panel-visible-right'); // Remove panel-visible classes
         }
         if (elements.panelToggleBtnTop) {
             elements.panelToggleBtnTop.classList.add('panel-right'); // Reset to default right position
