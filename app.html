@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorlu Center - Kiosk</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Container for layered views */
+        .app-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Navigation Layer - Bottom (always running in background) */
+        .navigation-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .navigation-layer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Landing Layer - Top (toggleable visibility) */
+        .landing-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: auto;
+        }
+
+        .landing-layer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Landing hidden state */
+        .landing-layer.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
+
+        /* Update overlay */
+        .update-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .update-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .update-content {
+            text-align: center;
+            color: white;
+        }
+
+        .update-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .update-text {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        /* Debug info */
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            z-index: 10000;
+            display: none;
+            max-width: 300px;
+        }
+
+        .debug-info.visible {
+            display: block;
+        }
+
+        .debug-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            gap: 12px;
+        }
+
+        .debug-label {
+            color: #94a3b8;
+        }
+
+        .debug-value {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .debug-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Navigation Layer (Bottom - Always active in background) -->
+        <div class="navigation-layer">
+            <iframe 
+                id="navigationFrame" 
+                src="index.html" 
+                allow="fullscreen">
+            </iframe>
+        </div>
+
+        <!-- Landing Layer (Top - Toggleable) -->
+        <div class="landing-layer" id="landingLayer">
+            <iframe 
+                id="landingFrame" 
+                src="landing.html" 
+                allow="fullscreen">
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Update Overlay -->
+    <div class="update-overlay" id="updateOverlay">
+        <div class="update-content">
+            <div class="update-spinner"></div>
+            <div class="update-text">Güncelleniyor...</div>
+        </div>
+    </div>
+
+    <!-- Debug Info -->
+    <div class="debug-info" id="debugInfo">
+        <div style="margin-bottom: 8px; font-weight: bold; color: #6366f1;">🔧 Kiosk Debug</div>
+        <div class="debug-divider"></div>
+        <div class="debug-row">
+            <span class="debug-label">Landing:</span>
+            <span class="debug-value" id="landingStatus">⏳ Yükleniyor</span>
+        </div>
+        <div class="debug-row">
+            <span class="debug-label">Navigation:</span>
+            <span class="debug-value" id="navStatus">⏳ Yükleniyor</span>
+        </div>
+        <div class="debug-row">
+            <span class="debug-label">Current View:</span>
+            <span class="debug-value" id="currentViewStatus">landing</span>
+        </div>
+        <div class="debug-divider"></div>
+        <div class="debug-row">
+            <span class="debug-label">Version:</span>
+            <span class="debug-value" id="versionInfo">1.0.0</span>
+        </div>
+        <div class="debug-row">
+            <span class="debug-label">Nav Refresh:</span>
+            <span class="debug-value" id="navRefreshStatus">--</span>
+        </div>
+        <div class="debug-row">
+            <span class="debug-label">Last Activity:</span>
+            <span class="debug-value" id="lastActivityStatus">--</span>
+        </div>
+    </div>
+
+    <script src="app-controller.js"></script>
+</body>
+</html>
+

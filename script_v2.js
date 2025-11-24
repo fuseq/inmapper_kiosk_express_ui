@@ -183,19 +183,68 @@ const elements = {
     mapCurrentFloorName: document.getElementById('mapCurrentFloorName'),
 };
 
+// ==================== PARENT WINDOW COMMUNICATION ====================
+/**
+ * Send message to parent window (app.html)
+ */
+function sendToParent(type, data = {}) {
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type, data }, '*');
+    }
+}
+
+/**
+ * Listen for messages from parent window
+ */
+window.addEventListener('message', (event) => {
+    const { type, data } = event.data || {};
+    
+    switch (type) {
+        case 'INIT':
+            // Parent initialized
+            console.log('Route navigation initialized by parent');
+            // Notify parent that route frame is ready
+            sendToParent('ROUTE_READY', {});
+            break;
+            
+        case 'ROUTE_ACTIVATED':
+            // Route navigation is now visible
+            console.log('Route navigation activated');
+            break;
+            
+        default:
+            break;
+    }
+});
+
 // ==================== VIEW MANAGEMENT ====================
 function showInitialHome() {
     state.currentView = 'initial';
-    elements.initialHome.style.opacity = '1';
-    elements.initialHome.style.visibility = 'visible';
-    elements.initialHome.style.pointerEvents = 'auto';
-    elements.initialHome.classList.remove('search-mode');
-    elements.searchTab.classList.remove('open');
-    elements.routeInfoOverlay.classList.remove('visible');
+    
+    // Safely update initialHome
+    if (elements.initialHome) {
+        elements.initialHome.style.opacity = '1';
+        elements.initialHome.style.visibility = 'visible';
+        elements.initialHome.style.pointerEvents = 'auto';
+        elements.initialHome.classList.remove('search-mode');
+    }
+    
+    // Safely update searchTab
+    if (elements.searchTab) {
+        elements.searchTab.classList.remove('open');
+    }
     
     // Hide floor selector on home screen
     if (elements.mapFloorSelectorCompact) {
         elements.mapFloorSelectorCompact.style.display = 'none';
+    }
+    
+    // If we're in an iframe and showing initial home, notify parent to show landing
+    // Only do this if we're truly at the initial state (not just hiding search)
+    if (window.parent && window.parent !== window && 
+        elements.searchTab && !elements.searchTab.classList.contains('open') && 
+        elements.mapPanel && !elements.mapPanel.classList.contains('visible')) {
+        sendToParent('HIDE_ROUTE', {});
     }
 }
 
@@ -207,12 +256,20 @@ function showSearchTab() {
         elements.mapFloorSelectorCompact.style.display = 'none';
     }
     
+    // Guard clause: Check if elements exist
+    if (!elements.initialHome || !elements.searchTab) {
+        console.warn('⚠️ Required elements not found for showSearchTab');
+        return;
+    }
+    
     // Step 1: Add animating class to keep logo/button visible during animation
     elements.initialHome.classList.add('animating');
     
     // Step 2: Start logo and button fade out (0.4s)
     setTimeout(() => {
-        elements.initialHome.classList.add('search-mode');
+        if (elements.initialHome) {
+            elements.initialHome.classList.add('search-mode');
+        }
     }, 50);
     
     // Step 3: After logo/button fade, expand search bar (0.7s)
@@ -221,22 +278,26 @@ function showSearchTab() {
     // Step 4: After search bar expansion, show panel (0.6s)
     // Total: 0.4s (fade) + 0.7s (expand) = 1.1s, panel starts at 0.5s into expansion
     setTimeout(() => {
-        elements.searchTab.classList.add('open');
-        loadAllLocations();
-        
-        // Render keyboard after panel is visible
-        setTimeout(() => {
-            console.log('🎹 Rendering keyboard after panel opened');
-            renderInlineKeyboard();
-        }, 100);
-        
-        // Remove animating class after all animations
-        setTimeout(() => {
-            elements.initialHome.classList.remove('animating');
-        }, 700);
+        if (elements.searchTab) {
+            elements.searchTab.classList.add('open');
+            loadAllLocations();
+            
+            // Render keyboard after panel is visible
+            setTimeout(() => {
+                console.log('🎹 Rendering keyboard after panel opened');
+                renderInlineKeyboard();
+            }, 100);
+            
+            // Remove animating class after all animations
+            setTimeout(() => {
+                if (elements.initialHome) {
+                    elements.initialHome.classList.remove('animating');
+                }
+            }, 700);
+        }
     }, 100);
     
-        // Focus on search after all animations complete
+    // Focus on search after all animations complete
     setTimeout(() => {
         if (elements.tabSearchInput) {
             elements.tabSearchInput.focus();
@@ -247,6 +308,12 @@ function showSearchTab() {
 function hideSearchTab() {
     console.log('🔽 Hiding search tab - Reverse animation...');
     
+    // Guard clause: Check if elements exist
+    if (!elements.initialHome || !elements.searchTab) {
+        console.warn('⚠️ Required elements not found for hideSearchTab');
+        return;
+    }
+    
     // Reverse animation sequence (opposite of showSearchTab)
     
     // Step 1: Close search panel (scale down) - 600ms
@@ -256,12 +323,16 @@ function hideSearchTab() {
     // Step 2: After panel closes, shrink search bar - 700ms
     setTimeout(() => {
         console.log('🔽 Shrinking search bar...');
-        elements.initialHome.classList.remove('search-mode');
+        if (elements.initialHome) {
+            elements.initialHome.classList.remove('search-mode');
+        }
         
         // Step 3: After search bar shrinks, fade in logo and explore button - 400ms
         setTimeout(() => {
             console.log('✨ Fading in home elements...');
-            elements.initialHome.classList.remove('animating');
+            if (elements.initialHome) {
+                elements.initialHome.classList.remove('animating');
+            }
             
             if (!state.selectedLocation) {
                 state.currentView = 'initial';
@@ -1172,16 +1243,29 @@ function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+    
+    const timeElement = document.getElementById('currentTime');
+    const dateElement = document.getElementById('currentDate');
+    const dayElement = document.getElementById('currentDay');
+    
+    if (timeElement) {
+        timeElement.textContent = `${hours}:${minutes}`;
+    }
     
     const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-    const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    const monthsShort = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
     
     const dayName = days[now.getDay()];
-    const monthName = months[now.getMonth()];
+    const monthName = monthsShort[now.getMonth()];
     const date = now.getDate();
     
-    document.getElementById('currentDate').textContent = `${dayName}, ${monthName} ${date}`;
+    if (dateElement) {
+        dateElement.innerHTML = `<span class="month-day">${date} ${monthName}</span><span class="day">${dayName}</span>`;
+    }
+    
+    if (dayElement) {
+        dayElement.textContent = dayName;
+    }
 }
 
 // ==================== EVENT LISTENERS ====================
@@ -1585,11 +1669,80 @@ function init() {
     // Note: Panel is set to right by default in HTML (panel-right class)
     // Keyboard will be rendered when search tab opens
     console.log('✅ Initialization complete. Kiosk location set as start point. Panel position: right (default)');
+    
+    // Notify parent that route frame is ready (if in iframe)
+    if (window.parent && window.parent !== window) {
+        sendToParent('ROUTE_READY', {});
+    }
 }
+
+// ==================== PARENT COMMUNICATION ====================
+
+// Parent frame'e navigation hazır mesajı gönder
+function notifyParentReady() {
+    if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'NAVIGATION_READY' }, '*');
+        console.log('📤 Parent\'a NAVIGATION_READY mesajı gönderildi');
+    }
+}
+
+// Ana sayfa/back butonuna parent mesajı ekle
+function setupParentCommunication() {
+    const mapBackBtn = document.getElementById('mapBackBtn');
+    
+    if (mapBackBtn) {
+        // Orijinal click listener'ı koruyarak yeni bir ekle
+        mapBackBtn.addEventListener('click', () => {
+            console.log('🏠 Ana Sayfa butonuna tıklandı');
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'BACK_TO_HOME' }, '*');
+                console.log('📤 Parent\'a BACK_TO_HOME mesajı gönderildi');
+            }
+        });
+    }
+}
+
+// Parent'dan gelen mesajları dinle
+window.addEventListener('message', (event) => {
+    const { type, data } = event.data || {};
+    
+    switch (type) {
+        case 'ACTIVATE':
+            // Navigation aktif olduğunda
+            console.log('✅ Navigation aktif edildi');
+            // Burada gerekirse state reset veya refresh yapılabilir
+            break;
+            
+        case 'INIT':
+            console.log('✅ Parent\'dan INIT mesajı alındı', data);
+            break;
+            
+        default:
+            break;
+    }
+});
 
 // Start application
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        init();
+        setupParentCommunication();
+        
+        // Sayfa tamamen yüklendiğinde parent'a bildir
+        window.addEventListener('load', () => {
+            notifyParentReady();
+        });
+    });
 } else {
     init();
+    setupParentCommunication();
+    
+    // Sayfa zaten yüklü, hemen bildir
+    if (document.readyState === 'complete') {
+        notifyParentReady();
+    } else {
+        window.addEventListener('load', () => {
+            notifyParentReady();
+        });
+    }
 }

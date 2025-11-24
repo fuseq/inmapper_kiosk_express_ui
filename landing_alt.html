@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zorlu Center Kiosk - Alternative</title>
+  <link rel="stylesheet" href="landing_alt.css">
+</head>
+<body>
+  <div class="landing-screen">
+    <!-- Full-screen background - current slide large version (bottom layer) -->
+    <div class="fullscreen-background" id="fullscreenBg"></div>
+    
+    <!-- Next Slide Preview for Panel Background -->
+    <div class="panel-preview" id="panelPreview"></div>
+    
+    <!-- Main Slideshow Container (top layer) -->
+    <div class="slideshow-container">
+      <div class="film-strip" id="filmStrip">
+        <div class="slide" style="background-image: url('assets/adidas.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/nike.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/h&m.jpg');"></div>
+      </div>
+    </div>
+
+    <!-- Route Content (iframe for index.html) -->
+    <iframe id="routeIframe" src="index.html" class="route-iframe" style="display: none;"></iframe>
+
+    <!-- Side Panel (middle layer) - Full Height with Header -->
+    <div class="glass-panel">
+      <div class="glass-content">
+        <div class="glass-header">
+          <div class="header-top">
+            <div class="time-date">
+              <div class="time" id="landingTime">11:09</div>
+              <div class="date-info">
+                <div class="date-top" id="landingDate">
+                  <span class="month-day">NOV 17</span>
+                </div>
+                <div class="day-bottom" id="landingDay">Monday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-main">
+          <span class="intro">Welcome To</span>
+          <div class="brand-logo-container">
+            <img class="brand-logo-main" src="assets/logo.png" alt="Zorlu Center">
+            <h1 class="brand">Zorlu Center</h1>
+          </div>
+          <button class="primary-btn" id="createRouteBtn">
+            <span>Create Route</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="glass-footer">
+          <div class="qr-section">
+            <div class="qr-placeholder" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="qr-text">
+              <span class="qr-title">Zorlu World</span>
+              <span class="qr-subtitle">Dünyasına Katıl</span>
+              <span class="qr-powered">Uygulamayı indir, rotanı mobilde takip et</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-indicators" id="slideIndicators" aria-hidden="true">
+      <button class="indicator active" data-index="0"><span></span></button>
+      <button class="indicator" data-index="1"><span></span></button>
+      <button class="indicator" data-index="2"><span></span></button>
+    </div>
+  </div>
+  <script src="landing_alt.js"></script>
+</body>
+</html>
+

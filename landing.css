@@ -1,0 +1,654 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fb 0%, #eef2f7 100%);
+  font-family: 'Poppins', sans-serif;
+  color: #1b2b43;
+}
+
+.landing-screen {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  padding: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: rgba(245, 247, 251, 0.6);
+}
+
+/* Full-screen Background - Bottom Layer */
+.fullscreen-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, rgb(100, 100, 100), rgb(80, 80, 80));
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.fullscreen-background.animating {
+  transition: background 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Glass Navbar - Middle Layer */
+.glass-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(70px, 8vh, 90px);
+  padding: 0 clamp(32px, 3.5vw, 56px);
+  --color-gradient: linear-gradient(90deg, rgba(100, 100, 100, 0.25), rgba(80, 80, 80, 0.25));
+  background: var(--color-gradient), rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  z-index: 10;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark overlay for better text readability on navbar */
+.glass-navbar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glass-navbar.animating {
+  transition: background 0.8s cubic-bezier(0.4, 0.0, 0.2, 1), 
+              border-color 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+
+
+.glass-navbar.dark-bg {
+  background: var(--color-gradient), rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.glass-navbar.light-bg {
+  background: var(--color-gradient), rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* Glass Corner Connector - Removed as navbar now spans full width */
+
+.navbar-content {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(20px, 2.5vw, 40px);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 1.5vw, 18px);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-logo-img {
+  width: clamp(40px, 5vw, 50px);
+  height: clamp(40px, 5vw, 50px);
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.nav-brand {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  transition: color 0.5s ease;
+}
+
+/* Time & Date in Navbar */
+.nav-left .time-date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-left .time-date .time {
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  transition: color 0.5s ease;
+}
+
+.nav-left .time-date .date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+
+.nav-left .time-date .date .month-day {
+  font-size: clamp(13px, 1.4vw, 16px);
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: color 0.5s ease;
+}
+
+.nav-left .time-date .date .day {
+  font-size: clamp(12px, 1.3vw, 14px);
+  font-weight: 400;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.5s ease;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(10px, 1.2vh, 14px) clamp(18px, 2vw, 24px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #1b2b43;
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.glass-navbar.dark-bg .nav-btn {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-navbar.light-bg .nav-btn {
+  color: #000000;
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.glass-navbar.dark-bg .nav-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.glass-navbar.light-bg .nav-btn:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.nav-icon {
+  width: clamp(18px, 2vw, 22px);
+  height: clamp(18px, 2vw, 22px);
+  stroke-width: 2;
+}
+
+/* Slideshow Container - Top Layer (remaining area) */
+.slideshow-container {
+  position: fixed;
+  top: clamp(70px, 8vh, 90px);
+  left: 0;
+  right: clamp(400px, 34vw, 560px);
+  bottom: 0;
+  overflow: hidden;
+  z-index: 8;
+  border-radius: 0;
+}
+
+/* Film Strip - Horizontal Sliding */
+.film-strip {
+  display: flex;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: transform;
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 calc(100vw - clamp(400px, 34vw, 560px));
+  width: calc(100vw - clamp(400px, 34vw, 560px));
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Glass Panel - Right Side Below Navbar */
+.glass-panel {
+  position: fixed;
+  right: 0;
+  top: clamp(70px, 8vh, 90px);
+  bottom: 0;
+  width: clamp(400px, 34vw, 560px);
+  padding: clamp(32px, 4vh, 48px) clamp(32px, 3.5vw, 56px) clamp(36px, 5vh, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  --color-gradient: linear-gradient(180deg, rgba(100, 100, 100, 0.25), rgba(80, 80, 80, 0.25));
+  background: var(--color-gradient), rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: none;
+  box-shadow: 
+    -8px 0 32px rgba(0, 0, 0, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.15);
+  z-index: 9;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark overlay for better text readability on panel */
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.glass-panel.animating {
+  transition: background 0.8s cubic-bezier(0.4, 0.0, 0.2, 1), 
+              border-color 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+
+.glass-panel.dark-bg {
+  background: var(--color-gradient), rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-left-color: rgba(255, 255, 255, 0.12);
+}
+
+.glass-panel.light-bg {
+  background: var(--color-gradient), rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-left-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Glass Main - Center Content */
+.glass-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 4vh, 44px);
+  text-align: center;
+  padding: clamp(24px, 4vh, 48px) 0;
+}
+
+.brand-logo-container {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 1.8vh, 20px);
+}
+
+.brand-logo-main {
+  width: clamp(100px, 12vw, 160px);
+  height: clamp(100px, 12vw, 160px);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.1));
+  transition: filter 0.5s ease;
+}
+
+.glass-panel.dark-bg .brand-logo-main {
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+}
+
+.intro {
+  font-size: clamp(19px, 2.1vw, 24px);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  transition: color 0.5s ease;
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  transition: color 0.5s ease;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: clamp(16px, 2vh, 22px) clamp(32px, 3.8vw, 44px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  margin-top: clamp(8px, 1.5vh, 16px);
+}
+
+.primary-btn .icon {
+  width: clamp(22px, 2.5vw, 28px);
+  height: clamp(22px, 2.5vw, 28px);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.primary-btn.is-pressed,
+.primary-btn:active {
+  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Glass Footer - QR Section */
+.glass-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.qr-section {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.qr-placeholder {
+  width: clamp(90px, 10vw, 110px);
+  height: clamp(90px, 10vw, 110px);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 4px;
+  padding: 12px;
+  transition: background 0.5s ease;
+}
+
+.glass-panel.dark-bg .qr-placeholder {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.glass-panel.light-bg .qr-placeholder {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.qr-placeholder span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background: rgba(27, 43, 67, 0.15);
+}
+
+.qr-placeholder span:nth-child(1),
+.qr-placeholder span:nth-child(3),
+.qr-placeholder span:nth-child(6),
+.qr-placeholder span:nth-child(7),
+.qr-placeholder span:nth-child(10),
+.qr-placeholder span:nth-child(12),
+.qr-placeholder span:nth-child(13),
+.qr-placeholder span:nth-child(15) {
+  background: #1b2b43;
+}
+
+.qr-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: clamp(14px, 1.5vw, 17px);
+  transition: color 0.5s ease;
+}
+
+.qr-title {
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.5s ease;
+}
+
+.qr-subtitle {
+  font-weight: 600;
+  font-size: clamp(17px, 2vw, 20px);
+  color: #ffffff;
+  transition: color 0.5s ease;
+}
+
+.qr-powered {
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.5s ease;
+}
+
+/* Slide Indicators */
+.slide-indicators {
+  position: fixed;
+  bottom: clamp(24px, 5vh, 48px);
+  left: calc((100vw - clamp(400px, 34vw, 560px)) / 2);
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 20;
+}
+
+.indicator {
+  width: 20px;
+  height: 20px;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.indicator span {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transition: width 0.25s ease, background 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.indicator.active {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.indicator.active span {
+  width: 24px;
+  border-radius: 12px;
+  background: #27c070;
+}
+
+.indicator:not(.active):hover {
+  opacity: 0.85;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .glass-navbar {
+    right: clamp(340px, 42vw, 480px);
+  }
+  
+  .glass-corner {
+    right: clamp(340px, 42vw, 480px);
+  }
+  
+  .slideshow-container {
+    right: clamp(340px, 42vw, 480px);
+  }
+  
+  .slide {
+    flex: 0 0 calc(100vw - clamp(340px, 42vw, 480px));
+    width: calc(100vw - clamp(340px, 42vw, 480px));
+  }
+  
+  .glass-panel {
+    width: clamp(340px, 42vw, 480px);
+    padding: clamp(28px, 3.5vh, 40px) clamp(24px, 3vw, 40px) clamp(28px, 4vh, 48px);
+  }
+  
+  .slide-indicators {
+    left: calc((100vw - clamp(340px, 42vw, 480px)) / 2);
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-navbar {
+    height: clamp(60px, 7vh, 75px);
+    padding: 0 clamp(24px, 4vw, 40px);
+  }
+  
+  
+  .navbar-content {
+    grid-template-columns: auto 1fr auto;
+  }
+  
+  .nav-left .time-date .time {
+    font-size: clamp(20px, 2.5vw, 28px);
+  }
+  
+  .nav-left .time-date .date .month-day {
+    font-size: clamp(11px, 1.2vw, 13px);
+  }
+  
+  .nav-left .time-date .date .day {
+    font-size: clamp(10px, 1.1vw, 12px);
+  }
+  
+  .nav-logo-img {
+    width: clamp(35px, 4.5vw, 45px);
+    height: clamp(35px, 4.5vw, 45px);
+  }
+  
+  .nav-brand {
+    font-size: clamp(18px, 2vw, 22px);
+  }
+  
+  .slideshow-container {
+    top: clamp(60px, 7vh, 75px);
+    right: 0;
+  }
+  
+  .slide {
+    flex: 0 0 100vw;
+    width: 100vw;
+  }
+  
+  .glass-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: calc(100vh - clamp(60px, 7vh, 75px));
+    padding: clamp(32px, 6vh, 56px) clamp(24px, 5vw, 40px);
+    margin-top: clamp(60px, 7vh, 75px);
+  }
+
+  .slide-indicators {
+    left: 50%;
+    bottom: clamp(100px, 12vh, 140px);
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .nav-left {
+    justify-content: center;
+  }
+  
+  .nav-right {
+    display: none;
+  }
+  
+  .glass-panel {
+    padding: 24px 24px 32px;
+  }
+
+  .brand-logo-main {
+    width: clamp(100px, 20vw, 140px);
+    height: clamp(100px, 20vw, 140px);
+  }
+
+  .brand {
+    font-size: clamp(40px, 10vw, 60px);
+  }
+
+  .qr-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
