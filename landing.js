@@ -1,11 +1,39 @@
 (function () {
+  // ==================== KIOSK CLIENT ENTEGRASYONU ====================
+  let kioskConfig = null;
+  let SLIDE_TRANSITION_DURATION = 8000; // Varsayılan geçiş süresi
+
+  // Kiosk Client'ı başlat
+  window.addEventListener('DOMContentLoaded', () => {
+    if (typeof KioskClient !== 'undefined') {
+      console.log('🚀 Kiosk Client başlatılıyor...');
+      KioskClient.init({
+        apiUrl: 'http://localhost:3000', // Backend sunucu adresi
+        pollInterval: 60000, // 1 dakikada bir kontrol
+        onConfigLoaded: (config) => {
+          console.log('✅ Landing page yapılandırması yüklendi:', config);
+          kioskConfig = config;
+          
+          if (config.landingPage) {
+            applyKioskConfiguration(config.landingPage);
+          }
+        },
+        onError: (error) => {
+          console.error('❌ Kiosk Client hatası:', error);
+          // Hata durumunda varsayılan yapılandırmayı kullan
+        }
+      });
+    }
+  });
+  // ==================== KIOSK CLIENT ENTEGRASYONU SONU ====================
+
   const timeElement = document.getElementById('landingTime');
   const dateElement = document.getElementById('landingDate');
   const dayElement = document.getElementById('landingDay');
   const createRouteButton = document.getElementById('createRouteBtn');
 
-  const originalSlides = Array.from(document.querySelectorAll('.slide'));
-  const indicators = Array.from(document.querySelectorAll('.indicator'));
+  let originalSlides = Array.from(document.querySelectorAll('.slide'));
+  let indicators = Array.from(document.querySelectorAll('.indicator'));
   const glassPanel = document.querySelector('.glass-panel');
   const glassNavbar = document.querySelector('.glass-navbar');
   const fullscreenBg = document.getElementById('fullscreenBg');
@@ -13,10 +41,10 @@
   let currentIndex = 0;
   let slideTimer;
   let isTransitioning = false;
-  const totalSlides = originalSlides.length;
+  let totalSlides = originalSlides.length;
   
   // Cache for precomputed colors for each slide
-  const slideColorCache = {};
+  let slideColorCache = {};
   
   // Canvas for brightness detection and color extraction
   const canvas = document.createElement('canvas');
@@ -398,9 +426,10 @@
     if (slideTimer) {
       window.clearInterval(slideTimer);
     }
+    // Dinamik geçiş süresi kullan
     slideTimer = window.setInterval(() => {
       nextSlide();
-    }, 8000);
+    }, SLIDE_TRANSITION_DURATION);
   }
 
   indicators.forEach((indicator, index) => {
@@ -442,6 +471,131 @@
       updateSlidePosition(false);
     }, 150);
   });
+
+  // ==================== KIOSK ENTEGRASYON FONKSİYONLARI ====================
+  
+  // Yapılandırmayı uygula
+  function applyKioskConfiguration(landingPage) {
+    console.log('🔧 Yapılandırma uygulanıyor...', landingPage);
+    
+    // 1. Slider resimlerini güncelle
+    if (landingPage.slides && landingPage.slides.length > 0) {
+      updateSliderImages(landingPage.slides);
+    }
+    
+    // 2. Geçiş süresini güncelle
+    if (landingPage.transitionDuration) {
+      updateTransitionDuration(landingPage.transitionDuration);
+    }
+  }
+
+  // Slider resimlerini güncelle
+  function updateSliderImages(slides) {
+    if (!filmStrip) return;
+    
+    console.log('🖼️ Slider resimleri güncelleniyor...', slides);
+    
+    // Slideshow'u durdur
+    if (slideTimer) {
+      window.clearInterval(slideTimer);
+    }
+    
+    // Mevcut slide'ları temizle
+    filmStrip.innerHTML = '';
+    
+    // Yeni slide'ları ekle
+    slides.forEach(slide => {
+      const slideDiv = document.createElement('div');
+      slideDiv.className = 'slide';
+      slideDiv.style.backgroundImage = `url('${slide.imageUrl}')`;
+      filmStrip.appendChild(slideDiv);
+    });
+    
+    // originalSlides ve totalSlides'ı güncelle
+    originalSlides = Array.from(filmStrip.querySelectorAll('.slide'));
+    totalSlides = originalSlides.length;
+    
+    // Indicator'ları güncelle
+    updateIndicatorsForNewSlides(slides.length);
+    
+    // Slider'ı yeniden başlat
+    reinitializeSlider();
+    
+    console.log('✅ Slider güncellendi:', slides.length, 'resim');
+  }
+
+  // Indicator'ları güncelle
+  function updateIndicatorsForNewSlides(count) {
+    const slideIndicators = document.getElementById('slideIndicators');
+    if (!slideIndicators) return;
+    
+    slideIndicators.innerHTML = '';
+    
+    for (let i = 0; i < count; i++) {
+      const indicator = document.createElement('button');
+      indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+      indicator.setAttribute('data-index', i);
+      indicator.innerHTML = '<span></span>';
+      slideIndicators.appendChild(indicator);
+    }
+    
+    // Indicator'ları güncelle ve event listener'ları ekle
+    indicators = Array.from(slideIndicators.querySelectorAll('.indicator'));
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        goToSlide(index);
+        startSlideShow();
+      });
+    });
+  }
+
+  // Geçiş süresini güncelle
+  function updateTransitionDuration(duration) {
+    console.log('⏱️ Geçiş süresi güncelleniyor:', duration, 'ms');
+    
+    SLIDE_TRANSITION_DURATION = duration;
+    
+    // Mevcut timer'ı durdur ve yeni süre ile başlat
+    startSlideShow();
+    
+    console.log('✅ Geçiş süresi güncellendi');
+  }
+
+  // Slider'ı yeniden başlat
+  function reinitializeSlider() {
+    if (!filmStrip || !originalSlides || originalSlides.length === 0) return;
+    
+    console.log('🔄 Slider yeniden başlatılıyor...');
+    
+    // Color cache'i temizle
+    slideColorCache = {};
+    
+    // Clone'ları oluştur
+    const firstClone = originalSlides[0].cloneNode(true);
+    const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+    
+    firstClone.setAttribute('data-clone', 'true');
+    lastClone.setAttribute('data-clone', 'true');
+    
+    filmStrip.insertBefore(lastClone, filmStrip.firstChild);
+    filmStrip.appendChild(firstClone);
+    
+    // Pozisyonu sıfırla
+    currentIndex = 0;
+    isTransitioning = false;
+    
+    updateIndicators();
+    updateSlidePosition(false);
+    analyzeColorsForIndex(0, false);
+    preloadNextSlideColors(0);
+    
+    // Slideshow'u başlat
+    startSlideShow();
+    
+    console.log('✅ Slider yeniden başlatıldı');
+  }
+  
+  // ==================== KIOSK ENTEGRASYON FONKSİYONLARI SONU ====================
 
   // ==================== PARENT COMMUNICATION ====================
   

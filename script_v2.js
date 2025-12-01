@@ -11,7 +11,7 @@ const state = {
     currentFloor: 0, // Current selected floor
     keyboardLanguage: 'tr', // 'tr', 'en', 'zh', 'ar'
     keyboardMode: 'letters', // 'letters' or 'numbers'
-    routeType: 'normal', // 'normal' or 'accessible'
+    routeType: 'shortest', // 'shortest' or 'accessible'
     panelSide: 'right', // 'left' or 'right' - which side the panel is on (default: right)
     kioskLocation: { id: 0, name: 'Bulunduğunuz Konum', category: 'Kiosk', floor: 'Zemin Kat', type: 'kiosk', icon: '📍' }, // Default kiosk location
 };
@@ -104,18 +104,18 @@ const floors = [
 
 // ==================== MOCK DATA ====================
 const locations = [
-    { id: 1, name: 'Zara', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '🛍️' },
-    { id: 2, name: 'H&M', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '👕' },
-    { id: 3, name: 'Starbucks', category: 'Kafe', floor: '1. Kat', type: 'coffee', icon: '☕' },
-    { id: 4, name: 'Mado', category: 'Kafe', floor: '1. Kat', type: 'coffee', icon: '🍰' },
-    { id: 5, name: 'Cinemaximum', category: 'Eğlence', floor: 'Sinema Katı', type: 'entertainment', icon: '🎬' },
-    { id: 6, name: 'Nike', category: 'Alışveriş', floor: '1. Kat', type: 'shopping', icon: '👟' },
-    { id: 7, name: 'Apple Store', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '📱' },
-    { id: 8, name: 'Burger King', category: 'Yemek', floor: '2. Kat', type: 'food', icon: '🍔' },
-    { id: 9, name: 'KFC', category: 'Yemek', floor: '2. Kat', type: 'food', icon: '🍗' },
-    { id: 10, name: 'Tuvalet (Zemin)', category: 'Tuvalet', floor: 'Zemin Kat', type: 'wc', icon: '🚻' },
-    { id: 11, name: 'ATM', category: 'ATM', floor: 'Zemin Kat', type: 'atm', icon: '💰' },
-    { id: 12, name: 'Otopark', category: 'Otopark', floor: '-2. Kat', type: 'parking', icon: '🅿️' },
+    { id: 1, name: 'Zara', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '🛍️', hours: 'Mon-Sun • Open until 22:00' },
+    { id: 2, name: 'H&M', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '👕', hours: 'Mon-Sun • Open until 22:00' },
+    { id: 3, name: 'Starbucks', category: 'Kafe', floor: '1. Kat', type: 'coffee', icon: '☕', hours: 'Every Day • Open until 23:00' },
+    { id: 4, name: 'Mado', category: 'Kafe', floor: '1. Kat', type: 'coffee', icon: '🍰', hours: 'Every Day • Open until 23:00' },
+    { id: 5, name: 'Cinemaximum', category: 'Eğlence', floor: 'Sinema Katı', type: 'entertainment', icon: '🎬', hours: 'Every Day • Open until 01:00' },
+    { id: 6, name: 'Nike', category: 'Alışveriş', floor: '1. Kat', type: 'shopping', icon: '👟', hours: 'Mon-Sun • Open until 22:00' },
+    { id: 7, name: 'Apple Store', category: 'Alışveriş', floor: 'Zemin Kat', type: 'shopping', icon: '📱', hours: 'Mon-Sun • Open until 22:00' },
+    { id: 8, name: 'Burger King', category: 'Yemek', floor: '2. Kat', type: 'food', icon: '🍔', hours: 'Every Day • Open until 23:00' },
+    { id: 9, name: 'KFC', category: 'Yemek', floor: '2. Kat', type: 'food', icon: '🍗', hours: 'Every Day • Open until 23:00' },
+    { id: 10, name: 'Tuvalet (Zemin)', category: 'Tuvalet', floor: 'Zemin Kat', type: 'wc', icon: '🚻', hours: 'Every Day • Open 24 Hours' },
+    { id: 11, name: 'ATM', category: 'ATM', floor: 'Zemin Kat', type: 'atm', icon: '💰', hours: 'Every Day • Open 24 Hours' },
+    { id: 12, name: 'Otopark', category: 'Otopark', floor: '-2. Kat', type: 'parking', icon: '🅿️', hours: 'Every Day • Open 24 Hours' },
 ];
 
 // ==================== DOM ELEMENTS ====================
@@ -221,6 +221,9 @@ window.addEventListener('message', (event) => {
 function showInitialHome() {
     state.currentView = 'initial';
     
+    // Hide store detail and show search content
+    hideStoreDetailInSearchTab();
+    
     // Safely update initialHome
     if (elements.initialHome) {
         elements.initialHome.style.opacity = '1';
@@ -250,6 +253,9 @@ function showInitialHome() {
 
 function showSearchTab() {
     state.currentView = 'search';
+    
+    // Hide store detail if it's showing and show search content
+    hideStoreDetailInSearchTab();
     
     // Hide floor selector during search
     if (elements.mapFloorSelectorCompact) {
@@ -313,6 +319,9 @@ function hideSearchTab() {
         console.warn('⚠️ Required elements not found for hideSearchTab');
         return;
     }
+    
+    // Also hide store detail if it's showing
+    hideStoreDetailInSearchTab();
     
     // Reverse animation sequence (opposite of showSearchTab)
     
@@ -435,10 +444,10 @@ function selectLocation(locationId) {
             elements.sidePanelEndName.textContent = location.name;
         }
         
-        // Show map with route if both points selected
+        // Instead of going directly to map, show store detail in search tab
         if (state.endPoint && state.startPoint) {
-            // Smooth transition sequence
-            transitionToMapView();
+            // Show store detail in search tab
+            showStoreDetailInSearchTab(location);
         }
     }
 }
@@ -450,6 +459,9 @@ function transitionToMapView() {
     if (!state.startPoint) {
         state.startPoint = state.kioskLocation;
     }
+    
+    // Close store detail if open
+    hideStoreDetailInSearchTab();
     
     // Step 1: Add closing class to fade panel content
     console.log('📉 Step 1: Fading panel content...');
@@ -554,7 +566,7 @@ function changeRouteType(type) {
     
     // Update button states
     if (elements.routeTypeNormal) {
-        elements.routeTypeNormal.classList.toggle('active', type === 'normal');
+        elements.routeTypeNormal.classList.toggle('active', type === 'shortest' || type === 'normal');
     }
     if (elements.routeTypeAccessible) {
         elements.routeTypeAccessible.classList.toggle('active', type === 'accessible');
@@ -1272,6 +1284,8 @@ function updateClock() {
 function initEventListeners() {
     // Home search trigger
     elements.homeSearchTrigger.addEventListener('click', () => {
+        // Hide store detail if it's showing
+        hideStoreDetailInSearchTab();
         showSearchTab();
     });
     
@@ -1280,6 +1294,8 @@ function initEventListeners() {
         card.addEventListener('click', () => {
             const category = card.dataset.category;
             selectCategory(category);
+            // Hide store detail if it's showing
+            hideStoreDetailInSearchTab();
             showSearchTab();
         });
     });
@@ -1291,6 +1307,8 @@ function initEventListeners() {
     if (elements.endPointSelector) {
         elements.endPointSelector.addEventListener('click', () => {
             selectEditingPoint('end');
+            // Hide store detail if it's showing
+            hideStoreDetailInSearchTab();
             showSearchTab();
         });
     }
@@ -1322,9 +1340,56 @@ function initEventListeners() {
     // Map back button
     if (elements.mapBackBtn) {
         elements.mapBackBtn.addEventListener('click', () => {
+            // Close store detail if open
+            hideStoreDetailInSearchTab();
             showInitialHome();
         });
     }
+    
+    // Store detail back button
+    const storeMapBackBtn = document.getElementById('storeMapBackBtn');
+    if (storeMapBackBtn) {
+        storeMapBackBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('⬅️ Store Map Back clicked!');
+            hideStoreDetailInSearchTab();
+        });
+    }
+    
+    // Start Heading Forward button
+    const startHeadingBtn = document.getElementById('startHeadingBtn');
+    if (startHeadingBtn) {
+        startHeadingBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🧭 Start Heading Forward clicked!');
+            transitionToMapView();
+        });
+    }
+    
+    // Store detail route switch buttons
+    const storeRouteSwitch = document.getElementById('storeRouteSwitch');
+    const storeRouteSwitchBtns = document.querySelectorAll('.route-switch-btn');
+    
+    storeRouteSwitchBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const routeType = btn.dataset.type;
+            console.log('🔄 Route type switched to:', routeType);
+            
+            // Update switch state
+            if (routeType === 'accessible') {
+                storeRouteSwitch.classList.add('accessible');
+            } else {
+                storeRouteSwitch.classList.remove('accessible');
+            }
+            
+            // Update state
+            state.routeType = routeType;
+        });
+    });
     
         // Tab back button
     if (elements.tabBackBtn) {
@@ -1440,7 +1505,7 @@ function initEventListeners() {
     // Route type buttons
     if (elements.routeTypeNormal) {
         elements.routeTypeNormal.addEventListener('click', () => {
-            changeRouteType('normal');
+            changeRouteType('shortest');
         });
     }
     
@@ -1594,6 +1659,7 @@ function resetIdleTimer() {
         state.editingPoint = 'end'; // Always editing end point (destination)
         state.currentFloor = 0;
         state.panelSide = 'right';
+        state.routeType = 'shortest'; // Reset to shortest route
         
         // Reset displays
         if (elements.startPointDisplay) elements.startPointDisplay.textContent = state.kioskLocation.name;
@@ -1621,6 +1687,12 @@ function resetIdleTimer() {
         }
         if (elements.panelToggleBtnTop) {
             elements.panelToggleBtnTop.classList.add('panel-right'); // Reset to default right position
+        }
+        
+        // Reset route switch to shortest
+        const storeRouteSwitch = document.getElementById('storeRouteSwitch');
+        if (storeRouteSwitch) {
+            storeRouteSwitch.classList.remove('accessible');
         }
         
         showInitialHome();
@@ -1722,6 +1794,160 @@ window.addEventListener('message', (event) => {
     }
 });
 
+// ==================== STORE DETAIL IN SEARCH TAB ====================
+function showStoreDetailInSearchTab(location) {
+    console.log('🏪 Showing store detail in search tab for:', location.name);
+    
+    const searchContent = document.getElementById('searchContent');
+    const storeDetailContent = document.getElementById('storeDetailContent');
+    
+    if (!searchContent || !storeDetailContent) return;
+    
+    // Hide search content, show store detail
+    searchContent.classList.add('hidden');
+    storeDetailContent.classList.remove('hidden');
+    storeDetailContent.classList.add('active');
+    
+    // Populate store detail content
+    const storeFloorMap = document.getElementById('storeFloorMap');
+    const storeLogoIcon = document.getElementById('storeLogoIcon');
+    const storeName = document.getElementById('storeName');
+    const storeFloor = document.getElementById('storeFloor');
+    const storeHoursChip = document.getElementById('storeHoursChip');
+    const storeTags = document.getElementById('storeTags');
+    const storeDescription = document.getElementById('storeDescription');
+    const storeQRCode = document.getElementById('storeQRCode');
+    const storePhoneNumber = document.getElementById('storePhoneNumber');
+    const storePhoneBtn = document.getElementById('storePhoneBtn');
+    
+    // Set floor map
+    if (storeFloorMap) {
+        storeFloorMap.src = `floors/${state.currentFloor}.svg`;
+    }
+    
+    // Set logo icon
+    if (storeLogoIcon) storeLogoIcon.textContent = location.icon || '🏪';
+    
+    // Set store name
+    if (storeName) storeName.textContent = location.name;
+    
+    // Set floor info with Zorlu Center
+    if (storeFloor) storeFloor.textContent = `${location.floor} • Zorlu Center`;
+    
+    // Set opening hours
+    if (storeHoursChip) {
+        const hours = location.hours || 'Mon-Sun • 10:00-22:00';
+        const hoursSpan = storeHoursChip.querySelector('span');
+        if (hoursSpan) {
+            hoursSpan.textContent = hours;
+        }
+    }
+    
+    // Set tags (dynamic based on category)
+    if (storeTags) {
+        const categoryTags = {
+            'shopping': ['Clothes & Fashion', 'Apparel', 'Brands', 'Outlet'],
+            'food': ['Restaurant', 'Dining', 'Cuisine', 'Fast Food'],
+            'coffee': ['Coffee', 'Beverages', 'Cafe', 'Bakery'],
+            'entertainment': ['Entertainment', 'Leisure', 'Games', 'Fun'],
+            'wc': ['Restroom', 'Facilities', 'Public', 'Services'],
+            'atm': ['Banking', 'ATM', 'Services', 'Finance'],
+            'parking': ['Parking', 'Vehicle', 'Services', 'Transport']
+        };
+        
+        const tags = categoryTags[location.type] || ['Shopping', 'Retail', 'Store', 'Brand'];
+        storeTags.innerHTML = tags.map(tag => 
+            `<span class="store-tag">${tag}</span>`
+        ).join('');
+    }
+    
+    // Set description
+    if (storeDescription) {
+        storeDescription.textContent = location.description || 
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+    }
+    
+    // Generate QR code
+    if (storeQRCode) {
+        storeQRCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + 
+            encodeURIComponent(`Store: ${location.name}\nFloor: ${location.floor}\nCategory: ${location.category}`);
+    }
+    
+    // Set phone number
+    if (storePhoneNumber && storePhoneBtn) {
+        const phone = location.phone || '+90 (555) 000-0000';
+        storePhoneNumber.textContent = phone;
+        storePhoneBtn.href = `tel:${phone.replace(/\D/g, '')}`;
+    }
+    
+    // Populate similar stores (same category)
+    populateSimilarStores(location);
+    
+    // Setup event listeners
+    setupStoreDetailEvents();
+}
+
+function populateSimilarStores(currentLocation) {
+    const similarStoresContainer = document.getElementById('similarStores');
+    if (!similarStoresContainer) return;
+    
+    // Find stores in the same category, excluding current location
+    const similarStores = mockLocations
+        .filter(loc => 
+            loc.id !== currentLocation.id && 
+            loc.category === currentLocation.category
+        )
+        .slice(0, 4); // Get max 4 similar stores
+    
+    // Clear existing content
+    similarStoresContainer.innerHTML = '';
+    
+    // If we have similar stores, populate them
+    if (similarStores.length > 0) {
+        similarStores.forEach(store => {
+            const storeItem = document.createElement('div');
+            storeItem.className = 'similar-store-item';
+            storeItem.innerHTML = `
+                <span class="similar-icon">${store.icon || '🏪'}</span>
+                <span class="similar-label">${store.name}</span>
+            `;
+            
+            // Add click event to show this store's detail
+            storeItem.onclick = () => {
+                showStoreDetailInSearchTab(store);
+            };
+            
+            similarStoresContainer.appendChild(storeItem);
+        });
+    } else {
+        // If no similar stores found, show a message or hide the section
+        similarStoresContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--text-secondary);">
+                No similar stores found
+            </div>
+        `;
+    }
+}
+
+function hideStoreDetailInSearchTab() {
+    const searchContent = document.getElementById('searchContent');
+    const storeDetailContent = document.getElementById('storeDetailContent');
+    
+    if (!searchContent || !storeDetailContent) return;
+    
+    // Show search content, hide store detail
+    storeDetailContent.classList.remove('active');
+    storeDetailContent.classList.add('hidden');
+    searchContent.classList.remove('hidden');
+}
+
+function setupStoreDetailEvents() {
+    // Event listeners are now set up in initEventListeners()
+    // This function is kept for future use if needed
+    console.log('✅ Store detail events already set up in initEventListeners');
+}
+
+// ==================== START APPLICATION ====================
 // Start application
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {

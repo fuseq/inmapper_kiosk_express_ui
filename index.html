@@ -109,8 +109,157 @@
         <!-- Search Tab (Bottom Sheet) -->
         <div class="search-tab" id="searchTab">
 
-            <!-- Route Points Selector (Inside Panel) -->
-            <div class="route-points-selector-panel" id="routePointsSelector">
+            <!-- Store Detail Content (Hidden by default) -->
+            <div class="store-detail-content hidden" id="storeDetailContent">
+                <!-- Map Section -->
+                <div class="store-map-section">
+                    <!-- Back Button -->
+                    <button class="store-map-back-btn" id="storeMapBackBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Back</span>
+                    </button>
+                    
+                    <!-- Route Type Switch -->
+                    <div class="store-route-switch" id="storeRouteSwitch">
+                        <button class="route-switch-btn" data-type="shortest">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="13" r="9" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 13L15.5 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 13V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 4V2M12 2L10 4M12 2L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15 6L17 4M9 6L7 4M18 11H20M6 11H4M18 15H20M6 15H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <span class="route-label">En Kısa</span>
+                        </button>
+                        <div class="route-switch-slider"></div>
+                        <button class="route-switch-btn" data-type="accessible">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <rect x="6" y="3" width="12" height="18" rx="1" stroke="currentColor" stroke-width="2"/>
+                                <path d="M6 8H18M6 13H18M6 18H18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M10 8V3M14 8V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <circle cx="10" cy="10.5" r="0.5" fill="currentColor"/>
+                                <circle cx="14" cy="10.5" r="0.5" fill="currentColor"/>
+                            </svg>
+                            <span class="route-label">Asansörlü</span>
+                        </button>
+                    </div>
+                    
+                    <img src="floors/0.svg" alt="Floor Map" class="store-floor-map" id="storeFloorMap" />
+                    
+                    <!-- Button overlay -->
+                    <div class="store-map-overlay">
+                        <button class="store-heading-btn" id="startHeadingBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Start Heading Forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Business Info Section -->
+                <div class="store-info-grid">
+                    <!-- Left Column - Store Details -->
+                    <div class="store-left-column">
+                        <!-- Store Details Card -->
+                        <div class="store-info-card">
+                            <div class="store-header-flex">
+                                <div class="store-logo" id="storeLogoIcon">👕</div>
+                                <div class="store-title-info">
+                                    <h2 class="store-name" id="storeName">True Religion Outlet</h2>
+                                    <p class="store-floor" id="storeFloor">Zemin Kat • Zorlu Center</p>
+                                    <div class="store-hours-chip" id="storeHoursChip">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <span>Mon-Sun • 10:00-22:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="store-tags" id="storeTags">
+                                <span class="store-tag">Clothes & Fashion</span>
+                                <span class="store-tag">Apparel</span>
+                                <span class="store-tag">Brands</span>
+                                <span class="store-tag">Outlet</span>
+                            </div>
+                        </div>
+
+                        <!-- Description Card -->
+                        <div class="store-info-card">
+                            <h3 class="store-section-title">Description</h3>
+                            <p class="store-description" id="storeDescription">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            </p>
+                        </div>
+
+                        <!-- Similar Stores Card -->
+                        <div class="store-info-card">
+                            <h3 class="store-section-title">You might also like</h3>
+                            <div class="similar-stores-grid" id="similarStores">
+                                <div class="similar-store-item">
+                                    <span class="similar-icon">🛍️</span>
+                                    <span class="similar-label">ZUTPO</span>
+                                </div>
+                                <div class="similar-store-item">
+                                    <span class="similar-icon">🏢</span>
+                                    <span class="similar-label">RETAIL</span>
+                                </div>
+                                <div class="similar-store-item">
+                                    <span class="similar-icon">👔</span>
+                                    <span class="similar-label">BLUE</span>
+                                </div>
+                                <div class="similar-store-item">
+                                    <span class="similar-icon">❓</span>
+                                    <span class="similar-label">MORE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - QR & Contact -->
+                    <div class="store-right-column">
+                        <div class="store-right-content">
+                            <!-- QR Code Card -->
+                            <div class="store-qr-card">
+                                <h3 class="store-qr-title">Mobile Links</h3>
+                                <div class="store-qr-container">
+                                    <img id="storeQRCode" src="" alt="QR Code" class="store-qr-image">
+                                </div>
+                                <p class="store-qr-subtitle">Continue from your phone by scanning the QR</p>
+                            </div>
+
+                            <!-- View Store Page Button -->
+                            <button class="store-link-btn" id="viewStorePageBtn">
+                                <span class="store-link-content">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    View Store Page
+                                </span>
+                                <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
+                                </svg>
+                            </button>
+
+                            <!-- Phone Button -->
+                            <a href="tel:+17075550009" class="store-phone-btn" id="storePhoneBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z" stroke-width="2"/>
+                                </svg>
+                                <p class="store-phone-number" id="storePhoneNumber">(707) 555-0009</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Content (Default) -->
+            <div class="search-content" id="searchContent">
+                <!-- Route Points Selector (Inside Panel) -->
+                <div class="route-points-selector-panel" id="routePointsSelector">
                 <button class="route-point-btn disabled" id="startPointSelector" data-point="start" disabled>
                     <div class="point-icon start-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -248,6 +397,7 @@
                 <div class="keyboard-row">
                     <button class="inline-key space-key" data-key="Space">Space</button>
                 </div>
+            </div>
             </div>
         </div>
 
