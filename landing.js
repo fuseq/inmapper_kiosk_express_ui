@@ -8,21 +8,35 @@
     if (typeof KioskClient !== 'undefined') {
       console.log('🚀 Kiosk Client başlatılıyor...');
       KioskClient.init({
-        apiUrl: 'http://localhost:3000', // Backend sunucu adresi
-        pollInterval: 60000, // 1 dakikada bir kontrol
+        apiUrl: 'https://inmapper-kiosk-backend.isohtel.com.tr', // Backend sunucu adresi
+        pollInterval: 15000, // 15 saniyede bir kontrol (hızlı güncelleme için)
         onConfigLoaded: (config) => {
-          console.log('✅ Landing page yapılandırması yüklendi:', config);
+          console.log('📦 Config alındı:', JSON.stringify(config, null, 2));
           kioskConfig = config;
           
-          if (config.landingPage) {
-            applyKioskConfiguration(config.landingPage);
+          if (config && config.landingPage) {
+            console.log('🎯 Landing page bulundu:', config.landingPage.name);
+            console.log('📷 Slides:', config.landingPage.slides?.length || 0, 'adet');
+            console.log('🔗 isAssigned:', config.isAssigned);
+            
+            if (config.landingPage.slides && config.landingPage.slides.length > 0) {
+              applyKioskConfiguration(config.landingPage);
+            } else {
+              console.log('⚠️ Landing page var ama slide yok');
+            }
+          } else {
+            // Landing page atanmamış - slider'ı temizle
+            console.log('⚠️ Bu cihaza landing page atanmamış, slider temizleniyor...');
+            clearSlider();
           }
         },
         onError: (error) => {
           console.error('❌ Kiosk Client hatası:', error);
-          // Hata durumunda varsayılan yapılandırmayı kullan
+          // Hata durumunda mevcut görüntüyü koru
         }
       });
+    } else {
+      console.error('❌ KioskClient tanımlı değil! kiosk-client.js yüklenmiş mi?');
     }
   });
   // ==================== KIOSK CLIENT ENTEGRASYONU SONU ====================
@@ -473,6 +487,40 @@
   });
 
   // ==================== KIOSK ENTEGRASYON FONKSİYONLARI ====================
+  
+  // Slider'ı temizle (landing page atanmamışsa)
+  function clearSlider() {
+    // Slideshow'u durdur
+    if (slideTimer) {
+      window.clearInterval(slideTimer);
+      slideTimer = null;
+    }
+    
+    // Slider'ı temizle
+    if (filmStrip) {
+      filmStrip.innerHTML = '';
+    }
+    
+    // Indicator'ları temizle
+    const slideIndicators = document.getElementById('slideIndicators');
+    if (slideIndicators) {
+      slideIndicators.innerHTML = '';
+    }
+    
+    // Background'u temizle
+    if (fullscreenBg) {
+      fullscreenBg.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+    }
+    
+    // Değişkenleri sıfırla
+    originalSlides = [];
+    indicators = [];
+    totalSlides = 0;
+    currentIndex = 0;
+    slideColorCache = {};
+    
+    console.log('✅ Slider temizlendi - cihaza landing page atanması bekleniyor');
+  }
   
   // Yapılandırmayı uygula
   function applyKioskConfiguration(landingPage) {

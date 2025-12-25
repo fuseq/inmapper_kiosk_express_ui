@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floor Plan Viewer - Kat Planı Görüntüleyici</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button class="btn-icon mobile-menu-btn" id="toggleSidebar">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="logo">
+                        <img src="./assets/inmapper.png" alt="inMapper" class="logo-image">
+                        <span class="logo-text">
+                            <span class="logo-text-in">in</span><span class="logo-text-mapper">Mapper</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="header-center">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search floor plan items..." 
+                            class="search-input"
+                        >
+                    </div>
+                </div>
+
+                <div class="header-right google-menus">
+                    <button class="menu-icon-btn" id="appsMenuBtn" aria-label="Uygulamalar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="5" cy="5" r="1.6" fill="currentColor"></circle>
+                            <circle cx="12" cy="5" r="1.6" fill="currentColor"></circle>
+                            <circle cx="19" cy="5" r="1.6" fill="currentColor"></circle>
+                            <circle cx="5" cy="12" r="1.6" fill="currentColor"></circle>
+                            <circle cx="12" cy="12" r="1.6" fill="currentColor"></circle>
+                            <circle cx="19" cy="12" r="1.6" fill="currentColor"></circle>
+                            <circle cx="5" cy="19" r="1.6" fill="currentColor"></circle>
+                            <circle cx="12" cy="19" r="1.6" fill="currentColor"></circle>
+                            <circle cx="19" cy="19" r="1.6" fill="currentColor"></circle>
+                        </svg>
+                    </button>
+                    <button class="profile-btn" id="userMenuBtn" aria-label="Profil">
+                        <img src="./public/placeholder-user.jpg" alt="Profile" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="google-menu apps-dropdown" id="appsMenu" style="display: none;">
+                <div class="apps-grid">
+                    <a class="apps-grid-item" data-target="units" href="#">
+                        <div class="apps-grid-icon">
+                            <img src="./assets/indoor.png" alt="Harita" />
+                        </div>
+                        <span>Harita</span>
+                    </a>
+                    <a class="apps-grid-item" data-target="kiosk" href="#">
+                        <div class="apps-grid-icon">
+                            <img src="./assets/kiosk.png" alt="Kiosk" />
+                        </div>
+                        <span>Kiosk</span>
+                    </a>
+                    <a class="apps-grid-item apps-grid-item-disabled" href="#">
+                        <div class="apps-grid-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                        </div>
+                        <span>App 3</span>
+                    </a>
+                    <a class="apps-grid-item apps-grid-item-disabled" href="#">
+                        <div class="apps-grid-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                        </div>
+                        <span>App 4</span>
+                    </a>
+                    <a class="apps-grid-item apps-grid-item-disabled" href="#">
+                        <div class="apps-grid-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                        </div>
+                        <span>App 5</span>
+                    </a>
+                    <a class="apps-grid-item apps-grid-item-disabled" href="#">
+                        <div class="apps-grid-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                        </div>
+                        <span>App 6</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="google-menu profile-dropdown" id="userMenu" style="display: none;">
+                <div class="profile-header">
+                    <span id="userEmail">user@example.com</span>
+                    <button class="close-profile" id="closeUserMenuBtn" aria-label="Kapat">
+                        ✕
+                    </button>
+                </div>
+                <div class="profile-body">
+                    <div class="profile-avatar-wrapper">
+                        <img src="./public/placeholder-user.jpg" alt="Profile" id="userAvatar">
+                    </div>
+                   
+                    <p class="profile-name" id="userName">User Name</p>
+                    <button class="profile-action primary" id="manageAccountBtn">Hesabınızı yönetin</button>
+                    <button class="profile-action danger" id="signOutBtn">Oturumu kapat</button>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content" id="sidebarContent">
+                    <h3 class="sidebar-title">Floor Plan • <span id="itemCount">0</span> items</h3>
+                    <div class="items-list" id="itemsList">
+                        <!-- Items will be dynamically inserted here -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Details Panel -->
+            <aside class="details-panel" id="detailsPanel" style="display: none;">
+                <div class="details-content">
+                    <div class="details-header">
+                        <div class="details-title-wrapper">
+                            <h2 id="detailsTitle">Item Title</h2>
+                        </div>
+                        <button class="btn-icon" id="closeDetailsBtn">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+
+                    <div class="details-info">
+                        <div class="category-badge" id="detailsCategoryBadge">SHOP</div>
+                        <span class="details-meta" id="detailsMeta">ID0001 • Floor 0</span>
+                    </div>
+
+                    <div class="details-body">
+                        <div class="info-section">
+                            <span class="info-label">Title:</span>
+                            <div class="info-value" id="detailsTitleDisplay">Item Title</div>
+                            <input type="text" id="detailsTitleInputField" class="details-edit-input" style="display: none;">
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-item">
+                                <span class="info-label">Category:</span>
+                                <div class="info-value" id="detailsCategoryDisplay">Category</div>
+                                <select id="detailsCategoryInput" class="details-edit-input" style="display: none;">
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Floor:</span>
+                                <div class="info-value" id="detailsFloorDisplay">0</div>
+                                <input type="number" id="detailsFloorInput" class="details-edit-input" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <span class="info-label">Phone:</span>
+                            <div class="info-value" id="detailsPhoneDisplay">N/A</div>
+                            <input type="text" id="detailsPhoneInput" class="details-edit-input" style="display: none;">
+                        </div>
+
+                        <div class="info-section">
+                            <span class="info-label">Description:</span>
+                            <div class="info-value" id="detailsDescriptionValue">Description</div>
+                            <textarea id="detailsDescriptionInput" class="details-edit-input" rows="3" style="display: none;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="details-alerts">
+                        <div class="warning-alert" id="editPendingAlert" style="display: none;">
+                            There is a pending approval for this unit.
+                        </div>
+                    </div>
+
+                    <div class="details-edit">
+                        <button class="btn-primary" id="suggestEditBtn">Suggest an edit</button>
+                        <div class="title-edit-actions" id="titleEditActions" style="display: none;">
+                            <button class="btn-primary" id="submitEditBtn">Send</button>
+                        </div>
+                        <div class="success-alert" id="editSuccessAlert" style="display: none;">
+                            Your request has been sent. It will be updated after approval.
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Map Container -->
+            <div class="map-container" id="mapContainer">
+                <div id="leafletMap" class="leaflet-map"></div>
+
+                <!-- Category Dropdown (Google Maps style) -->
+                <div class="category-dropdown-container">
+                    <button class="category-dropdown-btn" id="categoryDropdownBtn">
+                        <span id="selectedCategoryText">Categories</span>
+                        <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <div class="category-dropdown-menu" id="categoryDropdownMenu" style="display: none;">
+                        <div class="category-dropdown-grid" id="categoryDropdownGrid">
+                            <!-- Categories will be populated dynamically from SVG colors -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Legend -->
+                <div class="map-legend">
+                    <div class="legend-title">Categories</div>
+                    <div class="legend-items" id="legendItems">
+                        <!-- Legend items will be populated dynamically from SVG colors -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="data.js"></script>
+    <script type="module" src="svg-map.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
+

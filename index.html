@@ -20,13 +20,11 @@
                 </div>
             </div>
             <div class="nav-center">
-                <div class="location-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" stroke-width="2" fill="none"/>
-                        <circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                <img src="assets/logo.png" alt="Zorlu Center" class="nav-logo">
+                <div class="nav-logo-text">
+                    <span class="nav-logo-title">ZORLU CENTER</span>
+                    <span class="nav-logo-subtitle">İSTANBUL</span>
                 </div>
-                <span class="nav-brand">Zorlu Center İstanbul</span>
             </div>
             <div class="nav-right">
                 <button class="panel-toggle-btn-top panel-right" id="panelToggleBtnTop" title="Paneli Taşı">
@@ -51,13 +49,12 @@
                 <!-- Logo Section -->
                 <div class="home-logo">
                     <div class="logo-icon">
-                        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                            <circle cx="60" cy="60" r="50" stroke="white" stroke-width="4"/>
-                            <text x="60" y="75" font-size="48" font-weight="bold" text-anchor="middle" fill="white">Z</text>
-                        </svg>
+                        <img src="assets/logo.png" alt="Zorlu Center Logo" class="logo-image">
                     </div>
-                    <h1 class="home-title">ZORLU CENTER</h1>
-                    <p class="home-subtitle">Dijital Yönlendirme Sistemi</p>
+                    <div class="home-title-wrapper">
+                        <h1 class="home-title">ZORLU CENTER</h1>
+                        <p class="home-title-location">İSTANBUL</p>
+                    </div>
                 </div>
 
                 <!-- Search Trigger -->
@@ -76,7 +73,7 @@
                     </div>
                     <div class="category-card" data-category="food">
                         <div class="category-card-icon">🍔</div>
-                        <span class="category-card-label">Yemek</span>
+                        <span class="category-card-label">Yeme-İçme</span>
                     </div>
                     <div class="category-card" data-category="coffee">
                         <div class="category-card-icon">☕</div>
@@ -103,6 +100,23 @@
                     </svg>
                     <span>Haritayı Keşfet</span>
                 </button>
+
+            </div>
+        </div>
+
+        <!-- Mini Slideshow at Bottom (Outside initial-home, fixed to viewport) -->
+        <div class="home-mini-slideshow" id="homeMiniSlideshow">
+            <div class="mini-slideshow-container">
+                <div class="mini-film-strip" id="miniFilmStrip">
+                    <div class="mini-slide" style="background-image: url('assets/adidas.jpg');"></div>
+                    <div class="mini-slide" style="background-image: url('assets/nike.jpg');"></div>
+                    <div class="mini-slide" style="background-image: url('assets/h&m.jpg');"></div>
+                </div>
+                <div class="mini-slide-indicators" id="miniSlideIndicators">
+                    <button class="mini-indicator active" data-index="0"><span></span></button>
+                    <button class="mini-indicator" data-index="1"><span></span></button>
+                    <button class="mini-indicator" data-index="2"><span></span></button>
+                </div>
             </div>
         </div>
 
@@ -197,24 +211,9 @@
 
                         <!-- Similar Stores Card -->
                         <div class="store-info-card">
-                            <h3 class="store-section-title">You might also like</h3>
+                            <h3 class="store-section-title">Beğenebileceğiniz Yerler</h3>
                             <div class="similar-stores-grid" id="similarStores">
-                                <div class="similar-store-item">
-                                    <span class="similar-icon">🛍️</span>
-                                    <span class="similar-label">ZUTPO</span>
-                                </div>
-                                <div class="similar-store-item">
-                                    <span class="similar-icon">🏢</span>
-                                    <span class="similar-label">RETAIL</span>
-                                </div>
-                                <div class="similar-store-item">
-                                    <span class="similar-icon">👔</span>
-                                    <span class="similar-label">BLUE</span>
-                                </div>
-                                <div class="similar-store-item">
-                                    <span class="similar-icon">❓</span>
-                                    <span class="similar-label">MORE</span>
-                                </div>
+                                <!-- Will be populated dynamically -->
                             </div>
                         </div>
                     </div>
@@ -290,7 +289,7 @@
                 <div class="category-tabs-wrapper">
                     <button class="category-tab active" data-category="all">Tümü</button>
                     <button class="category-tab" data-category="shopping">Alışveriş</button>
-                    <button class="category-tab" data-category="food">Yemek</button>
+                    <button class="category-tab" data-category="food">Yeme-İçme</button>
                     <button class="category-tab" data-category="coffee">Kafe</button>
                     <button class="category-tab" data-category="entertainment">Eğlence</button>
                     <button class="category-tab" data-category="wc">Tuvalet</button>
@@ -301,7 +300,7 @@
                 <!-- Floor Selector Compact -->
                 <div class="floor-selector-compact" id="floorSelectorCompact">
                     <button class="floor-display-btn" id="floorDisplayBtn">
-                        <span class="floor-name" id="currentFloorName">Zemin Kat</span>
+                        <span class="floor-name" id="currentFloorName">Tüm Katlar</span>
                     </button>
                     <div class="floor-arrows-group">
                         <button class="floor-arrow-btn" id="floorUpBtn">
@@ -316,23 +315,9 @@
                         </button>
                     </div>
                     
-                    <!-- Dropdown Menu -->
+                    <!-- Dropdown Menu - Dynamically populated by JavaScript -->
                     <div class="floor-dropdown" id="floorDropdown">
-                        <div class="floor-dropdown-item" data-floor="2">
-                            <span class="floor-label">2. Kat</span>
-                        </div>
-                        <div class="floor-dropdown-item" data-floor="1">
-                            <span class="floor-label">1. Kat</span>
-                        </div>
-                        <div class="floor-dropdown-item active" data-floor="0">
-                            <span class="floor-label">Zemin Kat</span>
-                        </div>
-                        <div class="floor-dropdown-item" data-floor="-1">
-                            <span class="floor-label">Otopark 1</span>
-                        </div>
-                        <div class="floor-dropdown-item" data-floor="-2">
-                            <span class="floor-label">Otopark 2</span>
-                        </div>
+                        <!-- Floor items will be added dynamically from API -->
                     </div>
                 </div>
             </div>
@@ -345,6 +330,8 @@
             <!-- Inline Keyboard -->
             <div class="inline-keyboard">
                 <div class="keyboard-row numbers-row">
+                    <button class="inline-key special-char-key" data-key="&">&</button>
+                    <button class="inline-key special-char-key" data-key=".">.</button>
                     <button class="inline-key number-key" data-key="1">1</button>
                     <button class="inline-key number-key" data-key="2">2</button>
                     <button class="inline-key number-key" data-key="3">3</button>
@@ -355,6 +342,8 @@
                     <button class="inline-key number-key" data-key="8">8</button>
                     <button class="inline-key number-key" data-key="9">9</button>
                     <button class="inline-key number-key" data-key="0">0</button>
+                    <button class="inline-key special-char-key" data-key="-">-</button>
+                    <button class="inline-key special-char-key" data-key="/">/</button>
                 </div>
                 <div class="keyboard-row">
                     <button class="inline-key" data-key="Q">Q</button>
@@ -418,7 +407,7 @@
                 <!-- Floor Selector Compact (Bottom Right) -->
                 <div class="map-floor-selector-compact" id="mapFloorSelectorCompact">
                     <button class="map-floor-display-btn" id="mapFloorDisplayBtn">
-                        <span class="map-floor-name" id="mapCurrentFloorName">Zemin Kat</span>
+                        <span class="map-floor-name" id="mapCurrentFloorName">Tüm Katlar</span>
                     </button>
                     <div class="map-floor-arrows-group">
                         <button class="map-floor-arrow-btn" id="mapFloorUpBtn">
@@ -433,215 +422,282 @@
                         </button>
                     </div>
                     
-                    <!-- Dropdown Menu -->
+                    <!-- Dropdown Menu - Dynamically populated by JavaScript -->
                     <div class="map-floor-dropdown" id="mapFloorDropdown">
-                        <div class="map-floor-dropdown-item" data-floor="2">
-                            <span class="map-floor-label">2. Kat</span>
-                        </div>
-                        <div class="map-floor-dropdown-item" data-floor="1">
-                            <span class="map-floor-label">1. Kat</span>
-                        </div>
-                        <div class="map-floor-dropdown-item active" data-floor="0">
-                            <span class="map-floor-label">Zemin Kat</span>
-                        </div>
-                        <div class="map-floor-dropdown-item" data-floor="-1">
-                            <span class="map-floor-label">Otopark 1</span>
-                        </div>
-                        <div class="map-floor-dropdown-item" data-floor="-2">
-                            <span class="map-floor-label">Otopark 2</span>
-                        </div>
+                        <!-- Floor items will be added dynamically from API -->
                     </div>
                 </div>
             </div>
             
             <!-- Side Panel for Route Info -->
             <div class="map-side-panel panel-right hidden" id="mapSidePanel">
-            <div class="side-panel-content">
-                <!-- Search Bar at Top -->
-                <div class="side-panel-search-bar" id="sidePanelSearchBar">
-                    <svg class="side-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span class="side-search-placeholder">Nereye gitmek istersiniz?</span>
-                </div>
-                
-                <!-- Route Points Header -->
-                <div class="side-panel-header">
-                        <div class="side-route-card start disabled">
-                            <div class="side-route-icon start-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                    <circle cx="12" cy="12" r="10"/>
-                                </svg>
+                <div class="side-panel-content">
+                    <!-- Search Bar at Top -->
+                    <div class="side-panel-search-bar" id="sidePanelSearchBar">
+                        <svg class="side-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" class="side-panel-search-input" id="sidePanelSearchInput" placeholder="Nereye gitmek istersiniz?" style="display: none;">
+                        <span class="side-search-placeholder" id="sidePanelSearchPlaceholder">Nereye gitmek istersiniz?</span>
+                    </div>
+                    
+                    <!-- ==================== STORE PREVIEW MODE ==================== -->
+                    <div class="side-store-preview-mode" id="sideStorePreviewMode">
+                        <!-- ==================== LOCATION LIST VIEW ==================== -->
+                        <div class="side-location-list-view hidden" id="sideLocationListView">
+                            <!-- Category Tabs -->
+                            <div class="side-list-category-tabs">
+                                <button class="side-list-category-tab active" data-category="all">Tümü</button>
+                                <button class="side-list-category-tab" data-category="shopping">Alışveriş</button>
+                                <button class="side-list-category-tab" data-category="food">Yeme-İçme</button>
+                                <button class="side-list-category-tab" data-category="coffee">Kafe</button>
+                                <button class="side-list-category-tab" data-category="entertainment">Eğlence</button>
                             </div>
-                            <div class="side-route-text">
-                                <div>
-                                    <span class="side-route-label">BAŞLANGIÇ (Kiosk)</span>
-                                    <span class="side-route-name" id="sidePanelStartName">Bulunduğunuz Konum</span>
-                                </div>
-                                <span class="side-route-floor" id="sidePanelStartFloor">Zemin Kat</span>
+                            
+                            <!-- Location Results -->
+                            <div class="side-list-results" id="sideListResults">
+                                <!-- Dynamically populated -->
                             </div>
                         </div>
                         
-                        <div class="side-route-divider"></div>
-                        
-                        <div class="side-route-card end" id="sidePanelEndPoint">
-                            <div class="side-route-icon end-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                        <!-- ==================== STORE DETAIL VIEW ==================== -->
+                        <div class="side-store-detail-view" id="sideStoreDetailView">
+                            <!-- Store Info Header -->
+                            <div class="side-panel-header side-store-info-card">
+                                <div class="side-store-header-flex">
+                                    <div class="side-store-logo" id="sidePanelStoreLogo">🛍️</div>
+                                    <div class="side-store-title-info">
+                                        <h2 class="side-store-name" id="sidePanelStoreName">Nike Store</h2>
+                                        <p class="side-store-floor" id="sidePanelStoreFloor">Zemin Kat • Zorlu Center</p>
+                                        <div class="side-store-hours-chip" id="sidePanelStoreHours">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                            <span>Mon-Sun • 10:00-22:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="side-store-tags" id="sidePanelStoreTags">
+                                    <span class="side-store-tag">Alışveriş</span>
+                                    <span class="side-store-tag">Spor</span>
+                                    <span class="side-store-tag">Ayakkabı</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Store Description Card -->
+                            <div class="side-panel-card side-description-card">
+                                <h3 class="side-card-title">Açıklama</h3>
+                                <p class="side-store-description" id="sidePanelStoreDescription">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                            
+                            <!-- Store Phone Card -->
+                            <div class="side-panel-card side-phone-card" id="sidePanelPhoneCard">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z" stroke-width="2"/>
                                 </svg>
-                            </div>
-                            <div class="side-route-text">
-                                <div>
-                                    <span class="side-route-label">VARIŞ</span>
-                                    <span class="side-route-name" id="sidePanelEndName">Seçiniz</span>
+                                <div class="side-phone-info">
+                                    <span class="side-phone-label">İletişim</span>
+                                    <p class="side-phone-number" id="sidePanelPhoneNumber">+90 (555) 123 45 67</p>
                                 </div>
-                                <span class="side-route-floor" id="sidePanelEndFloor">Floor 1</span>
                             </div>
+                            
+                            <!-- Similar Stores Section -->
+                            <div class="side-similar-stores">
+                                <div class="side-similar-header">
+                                    <h3>Beğenebileceğiniz Yerler</h3>
+                                </div>
+                                <div class="side-similar-grid" id="sidePanelSimilarStores">
+                                    <!-- Will be populated dynamically -->
+                                </div>
+                            </div>
+                            
+                            <!-- Draw Route Button -->
+                            <button class="store-heading-btn" id="sideDrawRouteBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>Rota Çiz</span>
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- Route Type Buttons -->
-                    <div class="route-type-selector">
-                        <button class="route-type-btn active" id="routeTypeNormal" data-type="normal">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <!-- ==================== ROUTE INFO MODE ==================== -->
+                    <div class="side-route-info-mode hidden" id="sideRouteInfoMode">
+                        <!-- Store Info Header -->
+                        <div class="side-panel-header side-store-info-card">
+                            <div class="side-store-header-flex">
+                                <div class="side-store-logo" id="sideRouteStoreLogo">🛍️</div>
+                                <div class="side-store-title-info">
+                                    <h2 class="side-store-name" id="sideRouteStoreName">Nike Store</h2>
+                                    <p class="side-store-floor" id="sideRouteStoreFloor">Zemin Kat • Zorlu Center</p>
+                                    <div class="side-store-hours-chip" id="sideRouteStoreHours">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <span>Mon-Sun • 10:00-22:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="side-store-tags" id="sideRouteStoreTags">
+                                <span class="side-store-tag">Alışveriş</span>
+                                <span class="side-store-tag">Spor</span>
+                                <span class="side-store-tag">Ayakkabı</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Store Description Card -->
+                        <div class="side-panel-card side-description-card">
+                            <h3 class="side-card-title">Açıklama</h3>
+                            <p class="side-store-description" id="sideRouteStoreDescription">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            </p>
+                        </div>
+                        
+                        <!-- Store Phone Card -->
+                        <div class="side-panel-card side-phone-card" id="sideRoutePhoneCard">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z" stroke-width="2"/>
                             </svg>
-                            <span>En Kısa Rota</span>
-                        </button>
-                        <button class="route-type-btn" id="routeTypeAccessible" data-type="accessible">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2"/>
-                                <path d="M10 22V14L7 10V6H17V10L14 14V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M10 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            <span>Asansörlü Rota</span>
-                        </button>
-                    </div>
-                    
-                    <!-- Route Info Stats -->
-                    <div class="route-stats">
-                        <div class="route-stat">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span id="routeDistance">173 m</span>
-                        </div>
-                        <div class="route-stat">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            <span id="routeTime">3 dk</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Navigation Steps -->
-                    <div class="navigation-steps">
-                        <div class="navigation-header">
-                            <h3>Rotayı Takip Edin</h3>
-                        </div>
-                        <div class="steps-container" id="navigationSteps">
-                            <!-- Will be populated dynamically -->
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Düz ilerleyin</span>
-                                    <span class="step-distance">7 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Sağa dönün ve ilerleyin</span>
-                                    <span class="step-distance">12 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Koridorda devam edin</span>
-                                    <span class="step-distance">25 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Sola dönün</span>
-                                    <span class="step-distance">3 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Ana geçide devam edin</span>
-                                    <span class="step-distance">45 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Sağ tarafta mağaza</span>
-                                    <span class="step-distance">8 m</span>
-                                </div>
-                            </div>
-                            <div class="nav-step">
-                                <div class="step-icon">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="step-text">
-                                    <span class="step-instruction">Hedefe vardınız</span>
-                                    <span class="step-distance">0 m</span>
-                                </div>
+                            <div class="side-phone-info">
+                                <span class="side-phone-label">İletişim</span>
+                                <p class="side-phone-number" id="sideRoutePhoneNumber">+90 (555) 123 45 67</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- QR Code Section (Bottom) -->
-                    <div class="side-panel-qr">
-                        <div class="qr-header">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                <rect x="7" y="7" width="3" height="3" fill="currentColor"/>
-                                <rect x="14" y="7" width="3" height="3" fill="currentColor"/>
-                                <rect x="7" y="14" width="3" height="3" fill="currentColor"/>
-                                <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
-                            </svg>
-                            <span>Rotayı Telefonunuza Gönderin</span>
+                        
+                        <!-- Similar Stores Section -->
+                        <div class="side-similar-stores">
+                            <div class="side-similar-header">
+                                <h3>Beğenebileceğiniz Yerler</h3>
+                            </div>
+                            <div class="side-similar-grid" id="sideRouteSimilarStores">
+                                <!-- Will be populated dynamically -->
+                            </div>
                         </div>
-                        <div class="qr-code-display">
-                            <img id="sidePanelQRCode" src="" alt="QR Code">
+                        
+                        <!-- Route Type Buttons -->
+                        <div class="route-type-selector">
+                            <button class="route-type-btn active" id="routeTypeNormal" data-type="normal">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span>En Kısa Rota</span>
+                            </button>
+                            <button class="route-type-btn" id="routeTypeAccessible" data-type="accessible">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M10 22V14L7 10V6H17V10L14 14V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10 14H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <span>Asansörlü Rota</span>
+                            </button>
                         </div>
-                        <p class="qr-desc">QR kodu tarayarak rotayı cep telefonunuzda görüntüleyin</p>
+                        
+                        <!-- Route Info Stats -->
+                        <div class="route-stats">
+                            <div class="route-stat">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span id="routeDistance">173 m</span>
+                            </div>
+                            <div class="route-stat">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                <span id="routeTime">3 dk</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Navigation Steps -->
+                        <div class="navigation-steps">
+                            <div class="navigation-header">
+                                <h3>Rotayı Takip Edin</h3>
+                            </div>
+                            <div class="steps-container" id="navigationSteps">
+                                <div class="nav-step">
+                                    <div class="step-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-text">
+                                        <span class="step-instruction">Düz ilerleyin</span>
+                                        <span class="step-distance">7 m</span>
+                                    </div>
+                                </div>
+                                <div class="nav-step">
+                                    <div class="step-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-text">
+                                        <span class="step-instruction">Sağa dönün ve ilerleyin</span>
+                                        <span class="step-distance">12 m</span>
+                                    </div>
+                                </div>
+                                <div class="nav-step">
+                                    <div class="step-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-text">
+                                        <span class="step-instruction">Koridorda devam edin</span>
+                                        <span class="step-distance">25 m</span>
+                                    </div>
+                                </div>
+                                <div class="nav-step">
+                                    <div class="step-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-text">
+                                        <span class="step-instruction">Sola dönün</span>
+                                        <span class="step-distance">3 m</span>
+                                    </div>
+                                </div>
+                                <div class="nav-step">
+                                    <div class="step-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-text">
+                                        <span class="step-instruction">Hedefe vardınız</span>
+                                        <span class="step-distance">0 m</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- QR Code Section (Bottom) -->
+                        <div class="side-panel-qr">
+                            <div class="qr-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <rect x="7" y="7" width="3" height="3" fill="currentColor"/>
+                                    <rect x="14" y="7" width="3" height="3" fill="currentColor"/>
+                                    <rect x="7" y="14" width="3" height="3" fill="currentColor"/>
+                                    <rect x="14" y="14" width="3" height="3" fill="currentColor"/>
+                                </svg>
+                                <span>Rotayı Telefonunuza Gönderin</span>
+                            </div>
+                            <div class="qr-code-display">
+                                <img id="sidePanelQRCode" src="" alt="QR Code">
+                            </div>
+                            <p class="qr-desc">QR kodu tarayarak rotayı cep telefonunuzda görüntüleyin</p>
+                        </div>
                     </div>
                 </div>
             </div>

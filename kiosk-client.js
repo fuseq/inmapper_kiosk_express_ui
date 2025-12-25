@@ -12,10 +12,12 @@
 (function(window) {
   'use strict';
 
+  const STORAGE_KEY = 'inmapper_kiosk_device';
+
   const KioskClient = {
     config: {
-      apiUrl: 'http://localhost:3000',
-      pollInterval: 60000, // 1 dakikada bir config kontrolü
+      apiUrl: 'https://inmapper-kiosk-backend.isohtel.com.tr',
+      pollInterval: 15000, // 15 saniyede bir config kontrolü
       onConfigLoaded: null,
       onError: null
     },
@@ -32,13 +34,24 @@
       this.config = { ...this.config, ...options };
 
       console.log('🔧 Inmapper Kiosk Client başlatılıyor...');
+      console.log('📡 API URL:', this.config.apiUrl);
 
       try {
-        // FingerprintJS'i yükle
-        await this.initFingerprint();
+        // Önce localStorage'dan kayıtlı cihaz bilgisini kontrol et
+        const savedDevice = this.loadFromStorage();
         
-        // Cihazı kaydet
-        await this.registerDevice();
+        if (savedDevice && savedDevice.deviceId && savedDevice.fingerprint) {
+          console.log('💾 Kayıtlı cihaz bulundu:', savedDevice.deviceId);
+          this.deviceId = savedDevice.deviceId;
+          this.fingerprint = savedDevice.fingerprint;
+          
+          // Cihazı backend'e bildir (lastSeen güncelleme)
+          await this.updateDevice();
+        } else {
+          // Yeni cihaz kaydı
+          await this.initFingerprint();
+          await this.registerDevice();
+        }
         
         // Yapılandırmayı çek
         await this.loadConfig();
@@ -47,11 +60,42 @@
         this.startPolling();
 
         console.log('✅ Kiosk Client başarıyla başlatıldı');
+        console.log('📱 Device ID:', this.deviceId);
+        console.log('🔑 Fingerprint:', this.fingerprint);
       } catch (error) {
         console.error('❌ Kiosk Client başlatılamadı:', error);
         if (this.config.onError) {
           this.config.onError(error);
         }
+      }
+    },
+
+    /**
+     * localStorage'dan cihaz bilgisini yükle
+     */
+    loadFromStorage() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : null;
+      } catch (e) {
+        console.warn('⚠️ localStorage okunamadı:', e);
+        return null;
+      }
+    },
+
+    /**
+     * localStorage'a cihaz bilgisini kaydet
+     */
+    saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          deviceId: this.deviceId,
+          fingerprint: this.fingerprint,
+          savedAt: new Date().toISOString()
+        }));
+        console.log('💾 Cihaz bilgisi kaydedildi');
+      } catch (e) {
+        console.warn('⚠️ localStorage yazılamadı:', e);
       }
     },
 
@@ -75,10 +119,62 @@
     },
 
     /**
+     * Mevcut cihazı güncelle (lastSeen)
+     */
+    async updateDevice() {
+      console.log('🔄 Cihaz güncelleniyor...');
+
+      const deviceInfo = {
+        userAgent: navigator.userAgent,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language,
+        platform: navigator.platform,
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const response = await fetch(`${this.config.apiUrl}/api/devices/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fingerprint: this.fingerprint,
+            deviceInfo
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // deviceId değişmiş olabilir (backend'de farklı ID atanmış olabilir)
+        if (data.device.id !== this.deviceId) {
+          console.log('⚠️ Device ID değişti:', this.deviceId, '->', data.device.id);
+          this.deviceId = data.device.id;
+          this.saveToStorage();
+        }
+
+        console.log('✅ Cihaz güncellendi:', this.deviceId);
+        return data.device;
+      } catch (error) {
+        console.error('❌ Cihaz güncellenemedi:', error);
+        // localStorage'ı temizle ve yeniden kayıt yap
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch(e) {}
+        await this.initFingerprint();
+        await this.registerDevice();
+      }
+    },
+
+    /**
      * Cihazı backend'e kaydet
      */
     async registerDevice() {
-      console.log('📝 Cihaz kaydediliyor...');
+      console.log('📝 Yeni cihaz kaydediliyor...');
 
       const deviceInfo = {
         userAgent: navigator.userAgent,
@@ -107,7 +203,10 @@
         const data = await response.json();
         this.deviceId = data.device.id;
 
-        console.log('✅ Cihaz kaydedildi:', this.deviceId);
+        // localStorage'a kaydet
+        this.saveToStorage();
+
+        console.log('✅ Yeni cihaz kaydedildi:', this.deviceId);
         return data.device;
       } catch (error) {
         console.error('❌ Cihaz kaydedilemedi:', error);

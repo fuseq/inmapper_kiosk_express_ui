@@ -493,5 +493,83 @@
       updateSlidePosition(false);
     }, 150);
   });
+
+  // ===================================================
+  // INMAPPER KIOSK CLIENT - Backend Entegrasyonu
+  // ===================================================
+  
+  // Kiosk Client'ı başlat
+  if (typeof KioskClient !== 'undefined') {
+    KioskClient.init({
+      apiUrl: 'https://inmapper-kiosk-backend.isohtel.com.tr',
+      pollInterval: 60000, // 1 dakikada bir güncelleme kontrolü
+      
+      onConfigLoaded: (config) => {
+        console.log('✅ inMapper yapılandırması yüklendi:', config);
+        
+        if (config.landingPage && config.landingPage.slides && config.landingPage.slides.length > 0) {
+          // Slider görsellerini güncelle
+          updateSliderFromBackend(config.landingPage.slides);
+          
+          // Geçiş süresini güncelle
+          if (config.landingPage.transitionDuration) {
+            window.SLIDE_DURATION = config.landingPage.transitionDuration;
+          }
+        }
+      },
+      
+      onError: (error) => {
+        console.error('❌ Kiosk Client hatası:', error);
+      }
+    });
+  } else {
+    console.warn('⚠️ KioskClient bulunamadı');
+  }
+  
+  // Backend'den gelen slider verilerini uygula
+  function updateSliderFromBackend(slides) {
+    if (!filmStrip || slides.length === 0) return;
+    
+    console.log('🖼️ Slider güncelleniyor:', slides.length, 'görsel');
+    
+    // Mevcut slide'ları temizle
+    filmStrip.innerHTML = '';
+    
+    // Yeni slide'ları ekle
+    slides.forEach((slide, index) => {
+      const slideDiv = document.createElement('div');
+      slideDiv.className = 'slide';
+      slideDiv.style.backgroundImage = `url('${slide.imageUrl}')`;
+      filmStrip.appendChild(slideDiv);
+    });
+    
+    // Global değişkenleri güncelle
+    const newSlides = Array.from(filmStrip.querySelectorAll('.slide'));
+    window.originalSlides = newSlides;
+    window.totalSlides = newSlides.length;
+    
+    // Indicator'ları güncelle
+    if (slideIndicators) {
+      slideIndicators.innerHTML = '';
+      for (let i = 0; i < slides.length; i++) {
+        const indicator = document.createElement('button');
+        indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+        indicator.dataset.index = i;
+        indicator.innerHTML = '<span></span>';
+        indicator.addEventListener('click', () => {
+          goToSlide(i);
+          startSlideShow();
+        });
+        slideIndicators.appendChild(indicator);
+      }
+      window.indicators = Array.from(slideIndicators.querySelectorAll('.indicator'));
+    }
+    
+    // Slider'ı yeniden başlat
+    currentIndex = 0;
+    initializeFilmStrip();
+    
+    console.log('✅ Slider güncellendi');
+  }
 })();
 

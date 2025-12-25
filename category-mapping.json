@@ -1,0 +1,123 @@
+{
+  "categories": [
+    {
+      "apiKey": "servicestores",
+      "displayName": "Hizmet Mağazaları",
+      "icon": "🛠️",
+      "description": "Araç bakım, kuru temizleme ve diğer hizmet mağazaları"
+    },
+    {
+      "apiKey": "culture_entertainment",
+      "displayName": "Kültür ve Sanat",
+      "icon": "🎬",
+      "description": "Sinema, tiyatro ve eğlence mekanları"
+    },
+    {
+      "apiKey": "restaurant_cafe",
+      "displayName": "Yiyecek & İçecek",
+      "icon": "🍔",
+      "description": "Restoranlar, kafeler ve yiyecek içecek mekanları"
+    },
+    {
+      "apiKey": "cosmetics_health",
+      "displayName": "Kozmetik & Sağlık",
+      "icon": "💄",
+      "description": "Kozmetik, sağlık ve kişisel bakım ürünleri"
+    },
+    {
+      "apiKey": "electronics",
+      "displayName": "Elektronik",
+      "icon": "📱",
+      "description": "Elektronik cihazlar ve teknoloji ürünleri"
+    },
+    {
+      "apiKey": "turkishdelight_confectionery",
+      "displayName": "Lokum ve Şekerleme",
+      "icon": "🍬",
+      "description": "Lokum, şekerleme ve tatlı mağazaları"
+    },
+    {
+      "apiKey": "fashion",
+      "displayName": "Moda",
+      "icon": "👕",
+      "description": "Giyim ve moda mağazaları"
+    },
+    {
+      "apiKey": "shoes_bags",
+      "displayName": "Ayakkabı & Çanta",
+      "icon": "👟",
+      "description": "Ayakkabı, çanta ve deri ürünleri"
+    },
+    {
+      "apiKey": "accessories_jewellery",
+      "displayName": "Aksesuar & Mücevher",
+      "icon": "💍",
+      "description": "Aksesuar, mücevher ve takı mağazaları"
+    },
+    {
+      "apiKey": "home_decoration",
+      "displayName": "Ev & Dekorasyon",
+      "icon": "🏠",
+      "description": "Ev eşyaları ve dekorasyon ürünleri"
+    },
+    {
+      "apiKey": "kids",
+      "displayName": "Çocuk",
+      "icon": "🧸",
+      "description": "Çocuk giyim ve oyuncakları"
+    },
+    {
+      "apiKey": "services",
+      "displayName": "Hizmetler",
+      "icon": "🛎️",
+      "description": "Genel hizmetler ve destek noktaları"
+    },
+    {
+      "apiKey": "offices",
+      "displayName": "Ofisler",
+      "icon": "🏢",
+      "description": "Ofis ve iş merkezleri"
+    },
+    {
+      "apiKey": "sports_outdoor",
+      "displayName": "Spor & Outdoor",
+      "icon": "⚽",
+      "description": "Spor malzemeleri ve outdoor ürünleri"
+    },
+    {
+      "apiKey": "books_stationery",
+      "displayName": "Kitap & Kırtasiye",
+      "icon": "📚",
+      "description": "Kitap, kırtasiye ve hobi ürünleri"
+    },
+    {
+      "apiKey": "pet_shop",
+      "displayName": "Pet Shop",
+      "icon": "🐾",
+      "description": "Evcil hayvan ürünleri ve hizmetleri"
+    },
+    {
+      "apiKey": "fastfood",
+      "displayName": "Fast Food",
+      "icon": "🍟",
+      "description": "Hızlı servis restoranları ve atıştırmalıklar"
+    },
+    {
+      "apiKey": "fitness",
+      "displayName": "Fitness",
+      "icon": "💪",
+      "description": "Spor salonları ve fitness merkezleri"
+    },
+    {
+      "apiKey": "market",
+      "displayName": "Market",
+      "icon": "🛒",
+      "description": "Gıda ve temel ihtiyaç ürünleri"
+    }
+  ],
+  "defaultCategory": {
+    "displayName": "Diğer",
+    "icon": "📍",
+    "description": "Diğer mağaza ve hizmetler"
+  }
+}
