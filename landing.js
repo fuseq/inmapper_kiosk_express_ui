@@ -1,7 +1,18 @@
 (function () {
   // ==================== KIOSK CLIENT ENTEGRASYONU ====================
   let kioskConfig = null;
+  let lastConfigHash = null; // Önceki config'in hash'i
   let SLIDE_TRANSITION_DURATION = 8000; // Varsayılan geçiş süresi
+
+  // Config değişiklik kontrolü için basit hash fonksiyonu
+  function getConfigHash(config) {
+    if (!config) return 'null';
+    if (!config.landingPage) return 'no-landing-page';
+    
+    const lp = config.landingPage;
+    const slidesHash = lp.slides ? lp.slides.map(s => s.imageUrl).join('|') : '';
+    return `${lp.id || lp._id}-${lp.name}-${slidesHash}-${lp.transitionDuration}`;
+  }
 
   // Kiosk Client'ı başlat
   window.addEventListener('DOMContentLoaded', () => {
@@ -11,7 +22,17 @@
         apiUrl: 'https://inmapper-kiosk-backend.isohtel.com.tr', // Backend sunucu adresi
         pollInterval: 15000, // 15 saniyede bir kontrol (hızlı güncelleme için)
         onConfigLoaded: (config) => {
-          console.log('📦 Config alındı:', JSON.stringify(config, null, 2));
+          // Config hash'ini hesapla
+          const newHash = getConfigHash(config);
+          
+          // Değişiklik yoksa güncelleme yapma
+          if (newHash === lastConfigHash) {
+            console.log('📦 Config değişmedi, slider korunuyor');
+            return;
+          }
+          
+          console.log('📦 Config değişti:', lastConfigHash, '->', newHash);
+          lastConfigHash = newHash;
           kioskConfig = config;
           
           if (config && config.landingPage) {
@@ -23,6 +44,7 @@
               applyKioskConfiguration(config.landingPage);
             } else {
               console.log('⚠️ Landing page var ama slide yok');
+              clearSlider();
             }
           } else {
             // Landing page atanmamış - slider'ı temizle
