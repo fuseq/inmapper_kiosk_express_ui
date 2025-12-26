@@ -514,6 +514,8 @@
   
   // Slider'ı temizle ve placeholder göster (landing page atanmamışsa)
   function clearSlider() {
+    console.log('🧹 clearSlider çağrıldı');
+    
     // Slideshow'u durdur
     if (slideTimer) {
       window.clearInterval(slideTimer);
@@ -549,9 +551,33 @@
       </div>
     `;
     
+    // filmStrip'i yeniden al (DOM değişmiş olabilir)
+    const currentFilmStrip = document.getElementById('filmStrip');
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    
     // Slider'ı placeholder ile değiştir
-    if (filmStrip) {
-      filmStrip.innerHTML = placeholderHTML;
+    if (currentFilmStrip) {
+      console.log('✅ filmStrip bulundu, placeholder ekleniyor');
+      currentFilmStrip.innerHTML = placeholderHTML;
+      // Transform'u sıfırla - önemli!
+      currentFilmStrip.style.transform = 'translateX(0)';
+      currentFilmStrip.style.transition = 'none';
+      
+      // Slideshow container'ı görünür yap
+      if (slideshowContainer) {
+        slideshowContainer.style.opacity = '1';
+        slideshowContainer.style.visibility = 'visible';
+      }
+      
+      console.log('✅ Placeholder HTML eklendi ve transform sıfırlandı');
+    } else {
+      console.error('❌ filmStrip bulunamadı!');
+    }
+    
+    // fullscreenBg'yi de mavi tonlarına ayarla
+    const currentFullscreenBg = document.getElementById('fullscreenBg');
+    if (currentFullscreenBg) {
+      currentFullscreenBg.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%)';
     }
     
     // Indicator'ları gizle
