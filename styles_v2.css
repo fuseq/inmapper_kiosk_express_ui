@@ -738,6 +738,56 @@ input {
     background-repeat: no-repeat;
 }
 
+/* Mini Placeholder Slide */
+.mini-slide.mini-placeholder-slide {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Placeholder varken film strip hareket etmesin */
+.mini-film-strip:has(.mini-placeholder-slide) {
+    transform: translateX(0) !important;
+    transition: none !important;
+}
+
+.mini-placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.mini-placeholder-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.mini-placeholder-icon svg {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.mini-placeholder-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.01em;
+}
+
 .mini-slide-indicators {
     position: absolute;
     bottom: 10px;

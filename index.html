@@ -108,14 +108,22 @@
         <div class="home-mini-slideshow" id="homeMiniSlideshow">
             <div class="mini-slideshow-container">
                 <div class="mini-film-strip" id="miniFilmStrip">
-                    <div class="mini-slide" style="background-image: url('assets/adidas.jpg');"></div>
-                    <div class="mini-slide" style="background-image: url('assets/nike.jpg');"></div>
-                    <div class="mini-slide" style="background-image: url('assets/h&m.jpg');"></div>
+                    <!-- Placeholder - will be updated from backend via app-controller -->
+                    <div class="mini-slide mini-placeholder-slide">
+                        <div class="mini-placeholder-content">
+                            <div class="mini-placeholder-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path d="M21 15l-5-5L5 21"/>
+                                </svg>
+                            </div>
+                            <span class="mini-placeholder-text">İçerik Bekleniyor</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="mini-slide-indicators" id="miniSlideIndicators">
-                    <button class="mini-indicator active" data-index="0"><span></span></button>
-                    <button class="mini-indicator" data-index="1"><span></span></button>
-                    <button class="mini-indicator" data-index="2"><span></span></button>
+                <div class="mini-slide-indicators" id="miniSlideIndicators" style="display: none;">
+                    <!-- Indicators will be generated dynamically -->
                 </div>
             </div>
         </div>

@@ -19,7 +19,8 @@ class KioskController {
             currentView: 'landing', // 'landing' veya 'navigation'
             lastActivity: Date.now(),
             navigationRefreshCount: 0,
-            lastRefreshTime: null
+            lastRefreshTime: null,
+            currentSliderConfig: null // Slider config'ini sakla
         };
 
         this.elements = {
@@ -83,6 +84,11 @@ class KioskController {
                     this.showNavigation();
                     break;
 
+                // Slider config landing'den geldiğinde
+                case 'SLIDER_CONFIG_UPDATED':
+                    this.handleSliderConfigUpdate(data);
+                    break;
+
                 // Navigation frame'den gelen mesajlar
                 case 'NAVIGATION_READY':
                     this.handleNavigationReady();
@@ -112,6 +118,26 @@ class KioskController {
         console.log('✅ Navigation hazır');
         this.state.navigationReady = true;
         this.updateDebugStatus();
+        
+        // Navigation hazır olduğunda mevcut slider config'i gönder
+        if (this.state.currentSliderConfig) {
+            this.sendSliderConfigToNavigation();
+        }
+    }
+
+    handleSliderConfigUpdate(data) {
+        console.log('🖼️ Slider config güncellendi:', data);
+        this.state.currentSliderConfig = data;
+        
+        // Navigation hazırsa hemen gönder
+        if (this.state.navigationReady) {
+            this.sendSliderConfigToNavigation();
+        }
+    }
+
+    sendSliderConfigToNavigation() {
+        console.log('📤 Slider config navigation\'a gönderiliyor...');
+        this.sendToNavigation('UPDATE_MINI_SLIDER', this.state.currentSliderConfig);
     }
 
     // ==================== VIEW SWITCHING ====================

@@ -41,9 +41,32 @@
     <!-- Main Slideshow Container (top layer) -->
     <div class="slideshow-container">
       <div class="film-strip" id="filmStrip">
-        <div class="slide" style="background-image: url('assets/adidas.jpg');"></div>
-        <div class="slide" style="background-image: url('assets/nike.jpg');"></div>
-        <div class="slide" style="background-image: url('assets/h&m.jpg');"></div>
+        <!-- Placeholder slides - will be replaced by backend config -->
+        <div class="slide placeholder-slide">
+          <div class="placeholder-content">
+            <div class="placeholder-orbs">
+              <div class="orb orb-1"></div>
+              <div class="orb orb-2"></div>
+              <div class="orb orb-3"></div>
+            </div>
+            <div class="placeholder-glass">
+              <div class="placeholder-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+              <div class="placeholder-text">
+                <span class="placeholder-title">İçerik Hazırlanıyor</span>
+                <span class="placeholder-subtitle">Yönetim panelinden görsel ekleyebilirsiniz</span>
+              </div>
+              <div class="placeholder-loader">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -80,9 +103,7 @@
       </div>
     </div>
     <div class="slide-indicators" id="slideIndicators" aria-hidden="true">
-      <button class="indicator active" data-index="0"><span></span></button>
-      <button class="indicator" data-index="1"><span></span></button>
-      <button class="indicator" data-index="2"><span></span></button>
+      <!-- Indicators will be generated dynamically based on slide count -->
     </div>
   </div>
   <script src="landing.js"></script>

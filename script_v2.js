@@ -3733,6 +3733,12 @@ window.addEventListener('message', (event) => {
         case 'INIT':
             console.log('✅ Parent\'dan INIT mesajı alındı', data);
             break;
+        
+        case 'UPDATE_MINI_SLIDER':
+            // Landing'den gelen slider config'i ile mini slider'ı güncelle
+            console.log('📥 Mini slider güncelleniyor...', data);
+            updateMiniSliderFromConfig(data);
+            break;
             
         default:
             break;
@@ -3928,7 +3934,7 @@ function setupStoreDetailEvents() {
 // ==================== MINI SLIDESHOW ====================
 let miniSlideshowState = {
     currentIndex: 0,
-    totalSlides: 3,
+    totalSlides: 1, // Başlangıçta placeholder (tek slide)
     autoPlayInterval: null
 };
 
@@ -3936,7 +3942,18 @@ function initMiniSlideshow() {
     const miniFilmStrip = document.getElementById('miniFilmStrip');
     const miniIndicators = document.querySelectorAll('.mini-indicator');
     
-    if (!miniFilmStrip || miniIndicators.length === 0) return;
+    if (!miniFilmStrip) return;
+    
+    // Placeholder slide varsa auto-play başlatma
+    const hasPlaceholder = miniFilmStrip.querySelector('.mini-placeholder-slide');
+    if (hasPlaceholder) {
+        console.log('📋 Mini slider placeholder modunda - auto-play devre dışı');
+        miniSlideshowState.totalSlides = 1;
+        return;
+    }
+    
+    // Indicator yoksa veya tek slide varsa auto-play başlatma
+    if (miniIndicators.length === 0) return;
     
     // Set up indicator click events
     miniIndicators.forEach((indicator, index) => {
@@ -3950,14 +3967,112 @@ function initMiniSlideshow() {
         });
     });
     
-    // Start auto-play
+    // Start auto-play only if more than 1 slide
+    if (miniIndicators.length > 1) {
+        startMiniAutoPlay();
+    }
+}
+
+// Mini slider'ı backend config'den güncelle
+function updateMiniSliderFromConfig(config) {
+    const miniFilmStrip = document.getElementById('miniFilmStrip');
+    const miniIndicatorsContainer = document.getElementById('miniSlideIndicators');
+    const miniSlideshow = document.getElementById('homeMiniSlideshow');
+    
+    if (!miniFilmStrip || !miniIndicatorsContainer) {
+        console.log('⚠️ Mini slider elemanları bulunamadı');
+        return;
+    }
+    
+    // Placeholder durumu veya boş slides
+    if (!config || !config.slides || config.slides.length === 0 || config.isPlaceholder) {
+        console.log('📋 Mini slider placeholder moduna alınıyor');
+        
+        // Placeholder HTML
+        miniFilmStrip.innerHTML = `
+            <div class="mini-slide mini-placeholder-slide">
+                <div class="mini-placeholder-content">
+                    <div class="mini-placeholder-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                    </div>
+                    <span class="mini-placeholder-text">İçerik Bekleniyor</span>
+                </div>
+            </div>
+        `;
+        
+        // Indicator'ları gizle
+        miniIndicatorsContainer.innerHTML = '';
+        miniIndicatorsContainer.style.display = 'none';
+        
+        // Auto-play'i durdur
+        stopMiniAutoPlay();
+        
+        // State'i güncelle
+        miniSlideshowState.totalSlides = 1;
+        miniSlideshowState.currentIndex = 0;
+        
+        return;
+    }
+    
+    // Gerçek slides varsa
+    console.log('🖼️ Mini slider güncelleniyor:', config.slides.length, 'slide');
+    
+    // Slides HTML'i oluştur
+    miniFilmStrip.innerHTML = config.slides.map(slide => 
+        `<div class="mini-slide" style="background-image: url('${slide.imageUrl}');"></div>`
+    ).join('');
+    
+    // Indicators HTML'i oluştur
+    miniIndicatorsContainer.innerHTML = config.slides.map((_, index) => 
+        `<button class="mini-indicator${index === 0 ? ' active' : ''}" data-index="${index}"><span></span></button>`
+    ).join('');
+    miniIndicatorsContainer.style.display = 'flex';
+    
+    // State'i güncelle
+    miniSlideshowState.totalSlides = config.slides.length;
+    miniSlideshowState.currentIndex = 0;
+    
+    // Indicator click event'lerini yeniden kur
+    const newIndicators = miniIndicatorsContainer.querySelectorAll('.mini-indicator');
+    newIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToMiniSlide(index);
+            if (miniSlideshowState.autoPlayInterval) {
+                clearInterval(miniSlideshowState.autoPlayInterval);
+                startMiniAutoPlay();
+            }
+        });
+    });
+    
+    // Film strip'i sıfırla
+    miniFilmStrip.style.transform = 'translateX(0%)';
+    
+    // Auto-play'i başlat
+    stopMiniAutoPlay();
     startMiniAutoPlay();
+    
+    console.log('✅ Mini slider güncellendi');
 }
 
 function showMiniSlideshow() {
     const miniSlideshow = document.getElementById('homeMiniSlideshow');
     if (miniSlideshow) {
         miniSlideshow.classList.remove('hidden');
+        
+        // Placeholder varsa veya tek slide varsa auto-play başlatma
+        const miniFilmStrip = document.getElementById('miniFilmStrip');
+        if (miniFilmStrip) {
+            const hasPlaceholder = miniFilmStrip.querySelector('.mini-placeholder-slide');
+            if (hasPlaceholder || miniSlideshowState.totalSlides <= 1) {
+                console.log('📋 showMiniSlideshow: placeholder/tek slide - auto-play devre dışı');
+                return;
+            }
+        }
+        
         startMiniAutoPlay();
     }
 }
@@ -3976,6 +4091,13 @@ function goToMiniSlide(index) {
     
     if (!miniFilmStrip) return;
     
+    // Placeholder varsa hareket ettirme
+    const hasPlaceholder = miniFilmStrip.querySelector('.mini-placeholder-slide');
+    if (hasPlaceholder) return;
+    
+    // Tek slide varsa hareket ettirme
+    if (miniSlideshowState.totalSlides <= 1) return;
+    
     miniSlideshowState.currentIndex = index;
     
     // Move the film strip
@@ -3993,6 +4115,9 @@ function goToMiniSlide(index) {
 }
 
 function nextMiniSlide() {
+    // Tek slide varsa geçiş yapma
+    if (miniSlideshowState.totalSlides <= 1) return;
+    
     const nextIndex = (miniSlideshowState.currentIndex + 1) % miniSlideshowState.totalSlides;
     goToMiniSlide(nextIndex);
 }
@@ -4001,6 +4126,23 @@ function startMiniAutoPlay() {
     // Clear existing interval if any
     if (miniSlideshowState.autoPlayInterval) {
         clearInterval(miniSlideshowState.autoPlayInterval);
+        miniSlideshowState.autoPlayInterval = null;
+    }
+    
+    // Placeholder varsa veya tek slide varsa auto-play başlatma
+    const miniFilmStrip = document.getElementById('miniFilmStrip');
+    if (miniFilmStrip) {
+        const hasPlaceholder = miniFilmStrip.querySelector('.mini-placeholder-slide');
+        if (hasPlaceholder) {
+            console.log('📋 Mini slider placeholder - auto-play devre dışı');
+            return;
+        }
+    }
+    
+    // Tek slide varsa auto-play başlatma
+    if (miniSlideshowState.totalSlides <= 1) {
+        console.log('📋 Mini slider tek slide - auto-play devre dışı');
+        return;
     }
     
     // Auto-advance every 4 seconds

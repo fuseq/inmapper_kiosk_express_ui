@@ -453,7 +453,11 @@
     });
   });
 
-  if (originalSlides.length > 0 && filmStrip) {
+  // Check if slides are placeholders
+  const hasPlaceholderSlides = originalSlides.length > 0 && 
+    originalSlides[0].classList.contains('placeholder-slide');
+  
+  if (originalSlides.length > 0 && filmStrip && !hasPlaceholderSlides) {
     // Clone first and last slides for infinite loop
     const firstClone = originalSlides[0].cloneNode(true);
     const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
@@ -473,6 +477,26 @@
     preloadNextSlideColors(0); // Preload next slide colors
     
     startSlideShow();
+  } else if (hasPlaceholderSlides) {
+    // Placeholder mode - hide indicators and don't start slideshow
+    console.log('📋 Placeholder mode - waiting for content from backend');
+    const slideIndicators = document.getElementById('slideIndicators');
+    if (slideIndicators) {
+      slideIndicators.style.display = 'none';
+    }
+    
+    // Apply blue color palette to navbar and panel (matching routing screen)
+    const placeholderColors = [
+      { r: 30, g: 58, b: 138, count: 100, brightness: 60 },   // #1e3a8a - koyu mavi
+      { r: 37, g: 99, b: 235, count: 80, brightness: 100 },   // #2563eb - ana mavi
+      { r: 59, g: 130, b: 246, count: 60, brightness: 130 },  // #3b82f6 - açık mavi
+      { r: 96, g: 165, b: 250, count: 40, brightness: 160 },  // #60a5fa - vurgu mavi
+      { r: 147, g: 197, b: 253, count: 20, brightness: 190 }  // #93c5fd - parlak mavi
+    ];
+    const placeholderBrightness = 80; // Dark theme için düşük brightness
+    
+    updateContrastAndColors(placeholderBrightness, placeholderColors, false);
+    console.log('🎨 Placeholder renk paleti uygulandı');
   }
   
   // Handle window resize to recalculate slide positions
@@ -488,7 +512,7 @@
 
   // ==================== KIOSK ENTEGRASYON FONKSİYONLARI ====================
   
-  // Slider'ı temizle (landing page atanmamışsa)
+  // Slider'ı temizle ve placeholder göster (landing page atanmamışsa)
   function clearSlider() {
     // Slideshow'u durdur
     if (slideTimer) {
@@ -496,20 +520,45 @@
       slideTimer = null;
     }
     
-    // Slider'ı temizle
+    // Placeholder HTML oluştur
+    const placeholderHTML = `
+      <div class="slide placeholder-slide">
+        <div class="placeholder-content">
+          <div class="placeholder-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+          </div>
+          <div class="placeholder-glass">
+            <div class="placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+            <div class="placeholder-text">
+              <span class="placeholder-title">İçerik Hazırlanıyor</span>
+              <span class="placeholder-subtitle">Yönetim panelinden görsel ekleyebilirsiniz</span>
+            </div>
+            <div class="placeholder-loader">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Slider'ı placeholder ile değiştir
     if (filmStrip) {
-      filmStrip.innerHTML = '';
+      filmStrip.innerHTML = placeholderHTML;
     }
     
-    // Indicator'ları temizle
+    // Indicator'ları gizle
     const slideIndicators = document.getElementById('slideIndicators');
     if (slideIndicators) {
       slideIndicators.innerHTML = '';
-    }
-    
-    // Background'u temizle
-    if (fullscreenBg) {
-      fullscreenBg.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+      slideIndicators.style.display = 'none';
     }
     
     // Değişkenleri sıfırla
@@ -519,7 +568,28 @@
     currentIndex = 0;
     slideColorCache = {};
     
-    console.log('✅ Slider temizlendi - cihaza landing page atanması bekleniyor');
+    // Apply blue color palette to navbar and panel (matching routing screen)
+    const placeholderColors = [
+      { r: 30, g: 58, b: 138, count: 100, brightness: 60 },   // #1e3a8a - koyu mavi
+      { r: 37, g: 99, b: 235, count: 80, brightness: 100 },   // #2563eb - ana mavi
+      { r: 59, g: 130, b: 246, count: 60, brightness: 130 },  // #3b82f6 - açık mavi
+      { r: 96, g: 165, b: 250, count: 40, brightness: 160 },  // #60a5fa - vurgu mavi
+      { r: 147, g: 197, b: 253, count: 20, brightness: 190 }  // #93c5fd - parlak mavi
+    ];
+    const placeholderBrightness = 80; // Dark theme için düşük brightness
+    
+    updateContrastAndColors(placeholderBrightness, placeholderColors, true);
+    
+    // Parent frame'e (app-controller) placeholder durumunu gönder
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ 
+        type: 'SLIDER_CONFIG_UPDATED', 
+        data: { slides: [], isPlaceholder: true }
+      }, '*');
+      console.log('📤 Parent\'a placeholder SLIDER_CONFIG_UPDATED mesajı gönderildi');
+    }
+    
+    console.log('✅ Placeholder gösteriliyor - navbar ve panel mavi tonlarında güncellendi');
   }
   
   // Yapılandırmayı uygula
@@ -542,6 +612,15 @@
     if (!filmStrip) return;
     
     console.log('🖼️ Slider resimleri güncelleniyor...', slides);
+    
+    // Parent frame'e (app-controller) slider config'ini gönder
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ 
+        type: 'SLIDER_CONFIG_UPDATED', 
+        data: { slides: slides }
+      }, '*');
+      console.log('📤 Parent\'a SLIDER_CONFIG_UPDATED mesajı gönderildi');
+    }
     
     // Slideshow'u durdur
     if (slideTimer) {
