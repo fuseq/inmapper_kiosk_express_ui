@@ -235,7 +235,9 @@
         const data = await response.json();
         console.log('✅ Yapılandırma yüklendi:', data);
 
-        if (this.config.onConfigLoaded && data.landingPage) {
+        // Her zaman callback'i çağır (landingPage null olsa bile)
+        // Bu sayede atama kaldırıldığında clearSlider() çalışabilir
+        if (this.config.onConfigLoaded) {
           this.config.onConfigLoaded(data);
         }
 
