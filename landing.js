@@ -475,6 +475,9 @@
     });
   });
 
+  // Placeholder mode flag (global)
+  let isPlaceholderMode = false;
+  
   // Check if slides are placeholders
   const hasPlaceholderSlides = originalSlides.length > 0 && 
     originalSlides[0].classList.contains('placeholder-slide');
@@ -501,6 +504,7 @@
     startSlideShow();
   } else if (hasPlaceholderSlides) {
     // Placeholder mode - hide indicators and don't start slideshow
+    isPlaceholderMode = true;
     console.log('📋 Placeholder mode - waiting for content from backend');
     const slideIndicators = document.getElementById('slideIndicators');
     if (slideIndicators) {
@@ -528,6 +532,15 @@
       window.clearTimeout(resizeTimer);
     }
     resizeTimer = window.setTimeout(() => {
+      // Placeholder modunda transform'u sıfırda tut
+      if (isPlaceholderMode) {
+        const currentFilmStrip = document.getElementById('filmStrip');
+        if (currentFilmStrip) {
+          currentFilmStrip.style.transform = 'translateX(0)';
+          currentFilmStrip.style.transition = 'none';
+        }
+        return;
+      }
       updateSlidePosition(false);
     }, 150);
   });
@@ -537,6 +550,9 @@
   // Slider'ı temizle ve placeholder göster (landing page atanmamışsa)
   function clearSlider() {
     console.log('🧹 clearSlider çağrıldı');
+    
+    // Placeholder moduna geç
+    isPlaceholderMode = true;
     
     // Slideshow'u durdur
     if (slideTimer) {
@@ -655,6 +671,9 @@
   // Yapılandırmayı uygula
   function applyKioskConfiguration(landingPage) {
     console.log('🔧 Yapılandırma uygulanıyor...', landingPage);
+    
+    // Placeholder modundan çık
+    isPlaceholderMode = false;
     
     // 1. Slider resimlerini güncelle
     if (landingPage.slides && landingPage.slides.length > 0) {
