@@ -544,6 +544,17 @@
       slideTimer = null;
     }
     
+    // Cihazın displayId'sini al
+    let displayId = '';
+    if (typeof KioskClient !== 'undefined' && KioskClient.displayId) {
+      displayId = KioskClient.displayId;
+    }
+    
+    // Placeholder mesajını displayId ile oluştur
+    const subtitleText = displayId 
+      ? `Yönetim panelinden <strong>${displayId}</strong>'ye görsel ekleyebilirsiniz`
+      : 'Yönetim panelinden görsel ekleyebilirsiniz';
+    
     // Placeholder HTML oluştur
     const placeholderHTML = `
       <div class="slide placeholder-slide">
@@ -563,8 +574,9 @@
             </div>
             <div class="placeholder-text">
               <span class="placeholder-title">İçerik Hazırlanıyor</span>
-              <span class="placeholder-subtitle">Yönetim panelinden görsel ekleyebilirsiniz</span>
+              <span class="placeholder-subtitle">${subtitleText}</span>
             </div>
+            ${displayId ? `<div class="placeholder-device-id">${displayId}</div>` : ''}
             <div class="placeholder-loader">
               <span></span><span></span><span></span>
             </div>

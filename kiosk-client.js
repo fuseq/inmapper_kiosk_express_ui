@@ -24,6 +24,7 @@
 
     deviceId: null,
     fingerprint: null,
+    displayId: null, // 6 haneli görüntüleme ID'si
     pollTimer: null,
 
     /**
@@ -41,9 +42,10 @@
         const savedDevice = this.loadFromStorage();
         
         if (savedDevice && savedDevice.deviceId && savedDevice.fingerprint) {
-          console.log('💾 Kayıtlı cihaz bulundu:', savedDevice.deviceId);
+          console.log('💾 Kayıtlı cihaz bulundu:', savedDevice.deviceId, '(displayId:', savedDevice.displayId, ')');
           this.deviceId = savedDevice.deviceId;
           this.fingerprint = savedDevice.fingerprint;
+          this.displayId = savedDevice.displayId;
           
           // Cihazı backend'e bildir (lastSeen güncelleme)
           await this.updateDevice();
@@ -91,9 +93,10 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           deviceId: this.deviceId,
           fingerprint: this.fingerprint,
+          displayId: this.displayId,
           savedAt: new Date().toISOString()
         }));
-        console.log('💾 Cihaz bilgisi kaydedildi');
+        console.log('💾 Cihaz bilgisi kaydedildi (displayId:', this.displayId, ')');
       } catch (e) {
         console.warn('⚠️ localStorage yazılamadı:', e);
       }
@@ -150,14 +153,23 @@
 
         const data = await response.json();
         
-        // deviceId değişmiş olabilir (backend'de farklı ID atanmış olabilir)
+        // deviceId veya displayId değişmiş olabilir
+        let needsSave = false;
         if (data.device.id !== this.deviceId) {
           console.log('⚠️ Device ID değişti:', this.deviceId, '->', data.device.id);
           this.deviceId = data.device.id;
+          needsSave = true;
+        }
+        if (data.device.displayId && data.device.displayId !== this.displayId) {
+          console.log('📛 Display ID güncellendi:', this.displayId, '->', data.device.displayId);
+          this.displayId = data.device.displayId;
+          needsSave = true;
+        }
+        if (needsSave) {
           this.saveToStorage();
         }
 
-        console.log('✅ Cihaz güncellendi:', this.deviceId);
+        console.log('✅ Cihaz güncellendi:', this.deviceId, '(displayId:', this.displayId, ')');
         return data.device;
       } catch (error) {
         console.error('❌ Cihaz güncellenemedi:', error);
@@ -202,11 +214,12 @@
 
         const data = await response.json();
         this.deviceId = data.device.id;
+        this.displayId = data.device.displayId;
 
         // localStorage'a kaydet
         this.saveToStorage();
 
-        console.log('✅ Yeni cihaz kaydedildi:', this.deviceId);
+        console.log('✅ Yeni cihaz kaydedildi:', this.deviceId, '(displayId:', this.displayId, ')');
         return data.device;
       } catch (error) {
         console.error('❌ Cihaz kaydedilemedi:', error);
@@ -292,6 +305,7 @@
       return {
         deviceId: this.deviceId,
         fingerprint: this.fingerprint,
+        displayId: this.displayId,
         apiUrl: this.config.apiUrl
       };
     }
