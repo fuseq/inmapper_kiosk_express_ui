@@ -589,7 +589,7 @@
               </svg>
             </div>
             <div class="placeholder-text">
-              <span class="placeholder-title">İçerik Hazırlanıyor</span>
+              <span class="placeholder-title">İçerik Bekleniyor</span>
               <span class="placeholder-subtitle">${subtitleText}</span>
             </div>
             ${displayId ? `<div class="placeholder-device-id">${displayId}</div>` : ''}
