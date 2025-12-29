@@ -566,9 +566,9 @@
       displayId = KioskClient.displayId;
     }
     
-    // Placeholder mesajını displayId ile oluştur
+    // Placeholder mesajını oluştur
     const subtitleText = displayId 
-      ? `Yönetim panelinden <strong>${displayId}</strong>'ye görsel ekleyebilirsiniz`
+      ? 'Yönetim panelinden aşağıda belirtilen cihaza görsel ekleyebilirsiniz'
       : 'Yönetim panelinden görsel ekleyebilirsiniz';
     
     // Placeholder HTML oluştur
