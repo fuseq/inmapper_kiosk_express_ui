@@ -19,7 +19,7 @@ function createWindow() {
   mainWindow.loadFile('app.html');
   
   // Development için DevTools'u aç (production'da kapat)
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   
   // Kiosk modundan çıkmayı engelle (F11, ESC vb.)
   mainWindow.setFullScreen(true);

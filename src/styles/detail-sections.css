@@ -1,0 +1,335 @@
+/* ============================================================
+ * Shared collapsible detail sections (kd-*)
+ * Used by every detail surface (kiosk tab, island, side panel, mobile).
+ * Colours adapt to the host surface via `currentColor` + color-mix, so the
+ * same markup reads correctly on dark-glass (island) and light (side panel /
+ * mobile / kiosk tab) backgrounds.
+ * ============================================================ */
+
+.kd-sections {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Flat sections separated by hairline dividers (classic detail-panel look):
+ * icon + title + content, no boxes/backgrounds. */
+.kd-section {
+    border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.kd-section:first-child { border-top: 0; }
+
+.kd-section-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: clamp(8px, 0.8vw, 12px) 2px clamp(6px, 0.5vw, 8px);
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+.kd-section-head--static { cursor: default; }
+.kd-section-ico {
+    display: inline-flex;
+    flex-shrink: 0;
+    opacity: 0.55;
+}
+.kd-section-ico svg { width: clamp(16px, 1vw, 19px); height: clamp(16px, 1vw, 19px); }
+.kd-section-title {
+    font-weight: 700;
+    font-size: clamp(13px, 0.95vw, 16px);
+    flex-shrink: 0;
+}
+.kd-section-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-size: clamp(11px, 0.7vw, 13px);
+    opacity: 0.8;
+    min-width: 0;
+}
+.kd-section-sub .kd-hours-today { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kd-chevron {
+    flex-shrink: 0;
+    margin-left: 8px;
+    transition: transform 0.25s ease;
+    opacity: 0.45;
+}
+.kd-section.is-open .kd-chevron { transform: rotate(180deg); }
+/* When a section has no subtitle the chevron should still hug the right edge. */
+.kd-section-head > .kd-chevron:nth-child(3) { margin-left: auto; }
+
+/* Smooth open/close without hard-coded max-heights (grid-rows 0fr→1fr). */
+.kd-section-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease;
+}
+.kd-section.is-open .kd-section-body { grid-template-rows: 1fr; }
+.kd-section-inner {
+    overflow: hidden;
+    padding: 0 2px 0 calc(clamp(16px, 1vw, 19px) + 9px);
+}
+.kd-section.is-open .kd-section-inner { padding-bottom: clamp(10px, 0.8vw, 14px); }
+
+/* Static (non-collapsible) section body is always visible. */
+.kd-section-static {
+    padding: 0 2px clamp(8px, 0.7vw, 12px) calc(clamp(16px, 1vw, 19px) + 9px);
+}
+.kd-section-static .kd-section-inner { padding: 0; overflow: visible; }
+
+/* ---- hours: heading + collapsible status line (reference layout) ---- */
+.kd-hours-section .kd-section-head--static { padding-bottom: 2px; }
+.kd-hours-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 2px 2px clamp(6px, 0.5vw, 8px) calc(clamp(16px, 1vw, 19px) + 9px);
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+.kd-hours-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(12px, 0.82vw, 14px);
+}
+.kd-hours-trigger .kd-chevron { margin-left: auto; }
+.kd-status { font-weight: 700; }
+.kd-status.kd-open { color: #15803d; }
+.kd-status.kd-closed { color: #dc2626; }
+
+/* ---- generic blocks (description, gallery) ---- */
+.kd-block { padding: clamp(8px, 0.8vw, 12px) 0; border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.kd-gallery-block { border-top: 0; padding-bottom: 0; }
+
+/* ---- contact bar (phone / web) ---- */
+.kd-contact {
+    display: flex;
+    gap: 8px;
+    padding: clamp(8px, 0.8vw, 12px) 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.kd-contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: clamp(40px, 3.4vw, 48px);
+    padding: 0 14px;
+    border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, currentColor 5%, transparent);
+    color: inherit;
+    font-size: clamp(13px, 0.85vw, 15px);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.kd-contact-btn:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.kd-contact-phone { flex: 1; min-width: 0; }
+.kd-contact-btn svg { flex-shrink: 0; opacity: 0.8; }
+
+/* ---- badges (open / closed) ---- */
+.kd-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 999px;
+}
+.kd-badge-open { background: rgba(34, 197, 94, 0.18); color: #15803d; }
+.kd-badge-closed { background: rgba(239, 68, 68, 0.16); color: #dc2626; }
+
+/* ---- gallery (single large image carousel) ---- */
+.kd-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.kd-gallery-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    overflow: hidden;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.kd-gallery-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: zoom-in;
+}
+.kd-gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(32px, 3vw, 40px);
+    height: clamp(32px, 3vw, 40px);
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.42);
+    color: #fff;
+    font-size: clamp(16px, 1.4vw, 20px);
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.15s;
+}
+.kd-gallery-prev { left: 8px; }
+.kd-gallery-next { right: 8px; }
+.kd-gallery-nav:hover { background: rgba(0, 0, 0, 0.65); }
+.kd-gallery-count {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+.kd-gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+.kd-gallery-dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    background: color-mix(in srgb, currentColor 25%, transparent);
+    transition: background 0.15s, transform 0.15s;
+}
+.kd-gallery-dot.is-active { background: currentColor; transform: scale(1.2); }
+
+/* ---- hours ---- */
+.kd-hours { display: flex; flex-direction: column; gap: 4px; }
+.kd-hours-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: clamp(12px, 0.8vw, 15px);
+}
+.kd-hours-day { opacity: 0.8; }
+.kd-hours-val { font-weight: 600; }
+.kd-hours-flat { font-size: clamp(12px, 0.8vw, 15px); opacity: 0.9; }
+
+/* ---- description ---- */
+.kd-desc {
+    font-size: clamp(11px, 0.72vw, 13px);
+    line-height: 1.5;
+    opacity: 0.85;
+    margin: 0;
+}
+.kd-desc.is-clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.kd-desc-more {
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent, #2563EB);
+    font-size: clamp(11px, 0.72vw, 13px);
+    font-weight: 600;
+    cursor: pointer;
+}
+.kd-desc-more[hidden] { display: none; }
+
+/* ---- tags ---- */
+.kd-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.kd-tag {
+    font-size: clamp(11px, 0.7vw, 13px);
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+/* ---- related ---- */
+.kd-related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(52px, 5vw, 72px), 1fr));
+    gap: 6px;
+}
+.kd-related-item {
+    display: grid;
+    place-items: center;
+    padding: 6px;
+    border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+    border-radius: 10px;
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.15s;
+}
+.kd-related-item:hover { border-color: color-mix(in srgb, currentColor 40%, transparent); transform: translateY(-2px); }
+.kd-related-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.kd-related-name {
+    font-size: clamp(9px, 0.6vw, 11px);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ---- lightbox ---- */
+.kd-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    background: rgba(0, 0, 0, 0.85);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    gap: 12px;
+    padding: clamp(16px, 4vw, 64px);
+}
+.kd-lightbox-img {
+    grid-column: 2;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.kd-lightbox-nav, .kd-lightbox-close {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    width: clamp(40px, 4vw, 56px);
+    height: clamp(40px, 4vw, 56px);
+    font-size: clamp(20px, 2vw, 28px);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+.kd-lightbox-nav:hover, .kd-lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
+.kd-lightbox-close { position: absolute; top: clamp(12px, 2vw, 28px); right: clamp(12px, 2vw, 28px); }

@@ -1,0 +1,2840 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1210",
+        "layer": "rooms",
+        "sublayer": "layer6",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95874382,
+              41.03476237
+            ],
+            [
+              28.95867705,
+              41.03432689
+            ],
+            [
+              28.9581763,
+              41.03437057
+            ],
+            [
+              28.95821582,
+              41.03462831
+            ],
+            [
+              28.95797311,
+              41.03464948
+            ],
+            [
+              28.9579911,
+              41.0347668
+            ],
+            [
+              28.95810774,
+              41.03475662
+            ],
+            [
+              28.95811074,
+              41.03477617
+            ],
+            [
+              28.95816729,
+              41.03477124
+            ],
+            [
+              28.95817356,
+              41.03481212
+            ],
+            [
+              28.95874382,
+              41.03476237
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1230",
+        "layer": "rooms",
+        "sublayer": "layer6",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95842538,
+              41.0344371
+            ],
+            [
+              28.95845207,
+              41.03461122
+            ],
+            [
+              28.95854743,
+              41.0346029
+            ],
+            [
+              28.95852074,
+              41.03442878
+            ],
+            [
+              28.95842538,
+              41.0344371
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1232",
+        "layer": "rooms",
+        "sublayer": "layer6",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95845207,
+              41.03461122
+            ],
+            [
+              28.95847395,
+              41.03475391
+            ],
+            [
+              28.95856931,
+              41.03474559
+            ],
+            [
+              28.95854743,
+              41.0346029
+            ],
+            [
+              28.95845207,
+              41.03461122
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID024",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95810774,
+              41.03475662
+            ],
+            [
+              28.95816429,
+              41.03475169
+            ],
+            [
+              28.95816729,
+              41.03477124
+            ],
+            [
+              28.95811074,
+              41.03477617
+            ],
+            [
+              28.95810774,
+              41.03475662
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1108",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.9580954,
+              41.0347577
+            ],
+            [
+              28.95809312,
+              41.03474278
+            ],
+            [
+              28.95813747,
+              41.03473891
+            ],
+            [
+              28.95813976,
+              41.03475383
+            ],
+            [
+              28.9580954,
+              41.0347577
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1110",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95808999,
+              41.03473946
+            ],
+            [
+              28.95808937,
+              41.03473539
+            ],
+            [
+              28.95814616,
+              41.03473044
+            ],
+            [
+              28.95814679,
+              41.03473451
+            ],
+            [
+              28.95808999,
+              41.03473946
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1112",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95807863,
+              41.03465101
+            ],
+            [
+              28.95808037,
+              41.0346624
+            ],
+            [
+              28.95812502,
+              41.03465851
+            ],
+            [
+              28.95812315,
+              41.03464637
+            ],
+            [
+              28.95811917,
+              41.03464671
+            ],
+            [
+              28.95812053,
+              41.0346556
+            ],
+            [
+              28.95808485,
+              41.03465871
+            ],
+            [
+              28.95808361,
+              41.03465058
+            ],
+            [
+              28.95807863,
+              41.03465101
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1114",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95807684,
+              41.03464043
+            ],
+            [
+              28.95807783,
+              41.0346469
+            ],
+            [
+              28.95812114,
+              41.03464312
+            ],
+            [
+              28.95812015,
+              41.03463665
+            ],
+            [
+              28.95807684,
+              41.03464043
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID014",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.9586091,
+              41.03442108
+            ],
+            [
+              28.9586904,
+              41.03441398
+            ],
+            [
+              28.95869994,
+              41.03447619
+            ],
+            [
+              28.95861864,
+              41.03448329
+            ],
+            [
+              28.9586091,
+              41.03442108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID015",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95852074,
+              41.03442878
+            ],
+            [
+              28.95850738,
+              41.03434169
+            ],
+            [
+              28.95867705,
+              41.03432689
+            ],
+            [
+              28.9586904,
+              41.03441398
+            ],
+            [
+              28.95852074,
+              41.03442878
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID016",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95847395,
+              41.03475391
+            ],
+            [
+              28.95847879,
+              41.03478549
+            ],
+            [
+              28.95857415,
+              41.03477717
+            ],
+            [
+              28.95856931,
+              41.03474559
+            ],
+            [
+              28.95847395,
+              41.03475391
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID017",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95816729,
+              41.03477124
+            ],
+            [
+              28.95816395,
+              41.03474946
+            ],
+            [
+              28.95846919,
+              41.03472283
+            ],
+            [
+              28.95847879,
+              41.03478549
+            ],
+            [
+              28.95817356,
+              41.03481212
+            ],
+            [
+              28.95816729,
+              41.03477124
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID018",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95856306,
+              41.03470482
+            ],
+            [
+              28.95854032,
+              41.0347068
+            ],
+            [
+              28.95853742,
+              41.0346879
+            ],
+            [
+              28.95856016,
+              41.03468591
+            ],
+            [
+              28.95856306,
+              41.03470482
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID019",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95831825,
+              41.034736
+            ],
+            [
+              28.95831403,
+              41.03470844
+            ],
+            [
+              28.95841048,
+              41.03470002
+            ],
+            [
+              28.95841471,
+              41.03472758
+            ],
+            [
+              28.95831825,
+              41.034736
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID022",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95815789,
+              41.03470993
+            ],
+            [
+              28.95826715,
+              41.0347004
+            ],
+            [
+              28.95827321,
+              41.03473993
+            ],
+            [
+              28.95816395,
+              41.03474946
+            ],
+            [
+              28.95815789,
+              41.03470993
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID023",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95815183,
+              41.03467038
+            ],
+            [
+              28.95819604,
+              41.03466652
+            ],
+            [
+              28.95819051,
+              41.03463051
+            ],
+            [
+              28.95814631,
+              41.03463437
+            ],
+            [
+              28.95815183,
+              41.03467038
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID020",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95842222,
+              41.03472693
+            ],
+            [
+              28.95841707,
+              41.03469335
+            ],
+            [
+              28.95845486,
+              41.03469005
+            ],
+            [
+              28.95846,
+              41.03472363
+            ],
+            [
+              28.95842222,
+              41.03472693
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID021",
+        "layer": "rooms",
+        "sublayer": "layer7",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95824052,
+              41.03462615
+            ],
+            [
+              28.95824917,
+              41.03468252
+            ],
+            [
+              28.95832521,
+              41.03467589
+            ],
+            [
+              28.95831656,
+              41.03461952
+            ],
+            [
+              28.95824052,
+              41.03462615
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID025",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95857415,
+              41.03477717
+            ],
+            [
+              28.95853028,
+              41.034491
+            ],
+            [
+              28.95869994,
+              41.03447619
+            ],
+            [
+              28.95874382,
+              41.03476237
+            ],
+            [
+              28.95857415,
+              41.03477717
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID013",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95807029,
+              41.03475989
+            ],
+            [
+              28.9580523,
+              41.03464257
+            ],
+            [
+              28.9580049,
+              41.03464671
+            ],
+            [
+              28.95802288,
+              41.03476402
+            ],
+            [
+              28.95807029,
+              41.03475989
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID009",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95853028,
+              41.034491
+            ],
+            [
+              28.95852074,
+              41.03442878
+            ],
+            [
+              28.9586091,
+              41.03442108
+            ],
+            [
+              28.95861864,
+              41.03448329
+            ],
+            [
+              28.95853028,
+              41.034491
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID010",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95852074,
+              41.03442878
+            ],
+            [
+              28.95842538,
+              41.0344371
+            ],
+            [
+              28.95841202,
+              41.03435001
+            ],
+            [
+              28.95850738,
+              41.03434169
+            ],
+            [
+              28.95852074,
+              41.03442878
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID011",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95816429,
+              41.03475169
+            ],
+            [
+              28.95814631,
+              41.03463437
+            ],
+            [
+              28.95845154,
+              41.03460774
+            ],
+            [
+              28.95846953,
+              41.03472506
+            ],
+            [
+              28.95816429,
+              41.03475169
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID012",
+        "layer": "rooms",
+        "sublayer": "layer9",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.9580523,
+              41.03464257
+            ],
+            [
+              28.95807029,
+              41.03475989
+            ],
+            [
+              28.95816429,
+              41.03475169
+            ],
+            [
+              28.95814631,
+              41.03463437
+            ],
+            [
+              28.9580523,
+              41.03464257
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID002",
+        "layer": "rooms",
+        "sublayer": "layer10",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95851104,
+              41.03460607
+            ],
+            [
+              28.95849364,
+              41.03449265
+            ],
+            [
+              28.95846826,
+              41.03449486
+            ],
+            [
+              28.95848565,
+              41.03460829
+            ],
+            [
+              28.95851104,
+              41.03460607
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID001",
+        "layer": "rooms",
+        "sublayer": "layer10",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95852401,
+              41.03460494
+            ],
+            [
+              28.95850685,
+              41.03449304
+            ],
+            [
+              28.95853028,
+              41.034491
+            ],
+            [
+              28.95854743,
+              41.0346029
+            ],
+            [
+              28.95852401,
+              41.03460494
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID003",
+        "layer": "rooms",
+        "sublayer": "layer10",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95847324,
+              41.03460937
+            ],
+            [
+              28.95845608,
+              41.03449747
+            ],
+            [
+              28.95843492,
+              41.03449932
+            ],
+            [
+              28.95845207,
+              41.03461122
+            ],
+            [
+              28.95847324,
+              41.03460937
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID004",
+        "layer": "rooms",
+        "sublayer": "layer10",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95852074,
+              41.03442878
+            ],
+            [
+              28.95853028,
+              41.034491
+            ],
+            [
+              28.95850685,
+              41.03449304
+            ],
+            [
+              28.95849732,
+              41.03443083
+            ],
+            [
+              28.95852074,
+              41.03442878
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID005",
+        "layer": "rooms",
+        "sublayer": "layer10",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95844654,
+              41.03443526
+            ],
+            [
+              28.95845608,
+              41.03449747
+            ],
+            [
+              28.95843492,
+              41.03449932
+            ],
+            [
+              28.95842538,
+              41.0344371
+            ],
+            [
+              28.95844654,
+              41.03443526
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID006",
+        "layer": "rooms",
+        "sublayer": "layer11",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95851859,
+              41.03475002
+            ],
+            [
+              28.95850772,
+              41.03467913
+            ],
+            [
+              28.95846308,
+              41.03468302
+            ],
+            [
+              28.95847395,
+              41.03475391
+            ],
+            [
+              28.95851859,
+              41.03475002
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID007",
+        "layer": "rooms",
+        "sublayer": "layer11",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.95845154,
+              41.03460774
+            ],
+            [
+              28.9584381,
+              41.03452009
+            ],
+            [
+              28.95820238,
+              41.03454066
+            ],
+            [
+              28.95821582,
+              41.03462831
+            ],
+            [
+              28.95845154,
+              41.03460774
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ID008",
+        "layer": "rooms",
+        "sublayer": "layer11",
+        "fill": null,
+        "stroke": null,
+        "stroke_width": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.9584381,
+              41.03452009
+            ],
+            [
+              28.95841202,
+              41.03435001
+            ],
+            [
+              28.9581763,
+              41.03437057
+            ],
+            [
+              28.95820238,
+              41.03454066
+            ],
+            [
+              28.9584381,
+              41.03452009
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1002",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95803537,
+            41.03470434
+          ],
+          [
+            28.95807436,
+            41.03470094
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1494",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95818696,
+            41.03469112
+          ],
+          [
+            28.95823177,
+            41.03468721
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1609",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95823177,
+            41.03468721
+          ],
+          [
+            28.95823346,
+            41.03469822
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1611",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95823346,
+            41.03469822
+          ],
+          [
+            28.95835259,
+            41.03468782
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1992",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95846071,
+            41.0344824
+          ],
+          [
+            28.95847987,
+            41.03448073
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path1994",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95847987,
+            41.03448073
+          ],
+          [
+            28.95847081,
+            41.03442167
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2197",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95853829,
+            41.03462857
+          ],
+          [
+            28.95854251,
+            41.0346561
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2199",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95854251,
+            41.0346561
+          ],
+          [
+            28.95858956,
+            41.034652
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2203",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95854251,
+            41.0346561
+          ],
+          [
+            28.95851798,
+            41.03465824
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2597",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95851798,
+            41.03465824
+          ],
+          [
+            28.95852431,
+            41.03469956
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2599",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95852431,
+            41.03469956
+          ],
+          [
+            28.95850247,
+            41.03470146
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2601",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95858956,
+            41.034652
+          ],
+          [
+            28.95856341,
+            41.03448149
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2167",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95851798,
+            41.03465824
+          ],
+          [
+            28.95848807,
+            41.03466085
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2169",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95848807,
+            41.03466085
+          ],
+          [
+            28.958439,
+            41.03466513
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2364",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.958439,
+            41.03466513
+          ],
+          [
+            28.95835259,
+            41.03468782
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2799",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95847987,
+            41.03448073
+          ],
+          [
+            28.9584986,
+            41.0344791
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2801",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.9584986,
+            41.0344791
+          ],
+          [
+            28.95850922,
+            41.03454837
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2803",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95850922,
+            41.03454837
+          ],
+          [
+            28.95852185,
+            41.03463074
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2805",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95852185,
+            41.03463074
+          ],
+          [
+            28.95848396,
+            41.03463404
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2807",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95852185,
+            41.03463074
+          ],
+          [
+            28.9585384,
+            41.0346293
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3082",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95848807,
+            41.03466085
+          ],
+          [
+            28.95848396,
+            41.03463404
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3082-9",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.958439,
+            41.03466513
+          ],
+          [
+            28.95842303,
+            41.03456097
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3082-9-7",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95824444,
+            41.03457655
+          ],
+          [
+            28.95823668,
+            41.03452596
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3082-9-3",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95842303,
+            41.03456097
+          ],
+          [
+            28.95824444,
+            41.03457655
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3084",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95846071,
+            41.0344824
+          ],
+          [
+            28.95848396,
+            41.03463404
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3199",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95807436,
+            41.03470094
+          ],
+          [
+            28.95809608,
+            41.03469905
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3201",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95809608,
+            41.03469905
+          ],
+          [
+            28.95809997,
+            41.03472438
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3203",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95809608,
+            41.03469905
+          ],
+          [
+            28.95809256,
+            41.03467606
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3205",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95809256,
+            41.03467606
+          ],
+          [
+            28.95810882,
+            41.03467464
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3207",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95809997,
+            41.03472438
+          ],
+          [
+            28.95811523,
+            41.03472304
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3209",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95811523,
+            41.03472304
+          ],
+          [
+            28.95814278,
+            41.03472064
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3211",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95814278,
+            41.03472064
+          ],
+          [
+            28.95813894,
+            41.0346956
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3425",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95818696,
+            41.03469112
+          ],
+          [
+            28.95813894,
+            41.0346956
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3429",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95810882,
+            41.03467464
+          ],
+          [
+            28.95813537,
+            41.03467232
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path3624",
+        "layer": "paths",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95813894,
+            41.0346956
+          ],
+          [
+            28.95813537,
+            41.03467232
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95847081,
+            41.03442167
+          ],
+          [
+            28.95846923,
+            41.03441134
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-25",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95848145,
+            41.03449106
+          ],
+          [
+            28.95847987,
+            41.03448073
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-3",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95856341,
+            41.03448149
+          ],
+          [
+            28.95856183,
+            41.03447116
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-3-8",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95835417,
+            41.03469816
+          ],
+          [
+            28.95835259,
+            41.03468782
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-3-8-7",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95842144,
+            41.03455063
+          ],
+          [
+            28.95842303,
+            41.03456097
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-3-8-7-5",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.9582351,
+            41.03451562
+          ],
+          [
+            28.95823668,
+            41.03452596
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-3-8-6",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95810978,
+            41.03469785
+          ],
+          [
+            28.95809608,
+            41.03469905
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-6",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95848878,
+            41.03470266
+          ],
+          [
+            28.95850247,
+            41.03470146
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "path2766-2",
+        "layer": "doors",
+        "stroke": null,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            28.95802168,
+            41.03470554
+          ],
+          [
+            28.95803537,
+            41.03470434
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID001",
+        "layer": "writing",
+        "text": "ID001_1_\nID001_2_\nID001_3_",
+        "lines": [
+          "ID001_1_",
+          "ID001_2_",
+          "ID001_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95852712,
+          41.03454797
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID002",
+        "layer": "writing",
+        "text": "ID002_1_\nID002_2_\nID002_3_",
+        "lines": [
+          "ID002_1_",
+          "ID002_2_",
+          "ID002_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95848965,
+          41.03455047
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID003",
+        "layer": "writing",
+        "text": "ID003_1_\nID003_2_\nID003_3_",
+        "lines": [
+          "ID003_1_",
+          "ID003_2_",
+          "ID003_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95845414,
+          41.03455434
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID004",
+        "layer": "writing",
+        "text": "ID004_1_\nID004_2_\nID004_3_",
+        "lines": [
+          "ID004_1_",
+          "ID004_2_",
+          "ID004_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95851377,
+          41.03446092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID005",
+        "layer": "writing",
+        "text": "ID005_1_\nID005_2_\nID005_3_",
+        "lines": [
+          "ID005_1_",
+          "ID005_2_",
+          "ID005_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9584408,
+          41.03446729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID006",
+        "layer": "writing",
+        "text": "ID006_1_\nID006_2_\nID006_3_",
+        "lines": [
+          "ID006_1_",
+          "ID006_2_",
+          "ID006_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95849089,
+          41.0347165
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID007",
+        "layer": "writing",
+        "text": "ID007_1_\nID007_2_\nID007_3_",
+        "lines": [
+          "ID007_1_",
+          "ID007_2_",
+          "ID007_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95832703,
+          41.03457417
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID008",
+        "layer": "writing",
+        "text": "ID008_1_\nID008_2_\nID008_3_",
+        "lines": [
+          "ID008_1_",
+          "ID008_2_",
+          "ID008_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95830727,
+          41.03444529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID009",
+        "layer": "writing",
+        "text": "ID009_1_\nID009_2_\nID009_3_",
+        "lines": [
+          "ID009_1_",
+          "ID009_2_",
+          "ID009_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95856967,
+          41.03445604
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID010",
+        "layer": "writing",
+        "text": "ID010_1_\nID010_2_\nID010_3_",
+        "lines": [
+          "ID010_1_",
+          "ID010_2_",
+          "ID010_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95846641,
+          41.03438934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID011",
+        "layer": "writing",
+        "text": "ID011_1_\nID011_2_\nID011_3_",
+        "lines": [
+          "ID011_1_",
+          "ID011_2_",
+          "ID011_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95830784,
+          41.03467967
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID012",
+        "layer": "writing",
+        "text": "ID012_1_\nID012_2_\nID012_3_",
+        "lines": [
+          "ID012_1_",
+          "ID012_2_",
+          "ID012_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95810831,
+          41.03469708
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID013",
+        "layer": "writing",
+        "text": "ID013_1_\nID013_2_\nID013_3_",
+        "lines": [
+          "ID013_1_",
+          "ID013_2_",
+          "ID013_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95803765,
+          41.03470324
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID014",
+        "layer": "writing",
+        "text": "ID014_1_\nID014_2_\nID014_3_",
+        "lines": [
+          "ID014_1_",
+          "ID014_2_",
+          "ID014_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95865452,
+          41.03444864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID015",
+        "layer": "writing",
+        "text": "ID015_1_\nID015_2_\nID015_3_",
+        "lines": [
+          "ID015_1_",
+          "ID015_2_",
+          "ID015_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9585989,
+          41.03437779
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID016",
+        "layer": "writing",
+        "text": "ID016_1_\nID016_2_\nID016_3_",
+        "lines": [
+          "ID016_1_",
+          "ID016_2_",
+          "ID016_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95852408,
+          41.03476551
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID017",
+        "layer": "writing",
+        "text": "ID017_1_\nID017_2_\nID017_3_",
+        "lines": [
+          "ID017_1_",
+          "ID017_2_",
+          "ID017_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95832131,
+          41.03476748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID018",
+        "layer": "writing",
+        "text": "ID018_1_\nID018_2_\nID018_3_",
+        "lines": [
+          "ID018_1_",
+          "ID018_2_",
+          "ID018_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95855017,
+          41.03469638
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID019",
+        "layer": "writing",
+        "text": "ID019_1_\nID019_2_\nID019_3_",
+        "lines": [
+          "ID019_1_",
+          "ID019_2_",
+          "ID019_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95836434,
+          41.03471802
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID020",
+        "layer": "writing",
+        "text": "ID020_1_\nID020_2_\nID020_3_",
+        "lines": [
+          "ID020_1_",
+          "ID020_2_",
+          "ID020_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95843859,
+          41.03470844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID021",
+        "layer": "writing",
+        "text": "ID021_1_\nID021_2_\nID021_3_",
+        "lines": [
+          "ID021_1_",
+          "ID021_2_",
+          "ID021_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9582829,
+          41.03465096
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID022",
+        "layer": "writing",
+        "text": "ID022_1_\nID022_2_\nID022_3_",
+        "lines": [
+          "ID022_1_",
+          "ID022_2_",
+          "ID022_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95821558,
+          41.03472491
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID023",
+        "layer": "writing",
+        "text": "ID023_1_\nID023_2_\nID023_3_",
+        "lines": [
+          "ID023_1_",
+          "ID023_2_",
+          "ID023_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95817115,
+          41.03465042
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID024",
+        "layer": "writing",
+        "text": "ID024_1_\nID024_2_\nID024_3_",
+        "lines": [
+          "ID024_1_",
+          "ID024_2_",
+          "ID024_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95813749,
+          41.03476393
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "w_ID025",
+        "layer": "writing",
+        "text": "ID025_1_\nID025_2_\nID025_3_",
+        "lines": [
+          "ID025_1_",
+          "ID025_2_",
+          "ID025_3_"
+        ],
+        "font_size": 12,
+        "room_area": 159240.3,
+        "floor": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95863707,
+          41.03462671
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1269 @@
+/* ==================== MOBILE LAYOUT ==================== */
+/* All rules scoped under html.mobile-layout -- kiosk/web CSS untouched */
+
+/* ---------- Token Overrides ---------- */
+html.mobile-layout {
+    --search-panel-w: 100vw;
+    --search-panel-h: 100vh;
+    --searchbar-h: 48px;
+    --navbar-h: 0px;
+    --nav-offset: 0px;
+    --side-panel-w: 100vw;
+
+    --mobile-sheet-radius: 18px;
+    --mobile-safe-top: env(safe-area-inset-top, 0px);
+    --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --mobile-accent: rgb(var(--accent-rgb));
+}
+
+/* ---------- Hide desktop-only elements ---------- */
+html.mobile-layout .glass-navbar,
+html.mobile-layout .initial-home,
+html.mobile-layout #homeMiniSlideshow,
+html.mobile-layout .search-tab,
+html.mobile-layout #keyboard,
+html.mobile-layout .map-side-panel,
+html.mobile-layout .map-back-btn,
+html.mobile-layout .side-route-summary,
+html.mobile-layout .map-floor-selector-compact,
+html.mobile-layout #mapFloorSelectorCompact {
+    display: none !important;
+}
+
+/* ---------- Full-screen map ---------- */
+html.mobile-layout .floor-map-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 !important;
+    z-index: 0;
+}
+
+html.mobile-layout .map-panel {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+}
+
+html.mobile-layout .map-container,
+html.mobile-layout #mapContainer {
+    padding: 0 !important;
+}
+
+/* ---------- Floor selector ---------- */
+html.mobile-layout .map-floor-selector-compact {
+    bottom: calc(46vh + 12px) !important;
+    right: 12px !important;
+    left: auto !important;
+    transform: none !important;
+    z-index: 150;
+    transition: bottom 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+
+/* ==================== BOTTOM SHEET ==================== */
+html.mobile-layout .mobile-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--mobile-sheet-bg);
+    border-radius: var(--mobile-sheet-radius) var(--mobile-sheet-radius) 0 0;
+    box-shadow: 0 -2px 20px var(--mobile-sheet-shadow);
+    transition: height 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: height;
+    max-height: 95vh;
+    display: flex;
+    flex-direction: column;
+    touch-action: none;
+    overflow: hidden;
+}
+
+html.mobile-layout .mobile-bottom-sheet.dragging {
+    transition: none !important;
+}
+
+html.mobile-layout .mobile-bottom-sheet.auto-fit {
+    height: auto !important;
+    max-height: 85vh;
+    transition: none;
+}
+html.mobile-layout .mobile-bottom-sheet.auto-fit .mobile-sheet-content {
+    flex: 0 0 auto;
+    overflow: visible;
+    padding-bottom: 16px;
+}
+
+/* Handle */
+html.mobile-layout .mobile-sheet-handle-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0 4px 0;
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+html.mobile-layout .mobile-sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--mobile-card-border);
+}
+
+/* Non-scrolling header (search bar stays pinned) */
+html.mobile-layout .mobile-sheet-header {
+    flex-shrink: 0;
+    padding: 0 16px 12px;
+}
+html.mobile-layout .mobile-sheet-header:empty {
+    padding: 0;
+}
+
+/* Scrollable content — scrollbar hidden on outer sheet, thin inside content */
+html.mobile-layout .mobile-sheet-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding: 0 16px var(--mobile-safe-bottom) 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.15) transparent;
+}
+
+html.mobile-layout .mobile-sheet-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+html.mobile-layout .mobile-sheet-content::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+html.mobile-layout .mobile-sheet-content::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+}
+
+html.mobile-layout .mobile-sheet-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.25);
+}
+
+/* ==================== SEARCH BAR (inside sheet) ==================== */
+html.mobile-layout .ms-search-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+html.mobile-layout .ms-search-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    padding: 0 14px;
+    background: var(--mobile-card-bg);
+    border: none;
+    border-radius: 12px;
+    cursor: text;
+}
+
+html.mobile-layout .ms-search-field svg {
+    flex-shrink: 0;
+    color: var(--mobile-text-muted);
+    width: 18px;
+    height: 18px;
+}
+
+html.mobile-layout .ms-search-field input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--mobile-text-primary);
+    font-family: inherit;
+    padding: 0;
+    -webkit-appearance: none;
+}
+
+html.mobile-layout .ms-search-field input::placeholder {
+    color: var(--mobile-text-muted);
+}
+
+/* Leading control inside the field — magnifier (home) / back (search).
+ * Fixed footprint so the field never shifts between the two states. */
+html.mobile-layout .ms-search-leading {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mobile-text-muted);
+    cursor: pointer;
+}
+
+html.mobile-layout .ms-search-leading svg {
+    width: 18px;
+    height: 18px;
+    color: inherit;
+}
+
+html.mobile-layout .ms-search-leading.is-back {
+    color: var(--mobile-text-primary);
+}
+
+/* ==================== FLOOR FILTER (left of search, mirrors island) ==================== */
+html.mobile-layout .ms-floor {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Matches the .ms-lang-btn tune control: 46px circle, fixed size. */
+html.mobile-layout .ms-floor-trigger {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-secondary);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+html.mobile-layout .ms-floor-ico { display: inline-flex; flex-shrink: 0; }
+html.mobile-layout .ms-floor-ico svg { width: 18px; height: 18px; }
+html.mobile-layout .ms-floor-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1;
+    color: var(--mobile-text-primary);
+}
+
+/* "All floors" → icon only. A specific floor → label only (fixed footprint). */
+html.mobile-layout .ms-floor.is-all .ms-floor-label { display: none; }
+html.mobile-layout .ms-floor:not(.is-all) .ms-floor-ico { display: none; }
+
+html.mobile-layout .ms-floor-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 160px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px;
+    background: var(--mobile-sheet-bg);
+    border: 1px solid var(--mobile-card-border);
+    border-radius: 16px;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+    z-index: 130;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+}
+html.mobile-layout .ms-floor.open .ms-floor-menu { display: flex; }
+
+html.mobile-layout .ms-floor-option {
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+    cursor: pointer;
+    white-space: nowrap;
+}
+html.mobile-layout .ms-floor-option:hover { background: var(--mobile-card-bg); }
+html.mobile-layout .ms-floor-option.active {
+    background: var(--mobile-accent-hover-bg);
+    color: var(--mobile-accent);
+}
+
+/* Glass mode — match the search field / tune button glass treatment. */
+html.mobile-layout:not(.no-glass) .ms-floor-trigger,
+html.mobile-layout:not(.no-glass) .ms-floor-menu {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ==================== CATEGORY GRID ==================== */
+html.mobile-layout .ms-category-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 4px;
+}
+
+html.mobile-layout .ms-cat-row {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+}
+
+html.mobile-layout .ms-cat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 6px 10px;
+    border-radius: 14px;
+    background: var(--mobile-surface-bg);
+    border: 1px solid var(--mobile-card-bg);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 88px;
+}
+
+html.mobile-layout .ms-cat-card:active {
+    background: var(--mobile-accent-hover-bg);
+    border-color: var(--mobile-accent-light);
+}
+
+html.mobile-layout .ms-cat-card.active {
+    background: var(--mobile-accent-hover-bg);
+    border-color: var(--mobile-accent-light);
+}
+
+html.mobile-layout .ms-cat-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+html.mobile-layout .ms-cat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mobile-text-secondary);
+    text-align: center;
+    line-height: 1.25;
+    margin-top: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==================== SCROLL HINT ==================== */
+html.mobile-layout .ms-scroll-hint {
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.35s ease;
+}
+
+html.mobile-layout .ms-scroll-hint.hide {
+    opacity: 0;
+}
+
+html.mobile-layout .ms-scroll-hint svg {
+    width: 16px;
+    height: 16px;
+    color: var(--mobile-text-muted);
+    animation: msScrollBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes msScrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(2px); }
+}
+
+/* ==================== LOCATION LIST ==================== */
+html.mobile-layout .ms-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--mobile-text-primary);
+    padding: 4px 0 8px 0;
+}
+
+html.mobile-layout .ms-loc-list {
+    display: flex;
+    flex-direction: column;
+}
+
+html.mobile-layout .ms-loc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 4px;
+    border-bottom: 1px solid var(--mobile-card-bg);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html.mobile-layout .ms-loc-item:last-child {
+    border-bottom: none;
+}
+
+html.mobile-layout .ms-loc-item:active {
+    background: var(--mobile-surface-bg);
+}
+
+html.mobile-layout .ms-loc-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--mobile-card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+html.mobile-layout .ms-loc-info {
+    flex: 1;
+    min-width: 0;
+}
+
+html.mobile-layout .ms-loc-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html.mobile-layout .ms-loc-meta {
+    font-size: 13px;
+    color: var(--mobile-text-muted);
+    margin-top: 1px;
+}
+
+html.mobile-layout .ms-empty {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--mobile-text-muted);
+    font-size: 14px;
+}
+
+/* ==================== DETAIL VIEW ==================== */
+html.mobile-layout .ms-detail {
+    padding: 2px 0 0 0;
+}
+
+/* Peek zone: logo, title, route btn, hours — sheet snaps to this height. */
+html.mobile-layout .ms-detail-peek {
+    border-bottom: 1px solid var(--mobile-card-border);
+    padding-bottom: 2px;
+}
+
+html.mobile-layout .ms-detail-more .kd-sections > :first-child {
+    border-top: 0;
+}
+
+/* Full-sheet detail: gallery sized to fit without awkward inner scroll */
+html.mobile-layout .ms-detail-more .kd-gallery-stage {
+    aspect-ratio: 16 / 10;
+    max-height: min(220px, 38vh);
+}
+
+html.mobile-layout .ms-detail-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+html.mobile-layout .ms-detail-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--mobile-card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--mobile-card-border);
+}
+
+html.mobile-layout .ms-detail-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+html.mobile-layout .ms-detail-info {
+    flex: 1;
+    min-width: 0;
+}
+
+html.mobile-layout .ms-detail-actions-top {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+html.mobile-layout .ms-detail-icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: var(--mobile-card-bg);
+    color: var(--mobile-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+html.mobile-layout .ms-detail-icon-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+html.mobile-layout .ms-detail-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--mobile-text-primary);
+    margin-top: 10px;
+}
+
+html.mobile-layout .ms-detail-sub {
+    font-size: 13px;
+    color: var(--mobile-text-secondary);
+    margin-top: 2px;
+}
+
+html.mobile-layout .ms-detail-desc {
+    font-size: 14px;
+    color: var(--mobile-text-secondary);
+    line-height: 1.6;
+    margin-top: 12px;
+}
+
+html.mobile-layout .ms-detail-route-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 14px;
+    background: var(--mobile-accent);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    gap: 8px;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s;
+}
+
+html.mobile-layout .ms-detail-route-btn:active {
+    opacity: 0.88;
+}
+
+/* ==================== DIRECTIONS VIEW ==================== */
+/* Fixed top block: route fields + draw button + divider stay pinned while
+ * the location list below scrolls. */
+html.mobile-layout .ms-dir-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--mobile-sheet-bg);
+}
+
+html.mobile-layout .ms-dir-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 14px;
+}
+
+html.mobile-layout .ms-dir-back {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--mobile-text-primary);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+html.mobile-layout .ms-dir-back svg {
+    width: 20px;
+    height: 20px;
+}
+
+html.mobile-layout .ms-dir-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--mobile-text-primary);
+}
+
+/* Route fields with vertical connector */
+html.mobile-layout .ms-dir-fields {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 16px;
+}
+
+html.mobile-layout .ms-dir-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 16px;
+    flex-shrink: 0;
+    padding: 18px 0;
+}
+
+html.mobile-layout .ms-dir-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+html.mobile-layout .ms-dir-dot.start {
+    border: 2px solid var(--mobile-text-muted);
+    background: var(--mobile-sheet-bg);
+}
+
+html.mobile-layout .ms-dir-dot.end {
+    background: var(--mobile-accent);
+}
+
+html.mobile-layout .ms-dir-line {
+    width: 2px;
+    flex: 1;
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--mobile-card-border) 0px,
+        var(--mobile-card-border) 4px,
+        transparent 4px,
+        transparent 8px
+    );
+}
+
+html.mobile-layout .ms-dir-inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+html.mobile-layout .ms-dir-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 46px;
+    padding: 0 12px;
+    background: var(--mobile-card-bg);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+html.mobile-layout .ms-dir-field.active {
+    background: var(--mobile-card-border);
+}
+
+html.mobile-layout .ms-dir-field.empty {
+    color: var(--mobile-text-muted);
+}
+
+html.mobile-layout .ms-dir-field svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--mobile-text-muted);
+}
+
+html.mobile-layout .ms-dir-field-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+html.mobile-layout .ms-dir-field-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mobile-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html.mobile-layout .ms-dir-field.empty .ms-dir-field-text {
+    color: var(--mobile-text-muted);
+    font-weight: 400;
+}
+
+/* Inline pin button inside start field */
+html.mobile-layout .ms-dir-field-pin {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--mobile-card-border);
+    border-radius: 8px;
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    transition: background 0.15s, color 0.15s;
+}
+
+html.mobile-layout .ms-dir-field-pin:active {
+    background: var(--mobile-accent-hover-bg);
+    color: var(--mobile-accent);
+}
+
+html.mobile-layout .ms-dir-field-pin svg {
+    width: 16px;
+    height: 16px;
+}
+
+html.mobile-layout .ms-dir-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+html.mobile-layout .ms-dir-draw-btn {
+    flex: 1;
+    height: 50px;
+    border: none;
+    border-radius: 14px;
+    background: var(--mobile-accent);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+html.mobile-layout .ms-dir-draw-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+html.mobile-layout .ms-dir-draw-btn:active:not(:disabled) {
+    opacity: 0.88;
+}
+
+/* Section divider */
+html.mobile-layout .ms-divider {
+    height: 1px;
+    background: var(--mobile-card-border);
+    margin: 8px 0;
+}
+
+/* ==================== NAVIGATION VIEW ==================== */
+html.mobile-layout .ms-nav {
+    padding-top: 4px;
+}
+
+/* ---- Progress bar ---- */
+html.mobile-layout .ms-nav-progress {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px 14px;
+}
+
+html.mobile-layout .ms-nav-progress-track {
+    flex: 1;
+    height: 8px;
+    background: var(--mobile-card-border);
+    border-radius: 4px;
+    position: relative;
+}
+
+html.mobile-layout .ms-nav-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--mobile-accent), var(--mobile-progress-end));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    position: relative;
+    z-index: 0;
+}
+
+/* Step markers on the track */
+/* Base marker */
+html.mobile-layout .ms-nav-track-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--mobile-sheet-bg);
+    border: 2px solid var(--mobile-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+html.mobile-layout .ms-nav-track-marker span {
+    font-size: 0;
+    line-height: 1;
+    color: var(--mobile-text-muted);
+}
+
+/* Active mid marker */
+html.mobile-layout .ms-nav-track-marker.active {
+    width: 14px;
+    height: 14px;
+    background: var(--mobile-accent);
+    border-color: var(--mobile-accent);
+    box-shadow: 0 0 0 3px var(--mobile-accent-light);
+}
+
+/* Done mid marker */
+html.mobile-layout .ms-nav-track-marker.done {
+    background: var(--mobile-accent);
+    border-color: var(--mobile-accent);
+}
+
+/* Start marker: larger hollow ring */
+html.mobile-layout .ms-nav-track-marker.start {
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--mobile-text-muted);
+    background: var(--mobile-sheet-bg);
+}
+html.mobile-layout .ms-nav-track-marker.start.done,
+html.mobile-layout .ms-nav-track-marker.start.active {
+    border-color: var(--mobile-accent);
+}
+
+/* End marker: larger with pin icon */
+html.mobile-layout .ms-nav-track-marker.end {
+    width: 18px;
+    height: 18px;
+    background: var(--mobile-accent);
+    border-color: var(--mobile-accent);
+}
+html.mobile-layout .ms-nav-track-marker.end span {
+    font-size: 0;
+    color: #fff;
+}
+html.mobile-layout .ms-nav-track-marker.end span svg {
+    width: 10px;
+    height: 10px;
+    display: block;
+}
+
+/* Mid markers: show step icon */
+html.mobile-layout .ms-nav-track-marker.mid span svg {
+    width: 8px;
+    height: 8px;
+    display: block;
+}
+
+/* ---- Endpoints row ---- */
+html.mobile-layout .ms-nav-endpoints {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 2px;
+}
+
+html.mobile-layout .ms-nav-ep-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+}
+
+html.mobile-layout .ms-nav-ep-name.end {
+    text-align: right;
+}
+
+html.mobile-layout .ms-nav-ep-sep {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mobile-text-muted);
+    flex-shrink: 0;
+    padding: 2px 6px;
+    background: var(--mobile-card-bg);
+    border-radius: 6px;
+}
+
+/* ---- ETA ---- */
+html.mobile-layout .ms-nav-eta {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--mobile-text-secondary);
+    padding-bottom: 12px;
+}
+
+/* ---- Step instruction card ---- */
+html.mobile-layout .ms-nav-step-card {
+    background: var(--mobile-surface-bg);
+    border: 1px solid var(--mobile-card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+html.mobile-layout .ms-nav-step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html.mobile-layout .ms-nav-step-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--mobile-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+html.mobile-layout .ms-nav-step-icon svg {
+    width: 18px;
+    height: 18px;
+    color: #fff;
+}
+
+html.mobile-layout .ms-nav-step-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+    min-width: 0;
+}
+
+html.mobile-layout .ms-nav-step-expand {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--mobile-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+html.mobile-layout .ms-nav-step-expand svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ---- Step list (expandable) ---- */
+html.mobile-layout .ms-nav-step-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.5s ease;
+    opacity: 0;
+}
+
+html.mobile-layout .ms-nav-step-list.expanded {
+    max-height: 500px;
+    opacity: 1;
+}
+
+html.mobile-layout .ms-nav-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 14px;
+    position: relative;
+}
+
+html.mobile-layout .ms-nav-step-item::before {
+    content: '';
+    position: absolute;
+    left: 26px;
+    top: 30px;
+    bottom: -8px;
+    width: 2px;
+    background: var(--mobile-card-border);
+}
+
+html.mobile-layout .ms-nav-step-item:last-child::before {
+    display: none;
+}
+
+html.mobile-layout .ms-nav-step-item.done::before {
+    background: var(--mobile-accent);
+}
+
+html.mobile-layout .ms-nav-step-bullet {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--mobile-card-border);
+    background: var(--mobile-surface-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    z-index: 1;
+    color: var(--mobile-text-muted);
+}
+
+html.mobile-layout .ms-nav-step-bullet svg {
+    width: 14px;
+    height: 14px;
+}
+
+html.mobile-layout .ms-nav-step-item.active .ms-nav-step-bullet {
+    border-color: var(--mobile-accent);
+    background: var(--mobile-accent);
+    color: #fff;
+}
+
+html.mobile-layout .ms-nav-step-item.done .ms-nav-step-bullet {
+    border-color: var(--mobile-accent);
+    background: var(--mobile-accent-bg);
+    color: var(--mobile-accent);
+}
+
+html.mobile-layout .ms-nav-step-label {
+    font-size: 13px;
+    color: var(--mobile-text-primary);
+    line-height: 1.4;
+    padding-top: 2px;
+}
+
+html.mobile-layout .ms-nav-step-item.active .ms-nav-step-label {
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+}
+
+html.mobile-layout .ms-nav-step-item.done .ms-nav-step-label {
+    color: var(--mobile-text-muted);
+}
+
+/* ---- Prev / Next buttons ---- */
+html.mobile-layout .ms-nav-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+html.mobile-layout .ms-nav-btn {
+    flex: 1;
+    height: 46px;
+    border: none;
+    border-radius: 12px;
+    background: var(--mobile-card-bg);
+    color: var(--mobile-text-primary);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+html.mobile-layout .ms-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+html.mobile-layout .ms-nav-btn:active:not(:disabled) {
+    background: var(--mobile-card-border);
+}
+
+html.mobile-layout .ms-nav-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* ---- Cancel X button (between prev/next) ---- */
+html.mobile-layout .ms-nav-btn.cancel {
+    flex: 0 0 46px;
+    background: var(--mobile-danger-bg);
+    color: var(--mobile-danger-color);
+}
+
+html.mobile-layout .ms-nav-btn.cancel:active {
+    opacity: 0.75;
+}
+
+/* ---- Route type switcher ---- */
+html.mobile-layout .ms-route-type-switch {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 14px;
+    background: var(--mobile-card-bg);
+    margin-top: 12px;
+}
+
+html.mobile-layout .ms-route-type-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 38px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--mobile-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    padding: 0 6px;
+}
+
+html.mobile-layout .ms-route-type-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+html.mobile-layout .ms-route-type-btn.active {
+    background: var(--mobile-accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+html.mobile-layout .ms-route-type-btn:not(.active):active {
+    background: var(--mobile-accent-hover-bg);
+}
+
+/* ==================== GLASS MODE ==================== */
+html.mobile-layout:not(.no-glass) .mobile-bottom-sheet {
+    backdrop-filter: blur(var(--mobile-sheet-blur, 25px));
+    -webkit-backdrop-filter: blur(var(--mobile-sheet-blur, 25px));
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Search field, direction fields — frosted input */
+html.mobile-layout:not(.no-glass) .ms-search-field,
+html.mobile-layout:not(.no-glass) .ms-dir-field {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Category cards — glass cards */
+html.mobile-layout:not(.no-glass) .ms-cat-card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Location list icons */
+html.mobile-layout:not(.no-glass) .ms-loc-icon,
+html.mobile-layout:not(.no-glass) .ms-detail-logo {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Icon buttons (phone, share etc.) */
+html.mobile-layout:not(.no-glass) .ms-detail-icon-btn {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Accent buttons — translucent accent glow */
+html.mobile-layout:not(.no-glass) .ms-detail-route-btn,
+html.mobile-layout:not(.no-glass) .ms-dir-go-btn {
+    background: color-mix(in srgb, var(--mobile-accent) 72%, transparent) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Navigation buttons */
+html.mobile-layout:not(.no-glass) .ms-nav-btn {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+html.mobile-layout:not(.no-glass) .ms-nav-btn.cancel {
+    background: rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Route type switcher */
+html.mobile-layout:not(.no-glass) .ms-route-type-switch {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+html.mobile-layout:not(.no-glass) .ms-route-type-btn.active {
+    background: color-mix(in srgb, var(--mobile-accent) 80%, transparent) !important;
+}
+
+/* Step card, step bullets, time badge */
+html.mobile-layout:not(.no-glass) .ms-nav-step-card {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+html.mobile-layout:not(.no-glass) .ms-nav-step-bullet {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+}
+html.mobile-layout:not(.no-glass) .ms-nav-ep-sep {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Dividers */
+html.mobile-layout:not(.no-glass) .ms-loc-item {
+    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Sheet handle — more visible on glass */
+html.mobile-layout:not(.no-glass) .mobile-sheet-handle {
+    background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ==================== NO-GLASS OVERRIDES ==================== */
+html.no-glass.mobile-layout .mobile-bottom-sheet {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* ==================== HIDE ON NON-MOBILE ==================== */
+html:not(.mobile-layout) .mobile-bottom-sheet {
+    display: none !important;
+}

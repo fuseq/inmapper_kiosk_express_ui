@@ -1,0 +1,492 @@
+/* ==================== KEYBOARD ==================== */
+.keyboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 300;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.keyboard:not(.hidden) {
+    transform: translateY(0);
+}
+
+.keyboard-display {
+    padding: 20px 40px;
+    background: var(--bg-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.keyboard-display-input {
+    width: 100%;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--t-full);
+    background: transparent;
+    text-align: center;
+    padding: 12px;
+}
+
+.keyboard-keys {
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.key {
+    min-width: 70px;
+    height: 60px;
+    padding: 0 20px;
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 600;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.key:hover {
+    background: var(--primary-light);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.key:active {
+    transform: translateY(0);
+}
+
+.key-space {
+    flex: 1;
+    max-width: 500px;
+}
+
+.key-backspace {
+    min-width: 100px;
+    background: var(--danger);
+    color: white;
+}
+
+.key-backspace:hover {
+    background: #dc2626;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 40px));
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% + 40px));
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeInUpButton {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 40px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes pulse-route {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 20px var(--primary);
+    }
+    50% {
+        opacity: 0.6;
+        box-shadow: 0 0 40px var(--secondary);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* When the virtual keyboard feature is disabled (or mobile view) we hide
+   the inline keyboard entirely so the list area below takes over its
+   space via its `flex: 1` rule. */
+html[data-keyboard-enabled="false"] .inline-keyboard,
+html.mobile-layout .inline-keyboard {
+    display: none !important;
+}
+
+/* ==================== INLINE KEYBOARD ==================== */
+.inline-keyboard {
+    padding: var(--keyboard-padding) clamp(16px, 1.2vw, 28px) clamp(16px, 1.2vw, 28px) clamp(16px, 1.2vw, 28px);
+    background: var(--s-5);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--key-gap);
+    flex-shrink: 0;
+}
+
+/* Language Selector Row - Removed, now using top bar */
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: var(--key-gap);
+}
+
+.keyboard-row.rtl {
+    direction: rtl;
+    flex-direction: row-reverse;
+}
+
+.keyboard-row.chinese-common {
+    background: rgba(var(--gradient-3-rgb), 0.05);
+    padding: 8px;
+    border-radius: var(--radius-md);
+    margin-top: 4px;
+}
+
+.inline-key {
+    min-width: var(--key-min-w);
+    height: var(--key-h);
+    padding: 0 clamp(12px, 1vw, 20px);
+    background: var(--s-15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: var(--key-fs);
+    font-weight: 600;
+    color: var(--t-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: 0 4px 16px rgba(var(--shadow-tint-rgb), 0.15);
+}
+
+.inline-key.number-key {
+    min-width: var(--key-min-w);
+    font-size: clamp(16px, 1.2vw, 24px);
+    font-weight: 700;
+    background: var(--s-12);
+    border: 1px solid color-mix(in srgb, var(--card-border) 85%, transparent);
+}
+
+.inline-key.number-key:hover {
+    background: var(--s-20);
+    border-color: color-mix(in srgb, var(--card-border) 55%, var(--accent) 45%);
+}
+
+.inline-key.special-char-key {
+    min-width: var(--key-min-w);
+    font-size: clamp(18px, 1.4vw, 26px);
+    font-weight: 600;
+    background: var(--s-15);
+    border: 1px solid var(--card-border);
+}
+
+.inline-key.special-char-key:hover {
+    background: var(--s-25);
+    border-color: color-mix(in srgb, var(--card-border) 55%, var(--accent) 45%);
+}
+
+.keyboard-row.numbers-row {
+    margin-bottom: clamp(6px, 0.5vh, 10px);
+}
+
+.inline-key.space-key {
+    min-width: var(--key-space-w);
+    font-size: var(--key-space-fs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.inline-key:hover {
+    background: var(--s-25);
+    border-color: color-mix(in srgb, var(--card-border) 55%, var(--accent) 45%);
+    color: var(--t-full);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(var(--shadow-tint-rgb), 0.25);
+}
+
+.inline-key:active {
+    transform: translateY(-1px);
+    background: var(--s-30);
+}
+
+.inline-key.special {
+    background: rgba(100, 116, 139, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(100, 116, 139, 0.4);
+    color: white;
+    min-width: var(--key-special-w);
+}
+
+.inline-key.special:hover {
+    background: rgba(71, 85, 105, 0.4);
+    border: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.inline-key svg {
+    width: clamp(18px, 1.2vw, 26px);
+    height: clamp(18px, 1.2vw, 26px);
+}
+
+/* RTL Support for Arabic */
+.search-placeholder[style*="direction: rtl"] {
+    text-align: right !important;
+}
+
+/* Chinese dual keys */
+.inline-key.chinese-key {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2px, 0.12vw, 3px);
+    padding: clamp(6px, 0.5vw, 10px) clamp(10px, 0.8vw, 16px);
+}
+
+.inline-key.chinese-key .key-main {
+    font-size: clamp(13px, 0.95vw, 20px);
+    font-weight: 600;
+    color: var(--t-90);
+    line-height: 1;
+}
+
+.inline-key.chinese-key .key-sub {
+    font-size: clamp(15px, 1.1vw, 24px);
+    font-weight: 400;
+    color: var(--t-75);
+    line-height: 1;
+}
+
+.inline-key.chinese-key:hover .key-main,
+.inline-key.chinese-key:hover .key-sub {
+    color: var(--t-full);
+}
+
+/* Chinese character keys */
+.keyboard-row.chinese-common .inline-key {
+    min-width: clamp(55px, 3.5vw, 85px);
+    height: clamp(45px, 3.5vh, 70px);
+    font-size: clamp(16px, 1.2vw, 26px);
+    background: var(--s-20);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(219, 234, 254, 0.3);
+}
+
+/* ==================== SIDE PANEL KEYBOARD BOTTOM SHEET ==================== */
+.side-keyboard-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+}
+
+.side-keyboard-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.side-keyboard-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-height: 75vh;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    cursor: default;
+}
+
+.side-keyboard-overlay.active .side-keyboard-sheet {
+    transform: translateY(0);
+}
+
+.side-keyboard-handle {
+    width: clamp(50px, 5vw, 80px);
+    height: clamp(5px, 0.4vw, 8px);
+    background: var(--border-color);
+    border-radius: 10px;
+    margin: clamp(12px, 1vw, 18px) auto clamp(20px, 1.5vw, 30px);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.side-keyboard-handle:hover {
+    background: var(--text-secondary);
+    transform: scaleX(1.1);
+}
+
+.side-keyboard-handle:active {
+    background: var(--text-primary);
+}
+
+.side-keyboard-content {
+    padding: 0 clamp(20px, 1.5vw, 36px) clamp(24px, 2vw, 40px);
+    overflow-y: auto;
+    max-height: calc(75vh - 80px);
+}
+
+.side-inline-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 0.7vw, 14px);
+}
+
+.side-inline-keyboard .keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(8px, 0.7vw, 14px);
+}
+
+.side-inline-keyboard .keyboard-row.rtl {
+    direction: rtl;
+    flex-direction: row-reverse;
+}
+
+.side-inline-keyboard .inline-key {
+    min-width: clamp(70px, 5.5vw, 110px);
+    height: clamp(60px, 5vh, 90px);
+    padding: 0 clamp(14px, 1.2vw, 24px);
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    font-size: clamp(20px, 1.5vw, 32px);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--border-color);
+}
+
+.side-inline-keyboard .inline-key:hover {
+    background: var(--primary-light);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.side-inline-keyboard .inline-key:active {
+    transform: translateY(0);
+}
+
+.side-inline-keyboard .inline-key.special {
+    background: #64748b;
+    color: white;
+    min-width: clamp(90px, 6.5vw, 130px);
+    border-color: #475569;
+}
+
+.side-inline-keyboard .inline-key.special:hover {
+    background: #475569;
+}
+
+.side-inline-keyboard .inline-key.space-key {
+    min-width: clamp(420px, 32vw, 650px);
+    font-size: clamp(14px, 1.1vw, 20px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.side-inline-keyboard .inline-key svg {
+    width: clamp(20px, 1.4vw, 30px);
+    height: clamp(20px, 1.4vw, 30px);
+}
+
+/* Chinese dual keys */
+.side-inline-keyboard .inline-key.chinese-key {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(3px, 0.2vw, 5px);
+    padding: clamp(8px, 0.6vw, 12px) clamp(12px, 1vw, 18px);
+}
+
+.side-inline-keyboard .inline-key.chinese-key .key-main {
+    font-size: clamp(14px, 1.05vw, 22px);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.side-inline-keyboard .inline-key.chinese-key .key-sub {
+    font-size: clamp(17px, 1.25vw, 26px);
+    font-weight: 400;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.side-inline-keyboard .inline-key.chinese-key:hover .key-main,
+.side-inline-keyboard .inline-key.chinese-key:hover .key-sub {
+    color: white;
+}
+

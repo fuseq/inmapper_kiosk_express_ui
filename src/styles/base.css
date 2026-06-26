@@ -1,0 +1,48 @@
+/* ==================== GLOBAL STYLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
+    color: var(--text-primary);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+/* Generic icon helpers (Lucide markers + emoji spans). Emitted by
+ * src/core/icon.js — `.ic` makes the host an inline-flex container
+ * so the SVG keeps the requested width/height regardless of where
+ * it's rendered (chips, list rows, detail logos). */
+.ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.ic-empty { opacity: .35; }
+.ic-glyph { font-family: 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif; }
+.ic svg { width: 100%; height: 100%; display: block; }
+.ic-img { overflow: hidden; }
+.ic-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+button {
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+input {
+    font-family: inherit;
+    border: none;
+    outline: none;
+}

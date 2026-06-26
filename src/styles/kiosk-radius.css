@@ -1,0 +1,42 @@
+/* ==================== KIOSK CORNER RADIUS ====================
+ * One radius for all kiosk surfaces — same as .search-tab (24px).
+ * Re-maps --radius-sm/md/lg inside kiosk scopes so existing
+ * var(--radius-*) usages inherit automatically. Circles (50%)
+ * and scrollbar thumbs are untouched. */
+
+.initial-home,
+.search-tab,
+html.kiosk-portrait-layout {
+    --radius-sm: var(--kiosk-radius);
+    --radius-md: var(--kiosk-radius);
+    --radius-lg: var(--kiosk-radius);
+}
+
+/* Values that were hardcoded instead of using radius tokens */
+.search-tab .category-tab {
+    border-radius: var(--kiosk-radius);
+}
+
+.search-tab .store-map-back-btn,
+.search-tab .store-route-switch,
+.search-tab .store-route-switch.route-pill-bar .route-switch-btn,
+.search-tab .store-heading-btn {
+    border-radius: var(--kiosk-radius);
+}
+
+html.kiosk-portrait-layout .kp-rail-btn,
+html.kiosk-portrait-layout .map-side-panel.island-layout,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-top-right,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-bottom-left,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-bottom-right,
+html.kiosk-portrait-layout .map-side-panel:not(.island-layout) {
+    border-radius: var(--kiosk-radius);
+}
+
+/* Map chrome on kiosk (floor selector, etc.) */
+html[data-initial-view="kiosk"] .floor-selector-compact,
+html[data-initial-view="kiosk"] .floor-display-btn,
+html[data-initial-view="kiosk-portrait"] .floor-selector-compact,
+html[data-initial-view="kiosk-portrait"] .floor-display-btn {
+    border-radius: var(--kiosk-radius);
+}

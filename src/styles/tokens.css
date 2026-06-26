@@ -1,0 +1,209 @@
+/* ==================== ROOT VARIABLES ==================== */
+:root {
+    /* Theme colors (overridden by config.theme via JS) */
+    --bg-gradient-1: #1e3a8a;
+    --bg-gradient-2: #2563eb;
+    --bg-gradient-3: #3b82f6;
+
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --accent-rgb: 99, 102, 241;
+    --accent-hover-rgb: 79, 70, 229;
+    --gradient-2-rgb: 37, 99, 235;
+    --gradient-3-rgb: 59, 130, 246;
+    --accent-dark-rgb: 29, 78, 216;
+    --primary-light-rgb: 129, 140, 248;
+    --blue-light-rgb: 96, 165, 250;
+    --blue-lighter-rgb: 147, 197, 253;
+    /* Neutral shadow — not tied to backgroundGradient (see applyTheme). */
+    --shadow-tint-rgb: 15, 23, 42;
+    --accent-light-rgb: 224, 231, 255;
+
+    --theme-text: rgba(255, 255, 255, 0.95);
+    --theme-text-secondary: rgba(255, 255, 255, 0.75);
+    --theme-text-muted: rgba(255, 255, 255, 0.5);
+
+    --glass-bg: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-blur: 25px;
+
+    --card-bg: rgba(255, 255, 255, 0.15);
+    --card-border: rgba(255, 255, 255, 0.25);
+
+    --chip-bg: rgba(255, 255, 255, 0.22);
+    --chip-active-bg: rgba(var(--accent-rgb), 0.8);
+
+    --input-bg: rgba(255, 255, 255, 0.15);
+
+    /* Legacy aliases */
+    --primary: var(--accent);
+    --primary-dark: var(--accent-hover);
+    --primary-light: #818cf8;
+    --secondary: #ec4899;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-overlay: rgba(0, 0, 0, 0.5);
+    
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+    
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    /* Kiosk chrome — matches .search-tab outer corners. */
+    --kiosk-radius: var(--radius-xl);
+    
+    --navbar-h: clamp(56px, 6vh, 68px);
+    --navbar-top: clamp(12px, 1.5vh, 22px);
+    /* Bottom edge of the floating navbar pill (with a small breathing
+     * gap) — used by other top-anchored surfaces (search-tab, search
+     * trigger in search-mode) to clear the navbar. When the navbar is
+     * disabled `applyNavbarConfig()` overrides this to 0px. */
+    --nav-offset: calc(var(--navbar-top) + var(--navbar-h) + 10px);
+
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Fluid scale tokens for large viewports */
+    --fs-xs: clamp(10px, 0.6vw, 14px);
+    --fs-sm: clamp(12px, 0.8vw, 16px);
+    --fs-md: clamp(14px, 1.0vw, 18px);
+    --fs-lg: clamp(16px, 1.2vw, 22px);
+    --fs-xl: clamp(20px, 1.6vw, 28px);
+    --fs-2xl: clamp(28px, 2.4vw, 48px);
+
+    --space-sm: clamp(8px, 0.6vw, 12px);
+    --space-md: clamp(12px, 0.9vw, 18px);
+    --space-lg: clamp(16px, 1.2vw, 24px);
+    --space-xl: clamp(20px, 1.6vw, 32px);
+
+    /* Component sizing */
+    --search-panel-w: clamp(900px, 80vw, 1700px);
+    --home-search-max-w: var(--search-panel-w); /* keep search bar width equal to panel */
+    --search-panel-h: clamp(560px, 70vh, 78vh);
+    --searchbar-h: clamp(64px, 7vh, 100px);
+    /* Breathing space between the search trigger and the search-tab
+     * panel when it opens. Bumped from clamp(4-14) so the trigger and
+     * panel no longer visually butt up against each other. */
+    --search-stack-gap: clamp(14px, 1.6vh, 24px);
+
+    /* Map side panel sizing */
+    --side-panel-w: clamp(360px, 24vw, 620px);
+    --side-panel-expanded-w: clamp(600px, 50vw, 1000px);
+    
+    /* Route selector responsive sizing */
+    --route-panel-h: clamp(75px, 6vh, 105px);
+    --route-btn-h: clamp(55px, 4.5vh, 78px);
+    --route-icon-size: clamp(32px, 2.4vw, 46px);
+    --route-icon-svg: clamp(16px, 1.2vw, 24px);
+    --route-label-fs: clamp(9px, 0.6vw, 13px);
+    --route-name-fs: clamp(12px, 0.85vw, 18px);
+    --route-arrow-fs: clamp(20px, 1.3vw, 30px);
+    
+    /* Inline keyboard responsive sizing */
+    --key-min-w: clamp(60px, 3.8vw, 90px);
+    --key-h: clamp(50px, 3.8vh, 75px);
+    --key-fs: clamp(18px, 1.3vw, 28px);
+    --key-gap: clamp(6px, 0.5vw, 12px);
+    --key-special-w: clamp(80px, 5vw, 110px);
+    --key-space-w: clamp(350px, 25vw, 550px);
+    --key-space-fs: clamp(12px, 0.85vw, 18px);
+    --keyboard-padding: clamp(10px, 0.8vw, 18px);
+
+    /* Mobile bottom-sheet tokens (overridden by config.theme.mobile via JS) */
+    --mobile-sheet-bg: #ffffff;
+    --mobile-sheet-shadow: rgba(0, 0, 0, 0.12);
+    --mobile-card-bg: #f3f4f6;
+    --mobile-card-border: #e5e7eb;
+    --mobile-surface-bg: #f9fafb;
+    --mobile-text-primary: #111827;
+    --mobile-text-secondary: #6b7280;
+    --mobile-text-muted: #9ca3af;
+    --mobile-accent-light: rgba(var(--accent-rgb), 0.2);
+    --mobile-accent-bg: rgba(var(--accent-rgb), 0.1);
+    --mobile-accent-hover-bg: rgba(var(--accent-rgb), 0.06);
+    --mobile-progress-end: #818cf8;
+    --mobile-danger-bg: #fef2f2;
+    --mobile-danger-color: #dc2626;
+}
+
+/* ==================== TEXT COLOR SYSTEM ==================== */
+:root {
+    --t-95: rgba(255, 255, 255, 0.95);
+    --t-90: rgba(255, 255, 255, 0.9);
+    --t-85: rgba(255, 255, 255, 0.85);
+    --t-80: rgba(255, 255, 255, 0.8);
+    --t-75: rgba(255, 255, 255, 0.75);
+    --t-70: rgba(255, 255, 255, 0.7);
+    --t-65: rgba(255, 255, 255, 0.65);
+    --t-60: rgba(255, 255, 255, 0.6);
+    --t-55: rgba(255, 255, 255, 0.55);
+    --t-50: rgba(255, 255, 255, 0.5);
+    --t-40: rgba(255, 255, 255, 0.4);
+    --t-full: white;
+}
+
+/* ==================== SURFACE SYSTEM ==================== */
+:root {
+    --s-3:  rgba(255, 255, 255, 0.03);
+    --s-5:  rgba(255, 255, 255, 0.05);
+    --s-8:  rgba(255, 255, 255, 0.08);
+    --s-10: rgba(255, 255, 255, 0.1);
+    --s-12: rgba(255, 255, 255, 0.12);
+    --s-15: rgba(255, 255, 255, 0.15);
+    --s-20: rgba(255, 255, 255, 0.2);
+    --s-22: rgba(255, 255, 255, 0.22);
+    --s-25: rgba(255, 255, 255, 0.25);
+    --s-30: rgba(255, 255, 255, 0.3);
+    --s-35: rgba(255, 255, 255, 0.35);
+    --s-50: rgba(255, 255, 255, 0.5);
+}
+
+/* ==================== NO-GLASS MODE ==================== */
+html.no-glass {
+    /* Glass vars are overwritten inline by applyTheme() from `theme.solidSurface`.
+       These are conservative fallbacks used only if JS hasn't run yet. */
+    --glass-bg:  rgb(18, 22, 48);
+    --glass-border: rgb(48, 52, 78);
+    --glass-blur: 0px;
+    --card-bg:   rgb(18, 22, 48);
+    --card-border: rgb(43, 47, 73);
+    --chip-bg:   rgb(35, 40, 65);
+    --chip-active-bg: rgb(68, 62, 108);
+    --input-bg:  rgb(18, 22, 48);
+
+    --s-3:  rgb(15, 18, 42);
+    --s-5:  rgb(15, 18, 42);
+    --s-8:  rgb(18, 22, 48);
+    --s-10: rgb(18, 22, 48);
+    --s-12: rgb(20, 24, 50);
+    --s-15: rgb(22, 26, 52);
+    --s-20: rgb(25, 30, 56);
+    --s-22: rgb(28, 33, 58);
+    --s-25: rgb(30, 35, 62);
+    --s-30: rgb(35, 40, 68);
+    --s-35: rgb(40, 45, 72);
+    --s-50: rgb(50, 55, 82);
+}
+
+/* Kill every backdrop-filter when the glass effect is disabled.
+   Otherwise elements keep their frosted sheen even after we swap to solid
+   surfaces because they were styled with backdrop-filter in the first place. */
+html.no-glass *,
+html.no-glass *::before,
+html.no-glass *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}

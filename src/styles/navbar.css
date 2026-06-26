@@ -1,0 +1,220 @@
+/* ==================== TOP INFO BAR ==================== */
+/* Floating glass pill — Mappedin-style. Centered at the top of the
+ * viewport, hovering above the map rather than occupying a full-width
+ * strip. Background uses the same `--card-bg / --card-border /
+ * --glass-blur` tokens as the rest of the surface system so the
+ * frosted-glass tint always matches the search-tab, side-panel and
+ * island instead of mirroring the raw page gradient.
+ *
+ * The bar is `position: fixed` and `.main-container` no longer pads
+ * itself by --nav-offset — see the bottom of this file. Top-anchored
+ * content (search-tab, search trigger in search-mode) still consults
+ * `--nav-offset` so it visually clears the pill. */
+
+html.map-view-active .glass-navbar {
+    display: none !important;
+}
+
+.glass-navbar {
+    position: fixed;
+    top: var(--navbar-top);
+    left: 50%;
+    transform: translateX(-50%);
+    height: auto;
+    min-height: var(--navbar-h);
+    /* Edge-to-edge bar with a small breathing gap on either side so
+     * it reads as a wide rectangular header instead of a pill. */
+    width: calc(100vw - clamp(16px, 1.5vw, 28px));
+    max-width: none;
+    padding: clamp(8px, 0.9vh, 14px) clamp(24px, 2.8vw, 56px);
+
+    background: var(--card-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    border: 1px solid var(--card-border);
+    /* Mild rounding — rectangular look but still soft at the corners
+     * so it matches the rest of the glass surface family. */
+    border-radius: clamp(8px, 0.8vw, 14px);
+    box-shadow:
+        0 10px 32px rgba(var(--shadow-tint-rgb), 0.18),
+        0 2px 8px rgba(var(--shadow-tint-rgb), 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    z-index: 100;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+    --text-primary: var(--theme-text);
+    --text-secondary: var(--theme-text-secondary);
+    --text-tertiary: var(--theme-text-secondary);
+}
+
+.navbar-content {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: clamp(20px, 2.5vw, 40px);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 1.2vw, 16px);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Time & Date in Navbar */
+.nav-left .time-date {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-left .time-date .time {
+    font-size: clamp(24px, 2.8vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--theme-text);
+    transition: color 0.5s ease;
+}
+
+.nav-left .time-date .date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.1;
+}
+
+.nav-left .time-date .date .month-day {
+    font-size: clamp(12px, 1.3vw, 14px);
+    color: var(--t-90);
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.5s ease;
+}
+
+.nav-left .time-date .date .day {
+    font-size: clamp(11px, 1.2vw, 13px);
+    font-weight: 400;
+    text-transform: none;
+    color: var(--t-80);
+    transition: color 0.5s ease;
+}
+
+.location-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--t-90);
+}
+
+.nav-logo {
+    height: clamp(32px, 3vw, 48px);
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    line-height: 1;
+}
+
+.nav-logo-title {
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: 400;
+    color: var(--theme-text);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.nav-logo-subtitle {
+    font-size: clamp(10px, 1vw, 13px);
+    font-weight: 300;
+    color: var(--t-90);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: -2px;
+}
+
+.nav-brand {
+    font-size: clamp(16px, 1.8vw, 20px);
+    font-weight: 600;
+    color: var(--theme-text);
+    letter-spacing: -0.01em;
+    transition: color 0.5s ease;
+}
+
+.language-switcher {
+    display: flex;
+    gap: 4px;
+    background: var(--s-8);
+    padding: 4px;
+    border-radius: 8px;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.lang-option {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t-60);
+    transition: var(--transition);
+}
+
+.lang-option:hover {
+    background: var(--s-10);
+    color: var(--t-90);
+}
+
+.lang-option.active {
+    /* Soft accent tint + inset accent border instead of a solid
+     * `var(--accent)` fill. The previous solid background turned the
+     * option into a dark/dark contrast trap when `theme.textPrimary`
+     * (→ `--t-full`) sat close to the accent colour, making the label
+     * invisible. The tinted background keeps the regular
+     * `--theme-text` colour readable, and the inset shadow draws the
+     * accent ring without bumping the pill's layout size. */
+    background: rgba(var(--accent-rgb), 0.18);
+    color: var(--theme-text);
+    box-shadow:
+        inset 0 0 0 1px var(--accent),
+        0 2px 8px rgba(var(--accent-rgb), 0.20);
+}
+
+/* Background map removed - now in map-panel */
+
+/* ==================== MAIN CONTAINER ==================== */
+/* The navbar is a floating pill — the main container does NOT pad
+ * itself by --nav-offset so the map / home / search-tab can extend
+ * to the very top of the viewport with the pill hovering over them.
+ * Anything that does need to sit below the pill (e.g. the search-tab
+ * in `.open` state) reads `--nav-offset` directly. */
+.main-container {
+    height: 100vh;
+    margin-top: 0;
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+}
+

@@ -1,0 +1,574 @@
+/* ==================== KIOSK DİKEY (Portrait) ====================
+ *
+ * Strategy: reuse the horizontal kiosk pipeline AS-IS — same `.initial-home`,
+ * `.search-tab`, `.store-detail-content`, side panel — and only:
+ *   • Hide the top navbar (a small right-edge rail of utility actions
+ *     stands in for it, mounted by features/portrait-chrome).
+ *   • Reposition home-screen overlays for a 1080 × 1920 viewport.
+ *   • Top-anchored search-tab whose result list caps at ~3 rows so the
+ *     bottom of the list never falls below a standing user's reach.
+ *   • Auto-height search-tab so store-detail doesn't leave a big white
+ *     void below the QR card.
+ *   • Single-column store-detail grid.
+ *   • Vertical floor selector docked at the LEFT middle (mirrors the
+ *     right rail) so floor switching is within reach of an upright user.
+ *   • Side panel (route directions) docked at TOP CENTER instead of any
+ *     of the island-* corners.
+ *
+ * All rules live under `html.kiosk-portrait-layout` so web/kiosk/mobile
+ * views are untouched.
+ *
+ * Sizing knobs (set by `applyKioskPortraitTheme` from config):
+ *   --kp-edge-pad, --kp-rail-w,
+ *   --kp-logo-offset, --kp-search-offset, --kp-cards-offset,
+ *   --kp-explore-offset, --kp-search-tab-offset, --kp-search-rows.
+ * ============================================================ */
+
+html.kiosk-portrait-layout {
+    --kp-edge-pad: 24px;
+    --kp-rail-w: 84px;
+
+    /* Vertical center for the right rail AND the left floor selector.
+     * Both anchored to the same `top: var(--kp-rail-top)` so they sit
+     * across from each other on the same horizontal line — comfortably
+     * within a standing user's reach (upper-mid of a 1920 viewport). */
+    --kp-rail-top: 42%;
+
+    /* Vertical offsets measured from viewport center (negative = above,
+     * positive = below). Mirrors the horizontal kiosk's home layout
+     * exactly — same compact center stack — so behaviour translates 1:1
+     * just with extra empty map showing above/below the stack on a
+     * 1920px-tall viewport. */
+    --kp-logo-offset:    -460px;
+    --kp-search-offset:  -120px;
+    --kp-cards-offset:   60px;
+    --kp-explore-offset: 220px;
+
+    /* Search-tab opens noticeably higher than the home position so the
+     * search-trigger animates upward (clear visual cue that the search
+     * surface is rising into view), and the tab lands at a comfortable
+     * typing height for an upright user. On a 1920-tall viewport this
+     * puts the tab top around y≈240px, with the elevated trigger just
+     * above it. */
+    --kp-search-tab-offset: -720px;
+    --kp-search-rows: 3;
+
+    /* Portrait owns its own top-anchored layout (everything is
+     * positioned via `top: calc(50% + ...)` against the viewport
+     * center) so the floating navbar's visual bottom doesn't need to
+     * be consulted — keep --nav-offset at 0 in portrait so the legacy
+     * top: calc(--nav-offset + …) rules don't double-shift content. */
+    --nav-offset: 0px;
+}
+
+/* ──────────────────── BODY / VIEWPORT ──────────────────── */
+
+html.kiosk-portrait-layout,
+html.kiosk-portrait-layout body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+/* Navbar: visible on home/search; hidden on full map via
+ * `html.map-view-active` (see app.js applyNavbarConfig). */
+/* Navbar — the global navbar.css already styles the bar as a wide
+ * top-anchored glass header, so portrait inherits the same look
+ * unchanged. */
+
+html.kiosk-portrait-layout .main-container {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+/* Map paneli her zaman görünür, tam ekran. */
+html.kiosk-portrait-layout .map-panel {
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+html.kiosk-portrait-layout .map-container {
+    width: 100%;
+    height: 100%;
+}
+
+html.kiosk-portrait-layout .floor-map-container {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+html.kiosk-portrait-layout .map-panel::before { display: none; }
+
+/* ──────────────────── HOME SCREEN — reposition only ──────────────────── */
+
+/* Logo block: same vertical stack (icon + title + subtitle), just shifted
+ * up to give room for the search trigger below it. */
+html.kiosk-portrait-layout .initial-home .home-logo {
+    top: calc(50% + var(--kp-logo-offset));
+    transform: translate(-50%, 0);
+}
+
+html.kiosk-portrait-layout .initial-home .home-logo .logo-image {
+    width: 160px;
+    height: 160px;
+}
+
+html.kiosk-portrait-layout .home-title {
+    font-size: clamp(36px, 4vw, 48px);
+}
+
+html.kiosk-portrait-layout .home-title-location {
+    font-size: clamp(18px, 2vw, 22px);
+}
+
+/* Search trigger pill — wider so it eats the available 1080px width. */
+html.kiosk-portrait-layout .initial-home .home-search-trigger {
+    width: min(900px, calc(100vw - 120px));
+    top: calc(50% + var(--kp-search-offset));
+    transform: translate(-50%, 0);
+    height: 84px;
+    padding: 0 28px;
+    font-size: 20px;
+}
+html.kiosk-portrait-layout .initial-home .home-search-trigger:hover {
+    transform: translate(-50%, -2px);
+}
+
+/* In search-mode the trigger fuses with the search-tab (see home.css):
+ * the tab opens at `--kp-search-tab-offset`, and the trigger top is that
+ * minus exactly the trigger height (84px) — zero gap, one surface. */
+html.kiosk-portrait-layout .initial-home.search-mode .home-search-trigger {
+    top: calc(50% + var(--kp-search-tab-offset) - 84px);
+    width: min(960px, calc(100vw - 120px));
+}
+/* No hover lift while the search-tab is open (see home.css for the
+ * yatay equivalent). The trigger snaps to its open-state position
+ * and stays there regardless of pointer state. */
+html.kiosk-portrait-layout .initial-home.search-mode .home-search-trigger:hover {
+    transform: translate(-50%, 0) !important;
+}
+
+html.kiosk-portrait-layout .initial-home .search-placeholder {
+    font-size: 20px;
+}
+
+/* Category cards — single row; cards flex-share the width and scale down
+ * responsively so they never wrap or overflow the search bar above. */
+/* Portrait keeps a width-constrained row (cards flex-grow), centred without a
+ * transform so the cards' backdrop-filter blur stays active (see home.css). */
+html.kiosk-portrait-layout .initial-home .home-category-cards {
+    inset: auto;
+    top: calc(50% + var(--kp-cards-offset));
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: min(900px, calc(100vw - 120px));
+    max-width: none;
+    padding-top: 0;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: clamp(8px, 1.4vw, 18px);
+    justify-content: center;
+}
+
+html.kiosk-portrait-layout .initial-home .category-card {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    width: auto;
+    min-height: 0;
+    padding: clamp(12px, 2vw, 24px) clamp(6px, 1vw, 14px);
+    gap: clamp(6px, 1vw, 12px);
+}
+
+html.kiosk-portrait-layout .initial-home .category-card-icon {
+    font-size: clamp(26px, 5.5vw, 44px);
+}
+
+html.kiosk-portrait-layout .initial-home .category-card-label {
+    font-size: clamp(11px, 2.3vw, 15px);
+}
+
+/* "Haritayı Keşfet" button — same horizontal kiosk look, just positioned
+ * for portrait. */
+html.kiosk-portrait-layout .initial-home .explore-map-btn {
+    top: calc(50% + var(--kp-explore-offset));
+    transform: translate(-50%, 0);
+    padding: 18px 36px;
+    font-size: 18px;
+}
+html.kiosk-portrait-layout .initial-home .explore-map-btn:hover {
+    transform: translate(-50%, -2px);
+}
+
+/* Mini slideshow (sponsored / ad reel). The horizontal kiosk dock it at
+ * `bottom: 16px` with a tiny ~300px frame. On a 1920-tall portrait that
+ * feels stranded in the bottom void below the explore button. Anchor it
+ * just below the explore CTA instead and bump it ~2x in size so the
+ * frame reads from across the room. */
+html.kiosk-portrait-layout .home-mini-slideshow {
+    top: calc(50% + var(--kp-explore-offset) + 120px) !important;
+    bottom: auto !important;
+}
+html.kiosk-portrait-layout .mini-slideshow-container {
+    width: min(720px, calc(100vw - 200px));
+    aspect-ratio: 16 / 9;
+}
+html.kiosk-portrait-layout .mini-placeholder-icon {
+    width: clamp(48px, 6vw, 72px);
+    height: clamp(48px, 6vw, 72px);
+}
+html.kiosk-portrait-layout .mini-placeholder-text {
+    font-size: clamp(14px, 1.4vw, 18px);
+}
+
+/* ──────────────────── SEARCH TAB — top sheet ──────────────────── */
+
+/* When the user taps the search trigger, the trigger itself rises into
+ * view (see `.search-mode` rule above) and the search-tab drops down
+ * directly below it. Top-anchored — not the bottom-sheet pattern web/
+ * kiosk use — so the keyboard at the bottom stays in easy reach and the
+ * result list above it never sinks below an upright user's eye line.
+ *
+ * `height: auto` + `max-height` so the tab shrinks to fit content when
+ * the store-detail surface is shown (otherwise the QR / phone card
+ * leave a big white void below). */
+html.kiosk-portrait-layout .search-tab {
+    top: calc(50% + var(--kp-search-tab-offset));
+    left: 50%;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top center;
+    width: min(960px, calc(100vw - 120px));
+    max-width: none;
+    height: auto;
+    max-height: calc(100vh - 440px);
+}
+html.kiosk-portrait-layout .search-tab.open {
+    transform: translateX(-50%) scaleY(1);
+}
+
+/* Store detail: hide the search trigger and slide the sheet up into its
+ * slot so the map section can grow. */
+html.kiosk-portrait-layout .initial-home.search-mode.store-detail-open .home-search-trigger {
+    display: none;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+html.kiosk-portrait-layout .search-tab.open.store-detail-open {
+    top: calc(50% + var(--kp-search-tab-offset) - 84px);
+    height: clamp(520px, 72vh, 76vh);
+    max-height: clamp(520px, 72vh, 76vh);
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+}
+
+html.kiosk-portrait-layout .search-tab.store-detail-open .store-map-section {
+    height: clamp(280px, 32vh, 360px);
+    flex-shrink: 0;
+}
+
+/* Results list: cap to ~3 visible rows so users don't bend down to
+ * read the bottom. The list itself stays scrollable, but the visible
+ * window is bounded. With grid auto-fill (160px column) + 12px gap +
+ * 16px padding, three rows comes out to ~3 * 130 + 2 * 12 + 16 = 430px. */
+html.kiosk-portrait-layout .search-tab .tab-results-container {
+    justify-content: center;
+    align-content: start;
+    gap: 12px;
+    padding: 16px 24px;
+    max-height: calc(var(--kp-search-rows) * 130px + (var(--kp-search-rows) - 1) * 12px + 32px);
+    overflow-y: auto;
+}
+
+html.kiosk-portrait-layout .search-tab .location-item {
+    flex: 1 1 140px;
+    min-width: 140px;
+    max-width: 200px;
+}
+
+/* Wider keyboard for portrait → bigger keys, more reachable. */
+html.kiosk-portrait-layout .search-tab .inline-keyboard {
+    margin-top: auto;
+}
+
+/* ──────────────────── STORE DETAIL — single column ──────────────────── */
+
+/* The horizontal kiosk store-detail already has a 1-column fallback at
+ * ≤900px wide. The portrait search-tab is ≤960px, just above that. Force
+ * the 1-column layout regardless so the QR / phone cards stack below the
+ * description instead of squishing alongside it. */
+html.kiosk-portrait-layout .search-tab .store-info-grid {
+    grid-template-columns: 1fr;
+}
+
+html.kiosk-portrait-layout .search-tab .store-map-section {
+    height: clamp(260px, 30vh, 380px);
+}
+
+html.kiosk-portrait-layout .search-tab .similar-stores-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* The route-type switch normally anchors to the bottom-right of the
+ * map section, where it sits ~40px above the "Start Heading Forward"
+ * button. On a 1080-wide portrait viewport that gap looks cramped —
+ * pull the switch to the TOP-right of the map section instead, leaving
+ * the entire bottom strip to the heading button. */
+html.kiosk-portrait-layout .search-tab .store-route-switch {
+    bottom: auto;
+    top: 16px;
+    right: 16px;
+}
+
+/* ──────────────────── RAIL (right side) ──────────────────── */
+
+/* Right-edge column of utility actions (home / findMe by default).
+ * Replaces the top navbar in portrait. Vertical-aligned with the left
+ * floor selector via `--kp-rail-top`. */
+html.kiosk-portrait-layout #kpRail {
+    position: absolute;
+    top: var(--kp-rail-top);
+    right: var(--kp-edge-pad);
+    transform: translateY(-50%);
+    width: var(--kp-rail-w);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 55;
+    pointer-events: auto;
+}
+
+/* Rail hidden on:
+ *   - idle   (home overlay covers the map)
+ *   - search (search-tab is open with results)
+ *   - detail (search-tab is open with store-detail — rail would sit
+ *             behind the opaque sheet anyway)
+ * Visible on `map` (including when a route panel is docked at top —
+ * the map is still the dominant surface and Ana Sayfa / Konumum are
+ * useful to the standing user). */
+html.kiosk-portrait-layout.kp-mode-idle   #kpRail,
+html.kiosk-portrait-layout.kp-mode-search #kpRail,
+html.kiosk-portrait-layout.kp-mode-detail #kpRail {
+    opacity: 0;
+    pointer-events: none;
+}
+
+html.kiosk-portrait-layout .kp-rail-btn {
+    width: 100%;
+    min-height: 72px;
+    padding: 8px 6px;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--kiosk-radius);
+    color: var(--theme-text);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-shadow: 0 4px 16px rgba(var(--shadow-tint-rgb), 0.2);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+html.kiosk-portrait-layout .kp-rail-btn:hover {
+    background: var(--chip-bg);
+    transform: translateY(-1px);
+}
+html.kiosk-portrait-layout .kp-rail-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+}
+html.kiosk-portrait-layout .kp-rail-icon svg {
+    width: 100%;
+    height: 100%;
+}
+html.kiosk-portrait-layout .kp-rail-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.1;
+    color: var(--theme-text-secondary, var(--theme-text));
+}
+
+/* ──────────────────── FLOOR SELECTOR — vertical, left middle ──────────────────── */
+
+/* The default bottom-right (or panel-right → bottom-left) compact selector
+ * is too low to be reachable on a 1.7m portrait kiosk — users would have
+ * to bend. Reshape it into a vertical pill stack at the LEFT middle
+ * (across from the right rail), at the same vertical height as the rail
+ * buttons so both reachable surfaces sit at the same comfortable
+ * mid-screen line. */
+html.kiosk-portrait-layout .map-floor-selector-compact {
+    position: absolute;
+    top: var(--kp-rail-top);
+    left: var(--kp-edge-pad);
+    right: auto;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: var(--kp-rail-w);
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 8px;
+    background: var(--card-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--kiosk-radius);
+    box-shadow: 0 4px 16px rgba(var(--shadow-tint-rgb), 0.2);
+}
+
+/* Cancel the conflicting horizontal-kiosk position rules. The map.css
+ * `.map-container.panel-right` and `.map-panel.island-*` selectors all
+ * try to set left/right — beat them with !important. */
+html.kiosk-portrait-layout .map-container.panel-right .map-floor-selector-compact,
+html.kiosk-portrait-layout .map-panel.island-top-left .map-floor-selector-compact,
+html.kiosk-portrait-layout .map-panel.island-top-right .map-floor-selector-compact,
+html.kiosk-portrait-layout .map-panel.island-bottom-left .map-floor-selector-compact,
+html.kiosk-portrait-layout .map-panel.island-bottom-right .map-floor-selector-compact {
+    left: var(--kp-edge-pad) !important;
+    right: auto !important;
+    bottom: auto !important;
+    top: var(--kp-rail-top) !important;
+}
+
+/* Up + down arrows are normally a vertical column to the right of the
+ * floor name; in portrait we want arrows on top and bottom, name in the
+ * middle. Re-order with flex `order`. */
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-arrows-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+    order: 0;
+}
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-display-btn {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding: 14px 8px;
+    flex-direction: column;
+    order: 1;
+}
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-name {
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: normal;
+    text-align: center;
+    word-break: break-word;
+    max-width: 100%;
+}
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-arrow-btn {
+    width: 100%;
+    height: 36px;
+}
+
+/* Dropdown — opens to the RIGHT of the vertical strip toward the map
+ * center, not above as in the default horizontal layout. */
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-dropdown {
+    position: absolute;
+    bottom: auto;
+    top: 0;
+    left: calc(100% + 12px);
+    right: auto;
+    transform: translateX(0);
+    min-width: 220px;
+    background: var(--card-bg);
+}
+/* The dropdown's `.open` translate animation is along Y in default css;
+ * override with an X-axis slide-in to match the new left-anchored
+ * position. */
+html.kiosk-portrait-layout .map-floor-selector-compact .map-floor-dropdown {
+    transform: translateX(-10px);
+}
+html.kiosk-portrait-layout .map-floor-selector-compact.open .map-floor-dropdown {
+    transform: translateX(0);
+}
+
+/* Hide the selector in idle/search/detail (no floor switching needed
+ * before the user reaches the map). Visible in `map` mode regardless of
+ * whether a route panel is docked. */
+html.kiosk-portrait-layout.kp-mode-idle   .map-floor-selector-compact,
+html.kiosk-portrait-layout.kp-mode-search .map-floor-selector-compact,
+html.kiosk-portrait-layout.kp-mode-detail .map-floor-selector-compact {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ──────────────────── SIDE PANEL — top-center route card ──────────────────── */
+
+/* Default config has `sidePanel.layout = 'island'` → the panel
+ * renders as a small floating card. We force it to the TOP-CENTER in
+ * portrait (overriding island-top-left/top-right/bottom-* positions)
+ * so the route directions sit above the map, equidistant from both
+ * rails, instead of clinging to a corner.
+ *
+ * Wide-but-not-full so the step list breathes and stays scannable from
+ * standing distance. */
+html.kiosk-portrait-layout .map-side-panel.island-layout,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-top-left,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-top-right,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-bottom-left,
+html.kiosk-portrait-layout .map-side-panel.island-layout.island-bottom-right {
+    top: calc(var(--kp-edge-pad) + 12px) !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translateX(-50%);
+    width: min(900px, calc(100vw - 200px)) !important;
+    max-width: 900px !important;
+    min-width: 0 !important;
+    max-height: calc(100vh - 480px) !important;
+    height: auto !important;
+    margin: 0 !important;
+    border-radius: var(--kiosk-radius);
+}
+
+/* Slide-in animations: come from above (since we're anchored to top
+ * center) — override the diagonal animation from default island css. */
+html.kiosk-portrait-layout .map-side-panel.island-layout.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-16px) scale(0.97);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Same fallback for the non-island variant if someone toggles layout. */
+html.kiosk-portrait-layout .map-side-panel:not(.island-layout) {
+    position: absolute;
+    top: calc(var(--kp-edge-pad) + 12px);
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translateX(-50%);
+    width: min(900px, calc(100vw - 200px));
+    height: auto;
+    max-height: calc(100vh - 480px);
+    border-radius: var(--kiosk-radius);
+}
+html.kiosk-portrait-layout .map-side-panel:not(.island-layout).hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-16px) scale(0.97);
+    pointer-events: none;
+}
+
+/* ──────────────────── BACK BUTTON ──────────────────── */
+/* The map-back-btn lives in horizontal kiosk's top-left. In portrait
+ * the right rail's "home" button covers that role, so hide it. */
+html.kiosk-portrait-layout .map-back-btn { display: none !important; }
+
+/* ──────────────────── MOBILE BOTTOM SHEET ──────────────────── */
+/* Portrait is NOT mobile — make sure the mobile bottom sheet stays gone. */
+html.kiosk-portrait-layout .mobile-bottom-sheet { display: none !important; }

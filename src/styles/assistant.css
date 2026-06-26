@@ -1,0 +1,416 @@
+/* ==========================================================================
+   Mobile Assistant — chat panel inside the bottom sheet.
+   Adapted from the speech-assistant prototype, re-themed onto the kiosk mobile
+   tokens (--mobile-accent / --mobile-card-bg / --mobile-text-* / …).
+   ========================================================================== */
+
+/* Floor filter + assistant toggle share one compact segmented pill. */
+html.mobile-layout .ms-search-tools {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    height: 46px;
+    border: 1px solid var(--mobile-card-border);
+    border-radius: 23px;
+    background: var(--mobile-sheet-bg);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    position: relative;
+}
+
+html.mobile-layout .ms-search-tools .ms-floor { position: relative; }
+
+/* Segments: borderless / transparent, fixed footprint, divider between. */
+html.mobile-layout .ms-search-tools .ms-floor-trigger,
+html.mobile-layout .ms-search-tools .ms-assistant-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    color: var(--mobile-text-secondary);
+    cursor: pointer;
+}
+html.mobile-layout .ms-search-tools .ms-floor-trigger { border-radius: 22px 0 0 22px; }
+html.mobile-layout .ms-search-tools .ms-assistant-btn {
+    border-radius: 0 22px 22px 0;
+    border-left: 1px solid var(--mobile-card-border);
+}
+html.mobile-layout .ms-search-tools .ms-assistant-btn svg { width: 20px; height: 20px; }
+html.mobile-layout .ms-search-tools .ms-assistant-btn.is-active {
+    background: var(--mobile-accent);
+    color: #fff;
+}
+
+/* ── panel layout ──────────────────────────────────────────────────────── */
+html.mobile-layout .asst-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+html.mobile-layout .asst-history {
+    flex: 1;
+    min-height: 120px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 2px 12px;
+}
+
+html.mobile-layout .asst-history::-webkit-scrollbar { width: 4px; }
+html.mobile-layout .asst-history::-webkit-scrollbar-thumb {
+    background: var(--mobile-card-border);
+    border-radius: 4px;
+}
+
+/* ── messages ──────────────────────────────────────────────────────────── */
+html.mobile-layout .asst-msg {
+    display: flex;
+    gap: 8px;
+    animation: asstMsgIn 0.25s ease-out;
+}
+
+@keyframes asstMsgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+html.mobile-layout .asst-msg.user { flex-direction: row-reverse; }
+
+html.mobile-layout .asst-avatar {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mobile-accent-hover-bg, var(--mobile-card-bg));
+    color: var(--mobile-accent);
+}
+html.mobile-layout .asst-avatar svg { width: 18px; height: 18px; }
+
+html.mobile-layout .asst-bubble {
+    max-width: 84%;
+    padding: 10px 14px;
+    border-radius: 16px 16px 16px 4px;
+    background: var(--mobile-card-bg);
+    color: var(--mobile-text-primary);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+html.mobile-layout .asst-msg.user .asst-bubble {
+    border-radius: 16px 16px 4px 16px;
+    background: var(--mobile-accent);
+    color: #fff;
+}
+
+html.mobile-layout .asst-msg-text { white-space: pre-wrap; }
+
+/* ── in-bubble chips (search results / suggestions) ────────────────────── */
+html.mobile-layout .asst-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+html.mobile-layout .asst-chip {
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-primary);
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+html.mobile-layout .asst-chip:hover,
+html.mobile-layout .asst-chip:active {
+    background: var(--mobile-accent-hover-bg);
+    border-color: var(--mobile-accent-light, var(--mobile-accent));
+}
+html.mobile-layout .asst-chip.wide { width: 100%; text-align: left; border-radius: 10px; }
+
+/* ── start-point picker (grouped by floor) ─────────────────────────────── */
+html.mobile-layout .asst-loc-scroll {
+    margin-top: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+html.mobile-layout .asst-loc-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+html.mobile-layout .asst-loc-group-head {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--mobile-text-muted);
+    position: sticky;
+    top: 0;
+    background: var(--mobile-card-bg);
+    padding: 2px 0;
+}
+
+/* ── action buttons (confirm / cancel) ─────────────────────────────────── */
+html.mobile-layout .asst-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+html.mobile-layout .asst-action-btn {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+html.mobile-layout .asst-action-btn.primary {
+    background: var(--mobile-accent);
+    border-color: var(--mobile-accent);
+    color: #fff;
+}
+
+/* ── route stage card ──────────────────────────────────────────────────── */
+html.mobile-layout .asst-route { margin-top: 4px; }
+html.mobile-layout .asst-route-head {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+html.mobile-layout .asst-route-head-ic {
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--mobile-accent);
+    color: #fff;
+}
+html.mobile-layout .asst-route-head-ic svg { width: 20px; height: 20px; }
+html.mobile-layout .asst-route-meta {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--mobile-text-muted);
+}
+html.mobile-layout .asst-route-head-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mobile-text-primary);
+    line-height: 1.35;
+}
+html.mobile-layout .asst-route-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid var(--mobile-card-border);
+    padding-top: 8px;
+}
+html.mobile-layout .asst-route-item {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    padding: 7px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--mobile-text-secondary);
+}
+html.mobile-layout .asst-route-item-ic {
+    width: 20px; height: 20px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--mobile-text-muted);
+}
+html.mobile-layout .asst-route-item-ic svg { width: 18px; height: 18px; }
+html.mobile-layout .asst-route-item-text { font-size: 13px; line-height: 1.35; }
+html.mobile-layout .asst-route-item.active {
+    background: var(--mobile-accent-hover-bg);
+    color: var(--mobile-text-primary);
+}
+html.mobile-layout .asst-route-item.active .asst-route-item-ic { color: var(--mobile-accent); }
+html.mobile-layout .asst-route-item.done { opacity: 0.55; }
+
+html.mobile-layout .asst-route-ctrls {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+html.mobile-layout .asst-route-btn {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+html.mobile-layout .asst-route-btn.primary {
+    background: var(--mobile-accent);
+    border-color: var(--mobile-accent);
+    color: #fff;
+}
+html.mobile-layout .asst-route-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* ── quick suggestions (auto-scrolling marquee) ────────────────────────── */
+html.mobile-layout .asst-suggestions {
+    overflow: hidden;
+    padding: 6px 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+html.mobile-layout .asst-suggestions-track {
+    display: flex;
+    gap: 8px;
+    width: max-content;
+    animation: asstMarquee 24s linear infinite;
+}
+html.mobile-layout .asst-suggestions-track:hover { animation-play-state: paused; }
+@keyframes asstMarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+html.mobile-layout .asst-suggestion {
+    flex-shrink: 0;
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-card-bg);
+    color: var(--mobile-text-secondary);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* ── input row ─────────────────────────────────────────────────────────── */
+html.mobile-layout .asst-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0 calc(8px + var(--mobile-safe-bottom));
+}
+html.mobile-layout .asst-lang {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--mobile-card-border);
+    background: var(--mobile-sheet-bg);
+    color: var(--mobile-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+}
+html.mobile-layout .asst-input-box {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 21px;
+    background: var(--mobile-card-bg);
+    border: 1px solid transparent;
+}
+html.mobile-layout .asst-input-box:focus-within {
+    border-color: var(--mobile-accent-light, var(--mobile-accent));
+}
+html.mobile-layout .asst-input-box input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--mobile-text-primary);
+}
+html.mobile-layout .asst-input-box input::placeholder { color: var(--mobile-text-muted); }
+
+/* waveform shown while listening */
+html.mobile-layout .asst-wave {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    height: 20px;
+}
+html.mobile-layout .asst-input-box.listening .asst-wave { display: flex; }
+html.mobile-layout .asst-input-box.listening input { display: none; }
+html.mobile-layout .asst-wave span {
+    width: 3px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--mobile-accent);
+    animation: asstWave 0.9s ease-in-out infinite;
+}
+html.mobile-layout .asst-wave span:nth-child(2) { animation-delay: 0.1s; }
+html.mobile-layout .asst-wave span:nth-child(3) { animation-delay: 0.2s; }
+html.mobile-layout .asst-wave span:nth-child(4) { animation-delay: 0.3s; }
+html.mobile-layout .asst-wave span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes asstWave {
+    0%, 100% { height: 6px; }
+    50% { height: 18px; }
+}
+
+html.mobile-layout .asst-mic,
+html.mobile-layout .asst-send {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+html.mobile-layout .asst-mic {
+    background: var(--mobile-card-bg);
+    color: var(--mobile-text-secondary);
+}
+html.mobile-layout .asst-mic svg,
+html.mobile-layout .asst-send svg { width: 20px; height: 20px; }
+html.mobile-layout .asst-mic.listening {
+    background: var(--mobile-accent);
+    color: #fff;
+    animation: asstPulse 1.2s ease-in-out infinite;
+}
+@keyframes asstPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--mobile-accent-hover-bg); }
+    50% { box-shadow: 0 0 0 6px transparent; }
+}
+html.mobile-layout .asst-send {
+    background: var(--mobile-accent);
+    color: #fff;
+}

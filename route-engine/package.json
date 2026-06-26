@@ -1,0 +1,28 @@
+{
+  "name": "@inmapper/route-engine",
+  "version": "0.1.0",
+  "description": "Standalone indoor routing engine: shortest / least-turns / accessible (elevator-first) routes with metric step directions, computed directly from venue SVGs. Zero dependencies, runs in the browser and Node.",
+  "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node test/smoke.test.js"
+  },
+  "keywords": [
+    "indoor-navigation",
+    "routing",
+    "dijkstra",
+    "wayfinding",
+    "svg",
+    "pathfinding"
+  ],
+  "license": "MIT",
+  "sideEffects": false
+}

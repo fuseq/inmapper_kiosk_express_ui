@@ -1,0 +1,242 @@
+/* ==================== SEARCH TAB (BOTTOM SHEET) ==================== */
+.search-tab {
+    position: absolute;
+    top: clamp(120px, 12vh, 220px);
+    left: 50%;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top center;
+    width: clamp(900px, 80vw, 1700px);
+    max-width: 92%;
+    height: var(--search-panel-h);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(30px);
+    /* Fused with the search bar above: square top corners, no top border —
+     * the bar (home-search-trigger) is the panel's header. */
+    border: 1px solid var(--card-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    box-shadow: 0 8px 32px 0 rgba(var(--shadow-tint-rgb), 0.4);
+    z-index: 55;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.5s,
+                opacity 0.4s ease 0.6s,
+                visibility 0s 0s;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-tab.open {
+    opacity: 1;
+    visibility: visible;
+    /* `--nav-offset` is the bottom edge of the floating navbar pill
+     * (0 when navbar is disabled). The trigger sits at `nav-offset
+     * + 10px` and is `--searchbar-h` tall; the panel starts EXACTLY at
+     * its bottom edge so bar + panel fuse into a single surface. */
+    top: calc(var(--nav-offset) + 10px + var(--searchbar-h));
+    transform: translateX(-50%) scaleY(1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.5s,
+                opacity 0.4s ease 0.6s,
+                top 0s 0s,
+                visibility 0s 0s;
+}
+
+/* Closing state - fade out content before panel scales down */
+.search-tab.closing > * {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.search-tab.closing {
+    pointer-events: none;
+}
+
+.tab-handle-bar {
+    display: none;
+}
+
+/* Top Search Bar (You are here style) */
+.tab-top-search {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--s-5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    flex-shrink: 0;
+}
+
+.tab-back-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--t-90);
+    border-radius: 50%;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.tab-back-icon:hover {
+    background: var(--s-20);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--t-full);
+}
+
+.tab-search-input-top {
+    flex: 1;
+    font-size: var(--fs-md);
+    color: var(--t-full);
+    font-weight: 700;
+    background: var(--s-10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md) var(--space-lg);
+    outline: none;
+    transition: var(--transition);
+}
+
+.tab-search-input-top:focus {
+    background: var(--s-15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tab-search-input-top::placeholder {
+    color: var(--t-65);
+}
+
+.tab-search-container {
+    display: none;
+}
+
+.tab-back-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.tab-back-btn:hover {
+    background: var(--bg-primary);
+    color: var(--primary);
+}
+
+.tab-search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md) var(--space-lg);
+}
+
+.tab-search-box .search-icon {
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.tab-search-input {
+    flex: 1;
+    font-size: var(--fs-md);
+    color: var(--t-full);
+    font-weight: 700;
+    background: transparent;
+}
+
+.tab-search-input::placeholder {
+    color: var(--text-light);
+}
+
+.tab-clear-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+.tab-clear-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tab-clear-btn:hover {
+    background: white;
+    color: var(--danger);
+}
+
+.category-tabs-container {
+    padding: var(--space-sm) 24px var(--space-md) 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+    background: var(--s-3);
+    position: relative;
+    z-index: 1000;
+}
+
+.category-tabs-wrapper {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    flex: 1;
+}
+
+.category-tabs-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.category-tab {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--input-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--kiosk-radius);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--theme-text-secondary);
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* Hover effect removed */
+
+.category-tab.active {
+    /* Soft tint instead of the previous solid `--chip-active-bg`
+     * (which was rgba(accent, 0.8)) — keeps the active pill clearly
+     * marked without overpowering the page palette. Border carries
+     * the accent so the cue stays strong even on bright/light
+     * themes. */
+    background: rgba(var(--accent-rgb), 0.18);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1.5px solid var(--accent);
+    color: var(--theme-text);
+    box-shadow: 0 2px 10px rgba(var(--accent-rgb), 0.18);
+    font-weight: 700;
+}
+

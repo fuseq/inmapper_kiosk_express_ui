@@ -1,12 +1,120 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-initial-view="web">
 <head>
+    <script>
+    (function(){
+        var p = new URLSearchParams(location.search);
+        var v = document.documentElement.getAttribute('data-initial-view');
+        if (p.get('preview') === '1') {
+            var vp = p.get('view');
+            if (vp === 'web' || vp === 'kiosk' || vp === 'kiosk-portrait' || vp === 'mobile') {
+                document.documentElement.setAttribute('data-initial-view', vp);
+                v = vp;
+            }
+        } else {
+            /* Production auto-detect: on a phone viewport prefer the mobile
+             * layout early to avoid a flash of desktop chrome. The real
+             * interface is resolved in app.js (resolveInterface) which
+             * corrects this if the deployment isn't web/mobile. */
+            try {
+                if ((v === 'web' || v === 'auto') && window.matchMedia &&
+                    window.matchMedia('(max-width: 768px)').matches) {
+                    v = 'mobile';
+                    document.documentElement.setAttribute('data-initial-view', 'mobile');
+                }
+            } catch (e) {}
+        }
+        if (v === 'mobile') document.documentElement.classList.add('mobile-layout');
+        if (v === 'kiosk-portrait') document.documentElement.classList.add('kiosk-portrait-layout');
+    })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zorlu Center - Dijital Rehber</title>
-    <link rel="stylesheet" href="styles_v2.css">
+    <style>
+        html, body { margin: 0; padding: 0; }
+        #appLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            background: linear-gradient(135deg, #214eaf 0%, #3863be 50%, #3b82f6 100%);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #appLoader.loader-hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #appLoader .loader-logo {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+            animation: loaderLogoPulse 2s ease-in-out infinite;
+        }
+        #appLoader .loader-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin: 0;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+        }
+        #appLoader .loader-subtitle {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            opacity: 0.8;
+            margin: -16px 0 0 0;
+        }
+        #appLoader .loader-spinner {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            animation: loaderSpin 0.9s linear infinite;
+            margin-top: 8px;
+        }
+        @keyframes loaderSpin { to { transform: rotate(360deg); } }
+        @keyframes loaderLogoPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.92; }
+        }
+    </style>
+    <link rel="stylesheet" href="src/styles/index.css">
+    <script src="https://unpkg.com/maplibre-gl@5.20.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@5.20.0/dist/maplibre-gl.css" rel="stylesheet">
+    <!-- Lucide icons — used for sheet-driven category icons (name → SVG). -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <!-- Fuse.js — fuzzy search for the mobile assistant's NLP layer. -->
+    <script src="https://unpkg.com/fuse.js@7.0.0/dist/fuse.min.js"></script>
+    <!-- Turf.js — metric polygon inset for Pointr-style "walls only" room mode. -->
+    <script src="https://unpkg.com/@turf/turf@7.2.0/turf.min.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 <body>
+    <!-- App Loader (shown until app:ready) -->
+    <div id="appLoader" role="status" aria-label="Yükleniyor">
+        <img src="assets/logo.png" alt="" class="loader-logo" onerror="this.style.display='none'">
+        <h1 class="loader-title">ZORLU CENTER</h1>
+        <p class="loader-subtitle">İSTANBUL</p>
+        <div class="loader-spinner" aria-hidden="true"></div>
+    </div>
+
     <!-- Glass Navbar -->
     <nav class="glass-navbar">
         <div class="navbar-content">
@@ -27,11 +135,6 @@
                 </div>
             </div>
             <div class="nav-right">
-                <button class="panel-toggle-btn-top panel-right" id="panelToggleBtnTop" title="Paneli Taşı">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path d="M7 16L3 12M3 12L7 8M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
                 <div class="language-switcher">
                     <button class="lang-option active" data-lang="tr">TR</button>
                     <button class="lang-option" data-lang="en">EN</button>
@@ -168,7 +271,7 @@
                         </button>
                     </div>
                     
-                    <img src="floors/0.svg" alt="Floor Map" class="store-floor-map" id="storeFloorMap" />
+                    <div id="storeFloorMapContainer" class="store-floor-map-container"></div>
                     
                     <!-- Button overlay -->
                     <div class="store-map-overlay">
@@ -209,16 +312,22 @@
                             </div>
                         </div>
 
-                        <!-- Description Card -->
-                        <div class="store-info-card">
+                        <!-- Unified collapsible detail sections (gallery / hours /
+                             details / categories / recommendations). Populated by
+                             store-detail/index.js; the legacy cards below are hidden
+                             when these render. -->
+                        <div id="storeDetailSections" class="store-detail-sections"></div>
+
+                        <!-- Description Card (legacy fallback) -->
+                        <div class="store-info-card" id="storeDescriptionCard">
                             <h3 class="store-section-title">Description</h3>
                             <p class="store-description" id="storeDescription">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                             </p>
                         </div>
 
-                        <!-- Similar Stores Card -->
-                        <div class="store-info-card">
+                        <!-- Similar Stores Card (legacy fallback) -->
+                        <div class="store-info-card" id="storeSimilarCard">
                             <h3 class="store-section-title">Beğenebileceğiniz Yerler</h3>
                             <div class="similar-stores-grid" id="similarStores">
                                 <!-- Will be populated dynamically -->
@@ -267,30 +376,34 @@
             <div class="search-content" id="searchContent">
                 <!-- Route Points Selector (Inside Panel) -->
                 <div class="route-points-selector-panel" id="routePointsSelector">
-                <button class="route-point-btn disabled" id="startPointSelector" data-point="start" disabled>
-                    <div class="point-icon start-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <circle cx="12" cy="12" r="10"/>
+                    <button class="route-point-btn" id="startPointSelector" data-point="start" title="Başlangıç noktası">
+                        <span class="rps-ico rps-ico-start" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                            </svg>
+                        </span>
+                        <span class="point-text">
+                            <span class="point-label" id="startPointLabel">NEREDEN?</span>
+                            <span class="point-name" id="startPointDisplay">Başlangıç seçin</span>
+                        </span>
+                    </button>
+                    <button type="button" class="rps-flow" id="routePointsSwapBtn" title="Başlangıç ve varışı değiştir" aria-label="Başlangıç ve varışı değiştir">
+                        <svg class="rps-flow-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/>
                         </svg>
-                    </div>
-                    <div class="point-info">
-                        <span class="point-label">BAŞLANGIÇ (Kiosk)</span>
-                        <span class="point-name" id="startPointDisplay">Bulunduğunuz Konum</span>
-                    </div>
-                </button>
-                <div class="route-arrow">→</div>
-                <button class="route-point-btn" id="endPointSelector" data-point="end">
-                    <div class="point-icon end-icon">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                        </svg>
-                    </div>
-                    <div class="point-info">
-                        <span class="point-label">VARIŞ</span>
-                        <span class="point-name" id="endPointDisplay">Seçiniz</span>
-                    </div>
-                </button>
-            </div>
+                    </button>
+                    <button class="route-point-btn" id="endPointSelector" data-point="end" title="Varış noktası">
+                        <span class="rps-ico rps-ico-end" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                        </span>
+                        <span class="point-text">
+                            <span class="point-label">NEREYE?</span>
+                            <span class="point-name" id="endPointDisplay">Hedef seçin</span>
+                        </span>
+                    </button>
+                </div>
 
             <!-- Category Tabs -->
             <div class="category-tabs-container">
@@ -406,11 +519,11 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>Ana Sayfa</span>
+                    <span>Geri Dön</span>
                 </button>
                 
                 <!-- SVG Floor Map -->
-                <img src="floors/0.svg" alt="Floor Map" class="floor-map-svg" id="floorMapSvg" />
+                <div id="floorMapContainer" class="floor-map-container"></div>
                 
                 <!-- Floor Selector Compact (Bottom Right) -->
                 <div class="map-floor-selector-compact" id="mapFloorSelectorCompact">
@@ -440,26 +553,65 @@
             <!-- Side Panel for Route Info -->
             <div class="map-side-panel panel-right hidden" id="mapSidePanel">
                 <div class="side-panel-content">
-                    <!-- Search Bar at Top -->
-                    <div class="side-panel-search-bar" id="sidePanelSearchBar">
-                        <svg class="side-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <input type="text" class="side-panel-search-input" id="sidePanelSearchInput" placeholder="Nereye gitmek istersiniz?" style="display: none;">
-                        <span class="side-search-placeholder" id="sidePanelSearchPlaceholder">Nereye gitmek istersiniz?</span>
+                    <!-- Search Bar + Floor filter -->
+                    <div class="side-panel-search-row" id="sidePanelSearchRow">
+                        <div class="side-panel-search-bar" id="sidePanelSearchBar">
+                            <svg class="side-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <input type="text" class="side-panel-search-input" id="sidePanelSearchInput" placeholder="Nereye gitmek istersiniz?" style="display: none;">
+                            <span class="side-search-placeholder" id="sidePanelSearchPlaceholder">Nereye gitmek istersiniz?</span>
+                        </div>
+                        <div class="side-list-floor hidden" id="sideListFloorWrap">
+                            <button type="button" class="side-list-floor-trigger" id="sideListFloorTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Kat filtresi">
+                                <svg class="side-list-floor-ico" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 13l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span class="side-list-floor-label" id="sideListFloorLabel">Tüm Katlar</span>
+                                <svg class="side-list-floor-caret" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <div class="side-list-floor-menu" id="sideListFloorMenu" role="listbox"></div>
+                        </div>
                     </div>
                     
                     <!-- ==================== STORE PREVIEW MODE ==================== -->
                     <div class="side-store-preview-mode" id="sideStorePreviewMode">
+                        <!-- ==================== ROUTE POINTS SUMMARY (manual mode) ==================== -->
+                        <div class="side-route-summary hidden" id="sideRoutePointsSummary">
+                            <div class="side-route-summary-row active-pick" id="summaryStartRow" data-point="start">
+                                <div class="side-route-summary-icon start-icon">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                                </div>
+                                <div class="side-route-summary-text">
+                                    <span class="side-route-summary-label">Başlangıç</span>
+                                    <span class="side-route-summary-name" id="summaryStartName">Başlangıç noktası seçin</span>
+                                    <span class="side-route-summary-floor" id="summaryStartFloor"></span>
+                                </div>
+                                <button class="side-route-pin-btn icon-only hidden" id="summaryDropPinBtn" title="Haritaya pin bırak">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="currentColor"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>
+                                </button>
+                            </div>
+                            <div class="side-route-summary-divider"></div>
+                            <div class="side-route-summary-row pending" id="summaryEndRow" data-point="end">
+                                <div class="side-route-summary-icon end-icon">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+                                </div>
+                                <div class="side-route-summary-text">
+                                    <span class="side-route-summary-label">Hedef</span>
+                                    <span class="side-route-summary-name" id="summaryEndName">Hedef noktası seçin</span>
+                                    <span class="side-route-summary-floor" id="summaryEndFloor"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- ==================== LOCATION LIST VIEW ==================== -->
                         <div class="side-location-list-view hidden" id="sideLocationListView">
-                            <!-- Category Tabs -->
-                            <div class="side-list-category-tabs">
-                                <button class="side-list-category-tab active" data-category="all">Tümü</button>
-                                <button class="side-list-category-tab" data-category="shopping">Alışveriş</button>
-                                <button class="side-list-category-tab" data-category="food">Yeme-İçme</button>
-                                <button class="side-list-category-tab" data-category="coffee">Kafe</button>
-                                <button class="side-list-category-tab" data-category="entertainment">Eğlence</button>
+                            <!-- Category chips (icon + label, populated at runtime) -->
+                            <div class="side-list-cats">
+                                <div class="side-list-category-tabs">
+                                    <button class="side-list-category-tab active" data-category="all">Tümü</button>
+                                </div>
+                                <div class="side-list-cats-fade" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                                </div>
                             </div>
                             
                             <!-- Location Results -->
@@ -493,7 +645,13 @@
                                 </div>
                             </div>
                             
-                            <!-- Store Description Card -->
+                            <!-- Unified collapsible detail sections (gallery / hours /
+                                 details / categories / recommendations). Populated by
+                                 store-preview.js; the legacy description + similar blocks
+                                 below are hidden when these render. -->
+                            <div id="sidePanelDetailSections" class="side-panel-detail-sections"></div>
+
+                            <!-- Store Description Card (legacy fallback) -->
                             <div class="side-panel-card side-description-card">
                                 <h3 class="side-card-title">Açıklama</h3>
                                 <p class="side-store-description" id="sidePanelStoreDescription">
@@ -534,6 +692,34 @@
                     
                     <!-- ==================== ROUTE INFO MODE ==================== -->
                     <div class="side-route-info-mode hidden" id="sideRouteInfoMode">
+                        <!-- Route Points Card -->
+                        <div class="side-panel-card side-route-points-card">
+                            <div class="side-route-card" id="sideRouteStartCard">
+                                <div class="side-route-icon start-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                                </div>
+                                <div class="side-route-text">
+                                    <div><span class="side-route-label">Başlangıç</span></div>
+                                    <span class="side-route-name" id="sidePanelStartName">Bulunduğunuz Konum</span>
+                                    <span class="side-route-floor" id="sidePanelStartFloor">Zemin Kat</span>
+                                </div>
+                                <button class="side-route-pin-btn icon-only hidden" id="routeDropPinBtn" title="Haritaya pin bırak">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="currentColor"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>
+                                </button>
+                            </div>
+                            <div class="side-route-divider"></div>
+                            <div class="side-route-card" id="sideRouteEndCard">
+                                <div class="side-route-icon end-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+                                </div>
+                                <div class="side-route-text">
+                                    <div><span class="side-route-label">Hedef</span></div>
+                                    <span class="side-route-name" id="sidePanelEndName">Hedef seçin</span>
+                                    <span class="side-route-floor" id="sidePanelEndFloor"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Store Info Header -->
                         <div class="side-panel-header side-store-info-card">
                             <div class="side-store-header-flex">
@@ -555,6 +741,8 @@
                                 <span class="side-store-tag">Spor</span>
                                 <span class="side-store-tag">Ayakkabı</span>
                             </div>
+                            <!-- Floor transitions (filled at runtime when a cross-floor route is active) -->
+                            <div class="side-route-transitions hidden" id="sideRouteTransitions"></div>
                         </div>
                         
                         <!-- Store Description Card -->
@@ -787,6 +975,19 @@
         </div>
     </div>
 
-    <script src="script_v2.js"></script>
+    <!-- ==================== MOBILE BOTTOM SHEET ==================== -->
+    <div class="mobile-bottom-sheet" id="mobileBottomSheet">
+        <div class="mobile-sheet-handle-area">
+            <div class="mobile-sheet-handle"></div>
+        </div>
+        <div class="mobile-sheet-header" id="mobileSheetHeader">
+            <!-- Non-scrolling header (search bar) rendered by sheet-content.js -->
+        </div>
+        <div class="mobile-sheet-content" id="mobileSheetContent">
+            <!-- Scrollable content rendered by sheet-content.js -->
+        </div>
+    </div>
+
+    <script type="module" src="src/app.js"></script>
 </body>
 </html>

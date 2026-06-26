@@ -1,0 +1,720 @@
+/* ==================== INITIAL HOME SCREEN ==================== */
+.initial-home {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        var(--bg-gradient-1) 0%, 
+        var(--bg-gradient-2) 15%,
+        var(--bg-gradient-3) 30%,
+        color-mix(in srgb, var(--bg-gradient-3) 100%, transparent) 40%,
+        color-mix(in srgb, var(--bg-gradient-3) 80%, transparent) 50%,
+        color-mix(in srgb, var(--bg-gradient-3) 50%, transparent) 60%,
+        color-mix(in srgb, var(--bg-gradient-3) 30%, transparent) 70%,
+        color-mix(in srgb, var(--bg-gradient-3) 15%, transparent) 80%,
+        color-mix(in srgb, var(--bg-gradient-3) 5%, transparent) 90%,
+        transparent 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    pointer-events: auto;
+}
+
+.initial-home.search-mode {
+    align-items: flex-start;
+    padding-top: 20px;
+    transition: padding-top 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.initial-home.search-mode.animating {
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+    transition: var(--transition);
+}
+
+.initial-home.search-mode .home-content {
+    gap: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+.home-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    animation: fadeInDown 0.6s ease-out;
+    opacity: 1;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    position: fixed;
+    top: calc(50% - 300px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 58;
+}
+
+.initial-home.search-mode .home-logo {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 30px));
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+}
+
+.initial-home.search-mode.animating .home-logo {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.logo-icon {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.logo-icon .logo-image {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+}
+
+.home-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.home-title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--theme-text);
+    letter-spacing: 4px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.home-title-location {
+    font-size: var(--fs-lg);
+    font-weight: 300;
+    color: var(--theme-text);
+    letter-spacing: 6px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.home-subtitle {
+    font-size: var(--fs-md);
+    color: var(--t-90);
+    font-weight: 500;
+}
+
+/* ==================== ROUTE POINTS — CONCAVE MIDDLE ====================
+ * Side cards: full pill (convex ends). Centre swap: CSS mask scoops
+ * match --rps-scoop (= half row height) and overlap via negative margin. */
+.route-points-selector-panel {
+    --rps-row-h: clamp(58px, 5.2vh, 78px);
+    --rps-scoop: calc(var(--rps-row-h) / 2);
+    --rps-btn-radius: calc(var(--rps-scoop) * 0.9);
+    --rps-flow-core: clamp(46px, 3.6vw, 62px);
+    --rps-flow-w: calc(var(--rps-flow-core) + var(--rps-scoop) * 2);
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+/* Flat icons (GPS = you-are-here, filled pin = destination). */
+.rps-ico {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--t-85);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.rps-ico svg {
+    width: clamp(20px, 1.5vw, 26px);
+    height: clamp(20px, 1.5vw, 26px);
+}
+
+/* Small uppercase caption above the value (NEREDEN? / NEREYE?). */
+.route-points-selector-panel .point-label {
+    display: block;
+    font-size: clamp(9px, 0.55vw, 11px);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--t-55);
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.point-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(2px, 0.2vh, 5px);
+    flex: 1;
+    min-width: 0;
+}
+
+.point-name {
+    font-size: clamp(13px, 0.85vw, 18px);
+    font-weight: 600;
+    color: var(--t-95);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    min-width: 0;
+}
+
+/* Placeholder (no selection yet) reads lighter than a chosen value. */
+.route-point-btn:not(.has-value) .point-name {
+    color: var(--t-55);
+    font-weight: 500;
+}
+
+/* Side segments — convex on the swap side; outer left edge stays square. */
+.route-point-btn {
+    flex: 1 1 50%;
+    min-height: var(--rps-row-h);
+    height: var(--rps-row-h);
+    padding: clamp(8px, 0.7vh, 14px) clamp(12px, 1vw, 18px);
+    background: var(--s-8);
+    border: 1px solid var(--card-border);
+    border-radius: 0 var(--rps-btn-radius) var(--rps-btn-radius) 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 0.8vw, 14px);
+    transition: background 0.2s ease, border-color 0.2s ease;
+    min-width: 0;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    box-shadow: none;
+}
+
+.route-point-btn:first-of-type {
+    border-radius: 0 var(--rps-btn-radius) var(--rps-btn-radius) 0;
+}
+
+.route-point-btn:last-of-type {
+    border-radius: var(--rps-btn-radius) 0 0 var(--rps-btn-radius);
+}
+
+.route-point-btn:hover { background: var(--s-12); }
+.route-point-btn:hover .rps-ico { transform: scale(1.05); }
+
+.route-point-btn.active {
+    background: rgba(var(--accent-rgb), 0.12);
+    border-color: rgba(var(--accent-rgb), 0.55);
+}
+
+.route-point-btn.active .rps-ico { color: var(--accent); }
+.route-point-btn.active .point-label { color: var(--accent); }
+
+.route-point-btn.disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Centre swap — concave sides via radial-gradient mask; sits on top for clicks. */
+.rps-flow {
+    flex: 0 0 var(--rps-flow-w);
+    width: var(--rps-flow-w);
+    min-height: var(--rps-row-h);
+    height: var(--rps-row-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--t-85);
+    background: var(--s-8);
+    border: none;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    border-radius: 0;
+    margin-left: calc(-1 * var(--rps-scoop));
+    margin-right: calc(-1 * var(--rps-scoop));
+    z-index: 3;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background 0.2s ease, color 0.2s ease;
+    -webkit-mask:
+        radial-gradient(circle var(--rps-scoop) at 0% 50%, transparent var(--rps-scoop), black calc(var(--rps-scoop) + 1px)) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--rps-scoop) at 100% 50%, transparent var(--rps-scoop), black calc(var(--rps-scoop) + 1px)) right / 51% 100% no-repeat;
+    mask:
+        radial-gradient(circle var(--rps-scoop) at 0% 50%, transparent var(--rps-scoop), black calc(var(--rps-scoop) + 1px)) left / 51% 100% no-repeat,
+        radial-gradient(circle var(--rps-scoop) at 100% 50%, transparent var(--rps-scoop), black calc(var(--rps-scoop) + 1px)) right / 51% 100% no-repeat;
+}
+
+.rps-flow:hover {
+    background: var(--s-12);
+    color: var(--t-full);
+}
+
+.rps-flow:active {
+    background: var(--s-15);
+}
+
+.rps-flow-icon {
+    position: relative;
+    z-index: 1;
+    width: clamp(18px, 1.3vw, 24px);
+    height: clamp(18px, 1.3vw, 24px);
+    flex-shrink: 0;
+}
+
+.home-search-trigger {
+    width: clamp(790px, 63vw, 1080px);
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-xl);
+    padding: calc(var(--space-lg) * 1.1) calc(var(--space-xl) * 1.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 32px 0 rgba(var(--shadow-tint-rgb), 0.37), 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    cursor: pointer;
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+    position: fixed;
+    top: calc(50% - 100px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 60;
+}
+
+/* In search-mode the trigger fuses with the search-tab below: same width,
+ * same surface, rounded only on top — the two read as ONE panel whose
+ * header is the search bar. The panel (.search-tab.open) starts exactly
+ * at this bar's bottom edge with no gap. */
+.initial-home.search-mode .home-search-trigger {
+    width: clamp(900px, 80vw, 1700px);
+    max-width: 92%;
+    margin: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--card-border);
+    border-bottom: 1px solid color-mix(in srgb, var(--card-border) 45%, transparent);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    height: var(--searchbar-h);
+    padding: 0 var(--space-xl);
+    box-shadow: none;
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    top: calc(var(--nav-offset) + 10px);
+    transform: translateX(-50%) translateY(0) !important;
+}
+
+.home-search-trigger:hover {
+    transform: translate(-50%, calc(-50% - 4px));
+    background: var(--s-25);
+    border: 1px solid color-mix(in srgb, var(--card-border) 70%, white 30%);
+    box-shadow: 0 12px 40px 0 rgba(var(--shadow-tint-rgb), 0.45), 0 0 2px rgba(255, 255, 255, 0.7) inset;
+}
+
+/* Locked while the search-tab is open: no hover lift (it would tear the
+ * bar off the panel top) and no surface change (bar + panel must keep
+ * reading as one piece). */
+.initial-home.search-mode .home-search-trigger:hover {
+    transform: translateX(-50%) translateY(0) !important;
+    background: var(--glass-bg);
+    border: 1px solid var(--card-border);
+    border-bottom: 1px solid color-mix(in srgb, var(--card-border) 45%, transparent);
+    box-shadow: none;
+}
+
+.home-search-trigger .search-icon {
+    color: var(--t-90);
+    flex-shrink: 0;
+    width: clamp(22px, 1.6vw, 32px);
+    height: clamp(22px, 1.6vw, 32px);
+}
+
+.search-placeholder {
+    flex: 1;
+    font-size: var(--fs-lg);
+    color: var(--theme-text);
+    font-weight: 700;
+}
+
+.explore-map-btn {
+    padding: var(--space-lg) calc(var(--space-lg) * 2.2);
+    background: var(--chip-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-xl);
+    color: var(--theme-text);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    animation: fadeInUpButton 0.6s ease-out 0.4s both;
+    opacity: 1;
+    position: fixed;
+    top: calc(50% + 160px);
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 58;
+}
+
+.initial-home.search-mode .explore-map-btn {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+}
+
+.initial-home.search-mode.animating .explore-map-btn {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.explore-map-btn:hover {
+    background: var(--s-30);
+    transform: translate(-50%, -2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== HOME MINI SLIDESHOW ==================== */
+.home-mini-slideshow {
+    position: fixed !important;
+    bottom: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 999 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+.home-mini-slideshow.hidden {
+    opacity: 0 !important;
+    transform: translateX(-50%) translateY(30px) !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s !important;
+}
+
+.mini-slideshow-container {
+    position: relative;
+    width: clamp(200px, 20vw, 360px);
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+}
+
+/* Mini Slider Responsive - Büyük ekranlar (4K) */
+@media (min-width: 3840px) {
+    .mini-slideshow-container {
+        width: clamp(480px, 14vw, 640px);
+    }
+    .home-mini-slideshow {
+        bottom: 40px !important;
+    }
+}
+
+/* Mini Slider Responsive - 2K+ (2560px) */
+@media (max-width: 3839px) and (min-width: 2560px) {
+    .mini-slideshow-container {
+        width: clamp(380px, 16vw, 500px);
+    }
+    .home-mini-slideshow {
+        bottom: 32px !important;
+    }
+}
+
+/* Mini Slider Responsive - 1440p */
+@media (max-width: 2559px) and (min-width: 1921px) {
+    .mini-slideshow-container {
+        width: clamp(300px, 18vw, 420px);
+    }
+    .home-mini-slideshow {
+        bottom: 24px !important;
+    }
+}
+
+/* Mini Slider Responsive - 1080p */
+@media (max-width: 1920px) and (min-width: 1367px) {
+    .mini-slideshow-container {
+        width: clamp(200px, 20vw, 320px);
+    }
+    .home-mini-slideshow {
+        bottom: 16px !important;
+    }
+}
+
+/* Mini Slider Responsive - HD (1366px) */
+@media (max-width: 1366px) and (min-width: 1025px) {
+    .mini-slideshow-container {
+        width: clamp(180px, 24vw, 280px);
+    }
+    .home-mini-slideshow {
+        bottom: 12px !important;
+    }
+}
+
+/* Mini Slider Responsive - Tablet/Small */
+@media (max-width: 1024px) {
+    .mini-slideshow-container {
+        width: clamp(160px, 32vw, 260px);
+    }
+    .home-mini-slideshow {
+        bottom: 10px !important;
+    }
+}
+
+.mini-film-strip {
+    display: flex;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+    will-change: transform;
+}
+
+.mini-slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Mini Placeholder Slide */
+.mini-slide.mini-placeholder-slide {
+    background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Placeholder varken film strip hareket etmesin */
+.mini-film-strip:has(.mini-placeholder-slide) {
+    transform: translateX(0) !important;
+    transition: none !important;
+}
+
+.mini-placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.4rem, 1vw, 0.75rem);
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+    background: var(--s-10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: clamp(0.5rem, 1.5vw, 1rem);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.mini-placeholder-icon {
+    width: clamp(24px, 4vw, 40px);
+    height: clamp(24px, 4vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--s-10);
+    border-radius: 50%;
+}
+
+.mini-placeholder-icon svg {
+    width: 50%;
+    height: 50%;
+    color: var(--t-80);
+}
+
+.mini-placeholder-text {
+    font-size: clamp(0.625rem, 1.2vw, 0.875rem);
+    font-weight: 500;
+    color: var(--t-90);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.mini-slide-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--s-20);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px 0 rgba(var(--shadow-tint-rgb), 0.25);
+    z-index: 10;
+}
+
+.mini-indicator {
+    width: 10px;
+    height: 10px;
+    border: none;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.mini-indicator span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(var(--blue-lighter-rgb), 0.5);
+    transition: all 0.3s ease;
+}
+
+.mini-indicator.active span {
+    background: rgba(var(--blue-lighter-rgb), 1);
+    box-shadow: 0 0 12px rgba(var(--blue-lighter-rgb), 0.6);
+}
+
+.mini-indicator:hover span {
+    background: rgba(var(--blue-lighter-rgb), 0.8);
+    transform: scale(1.2);
+}
+
+/* ==================== HOME CATEGORY CARDS ==================== */
+/* Full-viewport flex centring instead of transform-centring. A transformed
+ * OR opacity-animated ancestor establishes a "backdrop root" in Chromium,
+ * which silently freezes a descendant's `backdrop-filter` (the value still
+ * resolves correctly but samples an empty backdrop, so changing Cam Blur has
+ * no visible effect). Two rules keep the cards' glass blur live:
+ *   1. Centre with flex — never `transform: translate(...)` on this container.
+ *   2. The entrance fade lives on each `.category-card` itself, NOT on this
+ *      container. An opacity animation on the container (an ANCESTOR of the
+ *      cards) re-breaks the blur; the same animation on the card itself is
+ *      safe — exactly how `.explore-map-btn` animates + blurs at once.
+ * The container ignores pointer events; only the cards take clicks. */
+.home-category-cards {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(14px, 1.2vw, 24px);
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    padding-top: 100px;
+    z-index: 59;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+.home-category-cards .category-card {
+    pointer-events: auto;
+}
+
+@keyframes homeFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.initial-home.search-mode .home-category-cards {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0s 0.4s;
+}
+
+.initial-home.search-mode.animating .home-category-cards {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 0.7vw, 12px);
+    padding: clamp(18px, 1.4vw, 26px) clamp(20px, 1.6vw, 32px);
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: clamp(120px, 9.5vw, 160px);
+    max-width: clamp(120px, 9.5vw, 160px);
+    width: clamp(120px, 9.5vw, 160px);
+    min-height: clamp(110px, 9vw, 140px);
+    /* Entrance fade lives here (per-card), not on .home-category-cards — an
+     * opacity animation on the container would suppress this card's
+     * backdrop-filter blur. See the container's comment above. */
+    animation: homeFadeIn 0.6s ease-out 0.3s both;
+}
+
+.category-card-icon {
+    font-size: clamp(36px, 2.8vw, 50px);
+    line-height: 1;
+}
+
+.category-card-label {
+    font-size: clamp(12px, 0.8vw, 14px);
+    font-weight: 600;
+    color: var(--theme-text);
+    text-align: center;
+    max-width: 100%;
+    line-height: 1.3;
+    word-break: break-word;
+    hyphens: auto;
+    /* Clamp to 2 lines and always reserve 2 lines of height so a long name
+     * can't stretch the card — every card stays the same size. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    min-height: calc(2 * 1.3em);
+}
+
