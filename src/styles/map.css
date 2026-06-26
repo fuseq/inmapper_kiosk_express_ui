@@ -5,8 +5,8 @@
     align-items: center;
     gap: 6px;
     background: var(--s-15);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
     border-radius: 12px;
     padding: 6px;
     flex-shrink: 0;
@@ -24,8 +24,8 @@
     min-width: 160px;
     height: 40px;
     background: var(--s-20);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 10px;
     display: flex;
@@ -63,8 +63,8 @@
     align-items: center;
     justify-content: center;
     background: var(--s-20);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: var(--t-95);
     border-radius: 6px;
@@ -97,8 +97,8 @@
         rgba(200, 215, 255, 0.6) 0%, 
         rgba(210, 225, 255, 0.55) 50%,
         rgba(205, 220, 255, 0.58) 100%);
-    backdrop-filter: blur(80px) saturate(180%);
-    -webkit-backdrop-filter: blur(80px) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border-radius: 14px;
     padding: 8px;
     min-width: 200px;
@@ -131,8 +131,8 @@
     background: linear-gradient(135deg, 
         rgba(180, 210, 255, 0.45) 0%, 
         rgba(190, 220, 255, 0.4) 100%);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
     border: 1px solid rgba(200, 225, 255, 0.4);
     box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.1);
 }
@@ -141,8 +141,8 @@
     background: linear-gradient(135deg, 
         rgba(160, 200, 255, 0.55) 0%, 
         rgba(175, 210, 255, 0.5) 100%);
-    backdrop-filter: blur(25px) saturate(170%);
-    -webkit-backdrop-filter: blur(25px) saturate(170%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
     transform: translateX(-2px);
     box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.2);
     border: 1px solid rgba(180, 215, 255, 0.5);
@@ -152,8 +152,8 @@
     background: linear-gradient(135deg, 
         rgba(var(--blue-light-rgb), 0.75) 0%, 
         rgba(var(--gradient-3-rgb), 0.8) 100%);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(129, 180, 250, 0.65);
     box-shadow: 
         0 6px 20px rgba(var(--accent-rgb), 0.35),
@@ -197,8 +197,8 @@
     min-width: clamp(140px, 11vw, 160px);
     max-width: clamp(180px, 14vw, 230px);
     background: var(--s-15);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     padding: var(--space-md) var(--space-sm);
@@ -348,7 +348,7 @@
 
 .floor-map-container .maplibregl-ctrl-group {
     background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--glass-blur));
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     border: none;
@@ -373,8 +373,8 @@
     gap: clamp(8px, 0.6vw, 12px);
     padding: clamp(12px, 0.9vw, 18px) clamp(20px, 1.5vw, 32px);
     background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl, 20px);
     color: var(--t-full);
@@ -409,8 +409,8 @@
     align-items: center;
     gap: 8px;
     background: var(--s-15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-radius: 12px;
     padding: 6px;
     box-shadow: 0 8px 32px rgba(var(--shadow-tint-rgb), 0.2);
@@ -448,8 +448,8 @@
     min-width: 160px;
     height: 48px;
     background: var(--s-20);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 10px;
     display: flex;
@@ -462,8 +462,8 @@
 
 .map-floor-display-btn:hover {
     background: rgba(var(--primary-light-rgb), 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(var(--primary-light-rgb), 0.4);
     transform: scale(1.02);
 }
@@ -495,8 +495,8 @@
     align-items: center;
     justify-content: center;
     background: var(--s-20);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 8px;
     cursor: pointer;
@@ -506,8 +506,8 @@
 
 .map-floor-arrow-btn:hover {
     background: rgba(var(--accent-rgb), 0.4);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(var(--accent-rgb), 0.5);
     color: white;
     transform: scale(1.05);
@@ -524,8 +524,8 @@
     bottom: calc(100% + 12px);
     right: 0;
     background: var(--s-15);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-radius: 14px;
     padding: 8px;
     min-width: 200px;
@@ -562,14 +562,14 @@
 
 .map-floor-dropdown-item:hover {
     background: var(--s-20);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 .map-floor-dropdown-item.active {
     background: rgba(var(--accent-rgb), 0.35);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(var(--accent-rgb), 0.5);
     box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.25);
 }

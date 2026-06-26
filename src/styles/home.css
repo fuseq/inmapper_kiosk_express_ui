@@ -328,8 +328,8 @@
     max-width: 92%;
     margin: 0;
     background: var(--glass-bg);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
     border-bottom: 1px solid color-mix(in srgb, var(--card-border) 45%, transparent);
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
@@ -443,7 +443,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
 }
 
 /* Mini Slider Responsive - Büyük ekranlar (4K) */
@@ -544,8 +544,8 @@
     gap: clamp(0.4rem, 1vw, 0.75rem);
     padding: clamp(0.75rem, 2vw, 1.5rem);
     background: var(--s-10);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-radius: clamp(0.5rem, 1.5vw, 1rem);
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -583,8 +583,8 @@
     gap: 8px;
     padding: 6px 12px;
     background: var(--s-20);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-lg);
     border: 2px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 24px 0 rgba(var(--shadow-tint-rgb), 0.25);

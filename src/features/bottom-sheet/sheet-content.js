@@ -6,6 +6,7 @@ import { getCategoryDisplayInfo, getAvailableCategories } from '../data/category
 import { iconHTML, renderIcons } from '../../core/icon.js';
 import { assistant } from '../assistant/index.js';
 import { buildDetailSectionsHTML, wireDetailSections } from '../store-detail/detail-sections.js';
+import { openFloorMenuPortal, closeFloorMenuPortal, isFloorMenuOutsideClick } from '../../core/floor-menu-portal.js';
 
 let containerEl = null;
 let headerEl = null;
@@ -124,12 +125,15 @@ function msFloorOptions() {
 function closeMobileFloorMenu() {
     const wrap = headerEl?.querySelector('.ms-floor');
     if (wrap) wrap.classList.remove('open');
+    const menu = document.querySelector('.ms-floor-menu.is-portaled')
+        || wrap?.querySelector('.ms-floor-menu');
+    if (menu) closeFloorMenuPortal(menu);
     document.removeEventListener('click', onMobileFloorOutside, true);
 }
 
 function onMobileFloorOutside(e) {
     const wrap = headerEl?.querySelector('.ms-floor');
-    if (wrap && !wrap.contains(e.target)) closeMobileFloorMenu();
+    if (wrap && isFloorMenuOutsideClick(wrap, e)) closeMobileFloorMenu();
 }
 
 function buildFloorControlHtml() {
@@ -158,6 +162,11 @@ function wireFloorControl() {
             closeMobileFloorMenu();
         } else {
             wrap.classList.add('open');
+            openFloorMenuPortal({
+                wrap,
+                menu: wrap.querySelector('.ms-floor-menu'),
+                trigger: wrap.querySelector('.ms-floor-trigger'),
+            });
             document.addEventListener('click', onMobileFloorOutside, true);
         }
     });
@@ -175,6 +184,7 @@ function wireFloorControl() {
             closeMobileFloorMenu();
             if (currentMode === 'search') renderSearchList();
             else setMode('search');
+            snap('full');
         });
     });
 }
@@ -313,7 +323,12 @@ function renderHome() {
 
     containerEl.appendChild(grid);
     renderIcons();
-    showScrollHint();
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            snap('home-peek');
+            showScrollHint();
+        });
+    });
 }
 
 function showScrollHint() {
@@ -512,21 +527,23 @@ function renderDirections() {
     actions.innerHTML = `<button class="ms-dir-draw-btn" id="msDirDraw" ${canDraw ? '' : 'disabled'}>Rota Çiz</button>`;
     sticky.appendChild(actions);
 
-    // Divider + location list only when a point still needs picking. The
-    // divider closes the sticky region; the list below it is what scrolls.
+    // Divider marks the boundary — list scrolls in .ms-dir-scroll below.
     const needsStart = !sp && !isAutoStart();
     if (needsStart || !canDraw) {
         const divider = document.createElement('div');
         divider.className = 'ms-divider';
         sticky.appendChild(divider);
 
+        const scroll = document.createElement('div');
+        scroll.className = 'ms-dir-scroll';
+
         const title = document.createElement('div');
         title.className = 'ms-section-title';
         title.textContent = needsStart ? 'Başlangıç noktası seçin' : 'Birim seçin';
-        containerEl.appendChild(title);
+        scroll.appendChild(title);
 
         const locs = filterLocations('', null);
-        containerEl.appendChild(buildLocationList(locs, (loc) => {
+        scroll.appendChild(buildLocationList(locs, (loc) => {
             if (needsStart) {
                 state.startPoint = loc;
                 eventBus.emit('routePoint:updated', { point: 'start', location: loc });
@@ -538,6 +555,8 @@ function renderDirections() {
             renderDirections();
             snap(state.startPoint && state.endPoint ? 'fit' : 1);
         }));
+
+        containerEl.appendChild(scroll);
     }
 
     // Event bindings
@@ -777,6 +796,7 @@ function setMode(mode, params = {}) {
     else if (mode === 'home') state.mobileRouteScreen = null;
     // The bouncing "scroll for more" chevron belongs only to the home grid.
     if (mode !== 'home') removeScrollHint();
+    if (containerEl) containerEl.classList.toggle('ms-dir-mode', mode === 'directions');
     switch (mode) {
         case 'home':       renderHome(); break;
         case 'search':     renderSearch(params); break;

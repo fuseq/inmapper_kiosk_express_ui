@@ -10,7 +10,7 @@
     height: var(--search-panel-h);
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     /* Fused with the search bar above: square top corners, no top border —
      * the bar (home-search-trigger) is the panel's header. */
     border: 1px solid var(--card-border);
@@ -64,8 +64,8 @@
     align-items: center;
     gap: 12px;
     background: var(--s-5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     flex-shrink: 0;
 }
@@ -84,8 +84,8 @@
 
 .tab-back-icon:hover {
     background: var(--s-20);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     color: var(--t-full);
 }
 
@@ -95,8 +95,8 @@
     color: var(--t-full);
     font-weight: 700;
     background: var(--s-10);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: var(--radius-lg);
     padding: var(--space-md) var(--space-lg);

@@ -4,9 +4,10 @@ import { state } from '../../core/state.js';
 import { initMobileSearch } from './mobile-search.js';
 import { sheetContent } from './sheet-content.js';
 
-const SNAP_PEEK_RATIO = 0.40;   // home / navigation peek
+const SNAP_PEEK_RATIO = 0.40;   // fallback home / navigation peek
 const SNAP_HALF_RATIO = 0.55;   // directions
 const SNAP_FULL_RATIO = 0.95;   // search list + detail expanded (near full screen)
+const HOME_PEEK_ROWS = 3;       // minimum fully-visible category rows on home
 const VELOCITY_THRESHOLD = 0.4;
 const MIN_DRAG = 8;
 
@@ -42,6 +43,45 @@ function measureDetailPeekHeight() {
     h += padBottom;
 
     return Math.max(120, Math.min(Math.round(h), window.innerHeight * 0.95));
+}
+
+/** Measure home peek: handle + header + first N category rows (fully visible). */
+function measureHomePeekHeight() {
+    const rows = contentEl?.querySelectorAll('.ms-cat-row');
+    if (!rows?.length || !sheetEl) return null;
+
+    const handle = sheetEl.querySelector('.mobile-sheet-handle-area');
+    const header = document.getElementById('mobileSheetHeader');
+    let h = 0;
+    if (handle) h += handle.offsetHeight;
+    if (header?.offsetHeight) h += header.offsetHeight;
+
+    const contentStyle = getComputedStyle(contentEl);
+    h += parseFloat(contentStyle.paddingTop) || 0;
+
+    const grid = contentEl.querySelector('.ms-category-grid');
+    const gridGap = grid ? (parseFloat(getComputedStyle(grid).rowGap) || parseFloat(getComputedStyle(grid).gap) || 10) : 10;
+    const visibleRows = Math.min(HOME_PEEK_ROWS, rows.length);
+    for (let i = 0; i < visibleRows; i++) {
+        h += rows[i].offsetHeight;
+        if (i < visibleRows - 1) h += gridGap;
+    }
+    if (grid) h += parseFloat(getComputedStyle(grid).paddingBottom) || 0;
+    h += parseFloat(contentStyle.paddingBottom) || 0;
+    h += 8; // breathing room so card shadows aren't clipped
+
+    const fallback = Math.round(window.innerHeight * SNAP_PEEK_RATIO);
+    return Math.max(fallback, Math.min(Math.round(h), window.innerHeight * SNAP_FULL_RATIO));
+}
+
+function snapHomePeek(animate = true) {
+    const measured = measureHomePeekHeight();
+    const vh = window.innerHeight;
+    const peek = measured ?? Math.round(vh * SNAP_PEEK_RATIO);
+    snapPoints = [peek, Math.round(vh * SNAP_HALF_RATIO), Math.round(vh * SNAP_FULL_RATIO)];
+    currentSnap = 0;
+    setSheetHeight(peek, animate);
+    eventBus.emit('sheet:snapped', { level: 0, height: peek, homePeek: true });
 }
 
 function snapDetailPeek(animate = true) {
@@ -109,6 +149,20 @@ function eventY(e) {
     return e.clientY;
 }
 
+/** Scroll offset for the active inner list (directions) or the sheet content. */
+function getContentScrollTop() {
+    const dirScroll = contentEl?.querySelector('.ms-dir-scroll');
+    if (dirScroll) return dirScroll.scrollTop;
+    return contentEl?.scrollTop || 0;
+}
+
+function isDirectionsListTarget(e) {
+    const dirScroll = contentEl?.querySelector('.ms-dir-scroll');
+    if (!dirScroll) return false;
+    const t = e.target;
+    return t instanceof Node && dirScroll.contains(t);
+}
+
 function onDragStart(e) {
     // Mouse: only the primary button starts a drag.
     if (e.type === 'mousedown' && e.button !== 0) return;
@@ -117,7 +171,9 @@ function onDragStart(e) {
     // content scrolling when the list is scrolled at the full snap.
     const fromHandle = !!(e.currentTarget && e.currentTarget.classList
         && e.currentTarget.classList.contains('mobile-sheet-handle-area'));
-    if (!fromHandle && contentEl.scrollTop > 0 && currentSnap === 2) return;
+    if (!fromHandle && getContentScrollTop() > 0 && currentSnap === 2) return;
+    // Directions mode: let the location list scroll independently.
+    if (!fromHandle && isDirectionsListTarget(e)) return;
 
     const y = eventY(e);
     dragState = {
@@ -137,7 +193,7 @@ function onDragMove(e) {
     const dy = dragState.startY - y;
 
     if (!dragState.moved && Math.abs(dy) < MIN_DRAG) return;
-    if (!dragState.moved && !dragState.fromHandle && contentEl.scrollTop > 0 && dy > 0) {
+    if (!dragState.moved && !dragState.fromHandle && getContentScrollTop() > 0 && dy > 0) {
         dragState = null;
         return;
     }
@@ -184,6 +240,10 @@ function onResize() {
         else snapDetailPeek(false);
         return;
     }
+    if (mode === 'home' && currentSnap === 0) {
+        snapHomePeek(false);
+        return;
+    }
     snapPoints = getSnapPoints();
     snapTo(currentSnap < 0 ? 0 : currentSnap, false);
 }
@@ -193,8 +253,12 @@ export function snapSheet(level) {
         snapToFit();
     } else if (level === 'detail-peek') {
         snapDetailPeek(true);
+    } else if (level === 'home-peek') {
+        snapHomePeek(true);
     } else if (level === 'full') {
         snapFull(true);
+    } else if (level === 0 && sheetContent.getMode() === 'home') {
+        snapHomePeek(true);
     } else {
         snapTo(level, true);
     }
@@ -266,8 +330,7 @@ export async function init() {
         state.selectedLocation = null;
         state.endPoint = null;
         sheetContent.setMode('home');
-        snapPoints = getSnapPoints();
-        snapTo(0, true);
+        snapHomePeek(true);
     });
 
     eventBus.on('pin:dropped', () => {
@@ -284,7 +347,7 @@ export async function init() {
 
     eventBus.on('route:finished', () => {
         sheetContent.setMode('home');
-        snapTo(0, true);
+        snapHomePeek(true);
     });
 
     eventBus.on('idle:timeout', () => {
@@ -292,11 +355,9 @@ export async function init() {
         // Keep an active route on screen (classic nav card or assistant chat).
         if ((mode === 'navigation' || mode === 'assistant') && state.routeNavigationActive) return;
         sheetContent.setMode('home');
-        snapTo(0, true);
+        snapHomePeek(true);
     });
 
-    // Initial state: home with peek
-    snapTo(0, false);
     console.log('📱 Bottom sheet initialized');
 }
 

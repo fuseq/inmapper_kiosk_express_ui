@@ -10,6 +10,7 @@ import { iconHTML, renderIcons } from '../../core/icon.js';
 import { buildRouteQrImageUrl } from '../navigation/qr-service.js';
 import { isKioskView } from '../../app.js';
 import { getInterfaceProfile } from '../../core/interface-profile.js';
+import { openFloorMenuPortal, closeFloorMenuPortal, isFloorMenuOutsideClick } from '../../core/floor-menu-portal.js';
 
 /* "Mobile Links" sidecar that mirrors the store-detail QR card. Used as
  * the right column of the island's navigation layout. Returns an empty
@@ -108,12 +109,15 @@ function islandFloorOptions() {
 function closeIslandFloorMenu() {
     const wrap = headerEl?.querySelector('.isl-floor');
     if (wrap) wrap.classList.remove('open');
+    const menu = document.querySelector('.isl-floor-menu.is-portaled')
+        || wrap?.querySelector('.isl-floor-menu');
+    if (menu) closeFloorMenuPortal(menu);
     document.removeEventListener('click', onIslandFloorOutside, true);
 }
 
 function onIslandFloorOutside(e) {
     const wrap = headerEl?.querySelector('.isl-floor');
-    if (wrap && !wrap.contains(e.target)) closeIslandFloorMenu();
+    if (wrap && isFloorMenuOutsideClick(wrap, e)) closeIslandFloorMenu();
 }
 
 function buildFloorControlHtml() {
@@ -142,6 +146,11 @@ function wireFloorControl() {
             closeIslandFloorMenu();
         } else {
             wrap.classList.add('open');
+            openFloorMenuPortal({
+                wrap,
+                menu: wrap.querySelector('.isl-floor-menu'),
+                trigger: wrap.querySelector('.isl-floor-trigger'),
+            });
             document.addEventListener('click', onIslandFloorOutside, true);
         }
     });

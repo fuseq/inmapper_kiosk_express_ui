@@ -125,7 +125,7 @@
     min-width: clamp(70px, 6vw, 100px);
     height: clamp(36px, 3vw, 48px);
     background: var(--s-15);
-    backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     display: flex;
@@ -172,7 +172,7 @@
     align-items: center;
     gap: clamp(4px, 0.35vw, 6px);
     background: var(--s-15);
-    backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     padding: clamp(4px, 0.35vw, 6px);
@@ -227,7 +227,7 @@
     width: clamp(50px, 4.2vw, 70px);
     height: clamp(50px, 4.2vw, 70px);
     background: rgba(var(--accent-rgb), 0.5);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-lg);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
@@ -347,7 +347,7 @@
     gap: clamp(10px, 0.9vw, 14px);
     /* Enhanced liquid glass background */
     background: var(--s-25);
-    backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border: 2px solid var(--card-border);
     padding: clamp(16px, 1.3vw, 22px) clamp(20px, 1.5vw, 28px);
     margin-bottom: clamp(4px, 0.4vw, 8px);
@@ -427,7 +427,7 @@
 
 .store-info-card {
     background: var(--s-25);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-lg);
     padding: clamp(12px, 1vw, 16px);
     border: 1px solid var(--card-border);
@@ -516,7 +516,7 @@
     gap: clamp(5px, 0.4vw, 7px);
     padding: clamp(5px, 0.4vw, 8px) clamp(10px, 0.8vw, 13px);
     background: rgba(34, 211, 238, 0.25);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(34, 211, 238, 0.4);
     border-radius: var(--radius-lg);
     font-size: clamp(9px, 0.75vw, 12px);
@@ -539,7 +539,7 @@
 .store-tag {
     padding: clamp(5px, 0.4vw, 7px) clamp(10px, 0.8vw, 14px);
     background: rgba(var(--accent-dark-rgb), 0.35);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-lg);
     font-size: clamp(9px, 0.75vw, 12px);
     font-weight: 600;
@@ -719,7 +719,7 @@
 
 .store-qr-card {
     background: var(--s-25);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
     border-radius: var(--radius-lg);
     padding: clamp(10px, 0.85vw, 14px);
     border: 1px solid var(--card-border);
@@ -776,7 +776,7 @@
 .store-phone-btn {
     width: 100%;
     background: var(--s-20);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     padding: clamp(10px, 0.8vw, 14px);

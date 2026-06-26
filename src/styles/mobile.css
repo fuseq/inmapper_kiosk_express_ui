@@ -11,6 +11,7 @@ html.mobile-layout {
     --side-panel-w: 100vw;
 
     --mobile-sheet-radius: 18px;
+    --mobile-sheet-pad-x: 16px;
     --mobile-safe-top: env(safe-area-inset-top, 0px);
     --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
     --mobile-accent: rgb(var(--accent-rgb));
@@ -130,7 +131,7 @@ html.mobile-layout .mobile-sheet-content {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    padding: 0 16px var(--mobile-safe-bottom) 16px;
+    padding: 0 var(--mobile-sheet-pad-x) var(--mobile-safe-bottom) var(--mobile-sheet-pad-x);
     scrollbar-width: thin;
     scrollbar-color: rgba(0,0,0,0.15) transparent;
 }
@@ -272,6 +273,8 @@ html.mobile-layout .ms-floor-menu {
     overflow-y: auto;
     padding: 6px;
     background: var(--mobile-sheet-bg);
+    backdrop-filter: blur(var(--mobile-sheet-blur, var(--glass-blur)));
+    -webkit-backdrop-filter: blur(var(--mobile-sheet-blur, var(--glass-blur)));
     border: 1px solid var(--mobile-card-border);
     border-radius: 16px;
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
@@ -280,7 +283,8 @@ html.mobile-layout .ms-floor-menu {
     flex-direction: column;
     gap: 2px;
 }
-html.mobile-layout .ms-floor.open .ms-floor-menu { display: flex; }
+html.mobile-layout .ms-floor.open .ms-floor-menu,
+html.mobile-layout .ms-floor-menu.is-portaled { display: flex; }
 
 html.mobile-layout .ms-floor-option {
     padding: 10px 12px;
@@ -300,8 +304,10 @@ html.mobile-layout .ms-floor-option.active {
 /* Glass mode — match the search field / tune button glass treatment. */
 html.mobile-layout:not(.no-glass) .ms-floor-trigger,
 html.mobile-layout:not(.no-glass) .ms-floor-menu {
-    background: rgba(255, 255, 255, 0.18) !important;
-    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    backdrop-filter: blur(var(--mobile-sheet-blur, var(--glass-blur))) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(var(--mobile-sheet-blur, var(--glass-blur))) saturate(180%) !important;
 }
 
 /* ==================== CATEGORY GRID ==================== */
@@ -585,13 +591,52 @@ html.mobile-layout .ms-detail-route-btn:active {
 }
 
 /* ==================== DIRECTIONS VIEW ==================== */
-/* Fixed top block: route fields + draw button + divider stay pinned while
- * the location list below scrolls. */
+/* Route header is fixed; only .ms-dir-scroll below it scrolls. */
+html.mobile-layout .mobile-sheet-content.ms-dir-mode {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
 html.mobile-layout .ms-dir-sticky {
-    position: sticky;
-    top: 0;
+    flex-shrink: 0;
     z-index: 5;
     background: var(--mobile-sheet-bg);
+    /* Bleed past .mobile-sheet-content horizontal padding so the route
+     * header fills the full sheet width edge-to-edge. */
+    margin-left: calc(-1 * var(--mobile-sheet-pad-x));
+    margin-right: calc(-1 * var(--mobile-sheet-pad-x));
+    padding-left: var(--mobile-sheet-pad-x);
+    padding-right: var(--mobile-sheet-pad-x);
+    padding-bottom: 4px;
+}
+
+html.mobile-layout:not(.no-glass) .ms-dir-sticky {
+    /* Sheet already provides the glass layer — no second opaque stack. */
+    background: transparent;
+}
+
+html.mobile-layout .ms-dir-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+    padding-bottom: max(8px, var(--mobile-safe-bottom));
+}
+
+html.mobile-layout .ms-dir-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+html.mobile-layout .ms-dir-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
 }
 
 html.mobile-layout .ms-dir-header {
@@ -1185,6 +1230,15 @@ html.mobile-layout:not(.no-glass) .mobile-bottom-sheet {
 /* Search field, direction fields — frosted input */
 html.mobile-layout:not(.no-glass) .ms-search-field,
 html.mobile-layout:not(.no-glass) .ms-dir-field {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+}
+
+html.mobile-layout:not(.no-glass) .ms-dir-dot.start {
+    background: transparent;
+}
+
+html.mobile-layout:not(.no-glass) .ms-dir-field-pin {
     background: rgba(255, 255, 255, 0.18) !important;
     border: 1px solid rgba(255, 255, 255, 0.45) !important;
 }

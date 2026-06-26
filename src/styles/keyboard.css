@@ -169,8 +169,8 @@ html.mobile-layout .inline-keyboard {
 .inline-keyboard {
     padding: var(--keyboard-padding) clamp(16px, 1.2vw, 28px) clamp(16px, 1.2vw, 28px) clamp(16px, 1.2vw, 28px);
     background: var(--s-5);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0 0 var(--radius-xl) var(--radius-xl);
     display: flex;
@@ -204,8 +204,8 @@ html.mobile-layout .inline-keyboard {
     height: var(--key-h);
     padding: 0 clamp(12px, 1vw, 20px);
     background: var(--s-15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
     font-size: var(--key-fs);
@@ -270,8 +270,8 @@ html.mobile-layout .inline-keyboard {
 
 .inline-key.special {
     background: rgba(100, 116, 139, 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(100, 116, 139, 0.4);
     color: white;
     min-width: var(--key-special-w);
@@ -327,8 +327,8 @@ html.mobile-layout .inline-keyboard {
     height: clamp(45px, 3.5vh, 70px);
     font-size: clamp(16px, 1.2vw, 26px);
     background: var(--s-20);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid rgba(219, 234, 254, 0.3);
 }
 
